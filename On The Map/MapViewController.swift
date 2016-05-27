@@ -5,7 +5,6 @@
 //  Created by Michael Nienaber on 23/05/2016.
 //  Copyright © 2016 Michael Nienaber. All rights reserved.
 //
-import Firebase
 import UIKit
 import MapKit
 

@@ -21,7 +21,7 @@ struct StudentLocationObjects {
     let longitude: Float
     let createdAt: String
     let updatedAt: String
-    let ACL: Bool
+    //let ACL: Bool
 
 
     // construct a StudentLocationObject from a dictionary
@@ -37,7 +37,7 @@ struct StudentLocationObjects {
         longitude = dictionary[Constants.ParseResponseKeys.Longitude] as! Float
         createdAt = dictionary[Constants.ParseResponseKeys.CreatedAt] as! String
         updatedAt = dictionary[Constants.ParseResponseKeys.UpdatedAt] as! String
-        ACL = dictionary[Constants.ParseResponseKeys.ACL] as! Bool
+        //ACL = dictionary[Constants.ParseResponseKeys.ACL] as! Bool
     }
     
     static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocationObjects] {

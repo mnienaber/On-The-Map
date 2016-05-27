@@ -74,7 +74,7 @@ class ListViewController: UITableViewController {
             }
             
             /* GUARD: Is the "FirstName" key in parsedResult? */
-            guard let results = parsedResult[Constants.ParseResponseKeys.FirstName] as? [[String:AnyObject]] else {
+            guard let results = parsedResult["results"] as? [[String:AnyObject]] else {
                 print("Cannot find your key, the status code is \(statusCode) and the full response is \(parsedResult)")
                 return
             }
@@ -101,8 +101,7 @@ extension ListViewController {
         
         // set cell defaults
         cell.textLabel!.text = location.firstName + " " + location.lastName
-        
-        self.tableView.reloadData()
+
         return cell
     }
     
