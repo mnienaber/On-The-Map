@@ -29,15 +29,15 @@ class ListViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         let methodParameters = [
-            Constants.ParameterValues.ParseAPIKey: Constants.ParameterValues.ParseAPIKey,
-            Constants.ParameterValues.RestAPIKey: Constants.ParameterValues.RestAPIKey
+            Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
+            Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey
         ]
         
      //TODO: fix the variables for this server request:
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "\(Constants.Scheme.ApiScheme)" + "\(Constants.Scheme.ApiHost)" + "\(Constants.Scheme.ApiPath)" + "\(Constants.Scheme.LimitAndOrder)")!)
-        request.addValue(Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        let request = NSMutableURLRequest(URL: NSURL(string: "\(Client.Constants.Scheme.ApiScheme)" + "\(Client.Constants.Scheme.ApiHost)" + "\(Client.Constants.Scheme.ApiPath)" + "\(Client.Constants.Scheme.LimitAndOrder)")!)
+        request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
+        request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             guard (error == nil) else {
@@ -68,8 +68,8 @@ class ListViewController: UITableViewController {
             
             
             /* GUARD: Did Parse return an error? */
-            if let _ = parsedResult[Constants.ParseResponseKeys.ObjectId] as? String {
-                print("Parse returned an error. See the '\(Constants.ParseResponseKeys.ObjectId)")
+            if let _ = parsedResult[Client.Constants.ParseResponseKeys.ObjectId] as? String {
+                print("Parse returned an error. See the '\(Client.Constants.ParseResponseKeys.ObjectId)")
                 return
             }
             

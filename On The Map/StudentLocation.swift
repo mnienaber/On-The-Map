@@ -17,8 +17,8 @@ struct StudentLocationObjects {
     let lastName: String
     let mapString: String
     let mediaURL: String
-    let latitude: Float
-    let longitude: Float
+    let latitude: Double
+    let longitude: Double
     let createdAt: String
     let updatedAt: String
     //let ACL: Bool
@@ -27,16 +27,16 @@ struct StudentLocationObjects {
     // construct a StudentLocationObject from a dictionary
     init(dictionary: [String:AnyObject]) {
         
-        objectId = dictionary[Constants.ParseResponseKeys.ObjectId] as! String
-        uniqueKey = dictionary[Constants.ParseResponseKeys.UniqueKey] as! String
-        firstName = dictionary[Constants.ParseResponseKeys.FirstName] as! String
-        lastName = dictionary[Constants.ParseResponseKeys.LastName] as! String
-        mapString = dictionary[Constants.ParseResponseKeys.MapString] as! String
-        mediaURL = dictionary[Constants.ParseResponseKeys.MediaURL] as! String
-        latitude = dictionary[Constants.ParseResponseKeys.Latitude] as! Float
-        longitude = dictionary[Constants.ParseResponseKeys.Longitude] as! Float
-        createdAt = dictionary[Constants.ParseResponseKeys.CreatedAt] as! String
-        updatedAt = dictionary[Constants.ParseResponseKeys.UpdatedAt] as! String
+        objectId = dictionary[Client.Constants.ParseResponseKeys.ObjectId] as! String
+        uniqueKey = dictionary[Client.Constants.ParseResponseKeys.UniqueKey] as! String
+        firstName = dictionary[Client.Constants.ParseResponseKeys.FirstName] as! String
+        lastName = dictionary[Client.Constants.ParseResponseKeys.LastName] as! String
+        mapString = dictionary[Client.Constants.ParseResponseKeys.MapString] as! String
+        mediaURL = dictionary[Client.Constants.ParseResponseKeys.MediaURL] as! String
+        latitude = dictionary[Client.Constants.ParseResponseKeys.Latitude] as! Double
+        longitude = dictionary[Client.Constants.ParseResponseKeys.Longitude] as! Double
+        createdAt = dictionary[Client.Constants.ParseResponseKeys.CreatedAt] as! String
+        updatedAt = dictionary[Client.Constants.ParseResponseKeys.UpdatedAt] as! String
         //ACL = dictionary[Constants.ParseResponseKeys.ACL] as! Bool
     }
     

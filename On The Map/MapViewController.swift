@@ -1,5 +1,5 @@
 //
-//  FirstViewController.swift
+//  MapViewController.swift
 //  On The Map
 //
 //  Created by Michael Nienaber on 23/05/2016.
@@ -10,6 +10,8 @@ import MapKit
 
 
 class MapViewController: UIViewController, MKMapViewDelegate {
+    
+    var studentLocation: [StudentLocationObjects] = [StudentLocationObjects]()
 
     @IBOutlet weak var mapView: MKMapView!
     
@@ -19,12 +21,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         // The "locations" array is an array of dictionary objects that are similar to the JSON
         // data that you can download from parse.
-        let locations = hardCodedLocationData()
+        let locations = Client.taskForGETMethod()
         
         // We will create an MKPointAnnotation for each dictionary in "locations". The
         // point annotations will be stored in this array, and then provided to the map view.
         var annotations = [MKPointAnnotation]()
-        
+        print("after annotations")
         // The "locations" array is loaded with the sample data below. We are using the dictionaries
         // to create map annotations. This would be more stylish if the dictionaries were being
         // used to create custom structs. Perhaps StudentLocation structs.
@@ -42,6 +44,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             let first = dictionary["firstName"] as! String
             let last = dictionary["lastName"] as! String
             let mediaURL = dictionary["mediaURL"] as! String
+            print("after in for dic")
             
             // Here we create the annotation and set its coordiate, title, and subtitle properties
             let annotation = MKPointAnnotation()
@@ -51,10 +54,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
             // Finally we place the annotation in an array of annotations.
             annotations.append(annotation)
-        }
         
+        }
+        print(annotations)
+        self.mapView.delegate = self
         // When the array is complete, we add the annotations to the map.
         self.mapView.addAnnotations(annotations)
+        print("after mapview")
         
     }
     
@@ -111,55 +117,75 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // Some sample data. This is a dictionary that is more or less similar to the
     // JSON data that you will download from Parse.
     
-    func hardCodedLocationData() -> [[String : AnyObject]] {
-        return  [
-            [
-                "createdAt" : "2015-02-24T22:27:14.456Z",
-                "firstName" : "Jessica",
-                "lastName" : "Uelmen",
-                "latitude" : 28.1461248,
-                "longitude" : -82.75676799999999,
-                "mapString" : "Tarpon Springs, FL",
-                "mediaURL" : "www.linkedin.com/in/jessicauelmen/en",
-                "objectId" : "kj18GEaWD8",
-                "uniqueKey" : 872458750,
-                "updatedAt" : "2015-03-09T22:07:09.593Z"
-            ], 
-                [
-                "createdAt" : "2015-02-24T22:35:30.639Z",
-                "firstName" : "Gabrielle",
-                "lastName" : "Miller-Messner",
-                "latitude" : 35.1740471,
-                "longitude" : -79.3922539,
-                "mapString" : "Southern Pines, NC",
-                "mediaURL" : "http://www.linkedin.com/pub/gabrielle-miller-messner/11/557/60/en",
-                "objectId" : "8ZEuHF5uX8",
-                "uniqueKey" : 225629859,
-                "updatedAt" : "2015-03-11T03:23:49.582Z"
-            ], [
-                "createdAt" : "2015-02-24T22:30:54.442Z",
-                "firstName" : "Jason",
-                "lastName" : "Schatz",
-                "latitude" : 37.7617,
-                "longitude" : -122.4216,
-                "mapString" : "18th and Valencia, San Francisco, CA",
-                "mediaURL" : "http://en.wikipedia.org/wiki/Swift_%28programming_language%29",
-                "objectId" : "hiz0vOTmrL",
-                "uniqueKey" : 236275853,
-                "updatedAt" : "2015-03-10T17:20:31.828Z"
-            ], [
-                "createdAt" : "2015-03-11T02:48:18.321Z",
-                "firstName" : "Jarrod",
-                "lastName" : "Parkes",
-                "latitude" : 34.73037,
-                "longitude" : -86.58611000000001,
-                "mapString" : "Huntsville, Alabama",
-                "mediaURL" : "https://linkedin.com/in/jarrodparkes",
-                "objectId" : "CDHfAy8sdp",
-                "uniqueKey" : 996618664,
-                "updatedAt" : "2015-03-13T03:37:58.389Z"
-            ]
-        ]
-    }
+//    func StudentLocationData() -> [[String:AnyObject]] {
+//        
+//        var results:[[String:AnyObject]] = [] {
+//            didSet {
+//                NSNotificationCenter.defaultCenter().postNotificationName("results", object: nil)
+//            }
+//        }
+//        
+//        let methodParameters = [
+//            Constants.ParameterValues.ParseAPIKey: Constants.ParameterValues.ParseAPIKey,
+//            Constants.ParameterValues.RestAPIKey: Constants.ParameterValues.RestAPIKey
+//        ]
+//        
+//        //TODO: fix the variables for this server request:
+//        
+//        let request = NSMutableURLRequest(URL: NSURL(string: "\(Constants.Scheme.ApiScheme)" + "\(Constants.Scheme.ApiHost)" + "\(Constants.Scheme.ApiPath)" + "\(Constants.Scheme.LimitAndOrder)")!)
+//        request.addValue(Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
+//        request.addValue(Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+//        let session = NSURLSession.sharedSession()
+//        let task = session.dataTaskWithRequest(request) { data, response, error in
+//            guard (error == nil) else {
+//                print("There was an error with your request: \(error)")
+//                return
+//            }
+//            
+//            /* GUARD: Did we get a successful 2XX response? */
+//            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+//                print("Your request returned a status code other than 2xx!")
+//                return
+//            }
+//            
+//            /* GUARD: Was there any data returned? */
+//            guard let data = data else {
+//                print("No data was returned by the request!")
+//                return
+//            }
+//            
+//            /* 5. Parse the data */
+//            let parsedResult: AnyObject!
+//            do {
+//                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+//            } catch {
+//                print("Could not parse the data as JSON: '\(data)'")
+//                return
+//            }
+//            
+//            
+//            /* GUARD: Did Parse return an error? */
+//            if let _ = parsedResult[Constants.ParseResponseKeys.ObjectId] as? String {
+//                print("Parse returned an error. See the '\(Constants.ParseResponseKeys.ObjectId)")
+//                return
+//            }
+//            
+//            /* GUARD: Is the "FirstName" key in parsedResult? */
+//            guard let results = parsedResult["results"] as? [[String:AnyObject]] else {
+//                print("Cannot find your key, the status code is \(statusCode) and the full response is \(parsedResult)")
+//                return
+//            }
+//            
+//            //print(NSString(data: data, encoding: NSUTF8StringEncoding))
+////            self.studentLocation = StudentLocationObjects.SLOFromResults(results)
+////            performUIUpdatesOnMain {
+////                self.tableView.reloadData()
+//            //print(results)
+//        }
+//        task.resume()
+//        return results
+//        
+//    }
+    
 }
 
