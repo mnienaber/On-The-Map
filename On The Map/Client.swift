@@ -26,7 +26,7 @@ class Client : NSObject {
         super.init()
     }
     
-    func taskForGETMethod(method: String, var parameters: [String:AnyObject], completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> [[String: AnyObject]] {
+    func taskForGETMethod(method: String, var parameters: [String:AnyObject], completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         var results:[[String:AnyObject]] = [] {
             didSet {
@@ -34,17 +34,17 @@ class Client : NSObject {
             }
         }
         
-        let methodParameters = [
+        let parameters = [
             Constants.ParameterValues.ParseAPIKey: Constants.ParameterValues.ParseAPIKey,
             Constants.ParameterValues.RestAPIKey: Constants.ParameterValues.RestAPIKey
         ]
         
         //TODO: fix the variables for this server request:
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "\(Constants.Scheme.ApiScheme)" + "\(Constants.Scheme.ApiHost)" + "\(Constants.Scheme.ApiPath)" + "\(Constants.Scheme.LimitAndOrder)")!)
+        let request = NSMutableURLRequest(URL: URLFromParameters(parameters, withPathExtension: method))
         request.addValue(Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        let session = NSURLSession.sharedSession()
+
         let task = session.dataTaskWithRequest(request) { data, response, error in
             
             func sendError(error: String) {
