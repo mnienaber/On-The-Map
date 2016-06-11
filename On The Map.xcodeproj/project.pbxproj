@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E240A451D001919004BC3D0 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E240A441D001919004BC3D0 /* Config.swift */; };
 		2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */; };
 		2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180141CF2EFF700D6EB19 /* MapViewController.swift */; };
 		2EE180171CF2EFF700D6EB19 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180161CF2EFF700D6EB19 /* ListViewController.swift */; };
@@ -21,6 +22,7 @@
 		2EE1804C1CF326D000D6EB19 /* Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE1804B1CF326D000D6EB19 /* Convenience.swift */; };
 		2EE1804E1CF32A0400D6EB19 /* StudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE1804D1CF32A0400D6EB19 /* StudentLocation.swift */; };
 		2EE180531CF5B1CB00D6EB19 /* BlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180521CF5B1CB00D6EB19 /* BlackBox.swift */; };
+		2EE180551CFD81CE00D6EB19 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180541CFD81CE00D6EB19 /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E240A441D001919004BC3D0 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2EE1800F1CF2EFF700D6EB19 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EE180141CF2EFF700D6EB19 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +64,7 @@
 		2EE1804B1CF326D000D6EB19 /* Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Convenience.swift; sourceTree = "<group>"; };
 		2EE1804D1CF32A0400D6EB19 /* StudentLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocation.swift; sourceTree = "<group>"; };
 		2EE180521CF5B1CB00D6EB19 /* BlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlackBox.swift; sourceTree = "<group>"; };
+		2EE180541CFD81CE00D6EB19 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +148,7 @@
 		2EE180421CF30A5200D6EB19 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2EE180541CFD81CE00D6EB19 /* LoginViewController.swift */,
 				2EE180141CF2EFF700D6EB19 /* MapViewController.swift */,
 				2EE180161CF2EFF700D6EB19 /* ListViewController.swift */,
 				2EE180451CF31B1000D6EB19 /* LocationViewController.swift */,
@@ -159,6 +164,7 @@
 				2EE1804B1CF326D000D6EB19 /* Convenience.swift */,
 				2EE1804D1CF32A0400D6EB19 /* StudentLocation.swift */,
 				2EE180521CF5B1CB00D6EB19 /* BlackBox.swift */,
+				2E240A441D001919004BC3D0 /* Config.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -305,10 +311,12 @@
 				2EE180481CF31CF100D6EB19 /* Constants.swift in Sources */,
 				2EE180171CF2EFF700D6EB19 /* ListViewController.swift in Sources */,
 				2EE1804A1CF31E2F00D6EB19 /* Client.swift in Sources */,
+				2E240A451D001919004BC3D0 /* Config.swift in Sources */,
 				2EE1804C1CF326D000D6EB19 /* Convenience.swift in Sources */,
 				2EE180531CF5B1CB00D6EB19 /* BlackBox.swift in Sources */,
 				2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */,
 				2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */,
+				2EE180551CFD81CE00D6EB19 /* LoginViewController.swift in Sources */,
 				2EE180461CF31B1000D6EB19 /* LocationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -52,6 +52,14 @@ extension Client {
             static let ACL = "ACL"
         }
         
+        struct UdacityResponseKeys {
+            
+            static let Account_Registered = "registered"
+            static let Account_Key = "key"
+            static let Session_Id = "id"
+            static let Session_Expiration = "expiration"
+        }
+        
         struct UI {
             static let LoginColorTop = UIColor(red: 0.345, green: 0.839, blue: 0.988, alpha: 1.0).CGColor
             static let LoginColorBottom = UIColor(red: 0.023, green: 0.569, blue: 0.910, alpha: 1.0).CGColor

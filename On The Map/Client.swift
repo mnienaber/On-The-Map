@@ -14,14 +14,6 @@ class Client : NSObject {
     // shared session
     var session = NSURLSession.sharedSession()
     
-    // configuration object
-    //var config = TMDBConfig()
-    
-    // authentication state
-    var requestToken: String? = nil
-    var sessionID : String? = nil
-    var userID : Int? = nil
-    
     override init() {
         super.init()
     }
@@ -34,10 +26,10 @@ class Client : NSObject {
             }
         }
         
-        let parameters = [
-            Constants.ParameterValues.ParseAPIKey: Constants.ParameterValues.ParseAPIKey,
-            Constants.ParameterValues.RestAPIKey: Constants.ParameterValues.RestAPIKey
-        ]
+//        let parameters = [
+//            Constants.ParameterValues.ParseAPIKey: Constants.ParameterValues.ParseAPIKey,
+//            Constants.ParameterValues.RestAPIKey: Constants.ParameterValues.RestAPIKey
+//        ]
         
         //TODO: fix the variables for this server request:
         
@@ -102,7 +94,7 @@ class Client : NSObject {
         
         
         task.resume()
-        return results
+        return task
         
     }
     
@@ -121,21 +113,6 @@ class Client : NSObject {
     }
     
     // create a URL from parameters
-    private func URLFromParameters(parameters: [String:AnyObject], withPathExtension: String? = nil) -> NSURL {
-        
-        let components = NSURLComponents()
-        components.scheme = Constants.Scheme.ApiScheme
-        components.host = Constants.Scheme.ApiHost
-        components.path = Constants.Scheme.ApiPath + (withPathExtension ?? "")
-        components.queryItems = [NSURLQueryItem]()
-        
-        for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
-            components.queryItems!.append(queryItem)
-        }
-        
-        return components.URL!
-    }
     
     // MARK: Shared Instance
     
