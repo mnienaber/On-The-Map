@@ -111,6 +111,9 @@ class LoginViewController: UIViewController {
                 /* 6. Use the data! */
                 self.appDelegate.sessionID = sessionID
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
+                for items in parsedResult["account"] as! NSDictionary {
+                    print(items)
+                }
                 print(NSString(data: newData, encoding: NSUTF8StringEncoding))
             }
             task.resume()

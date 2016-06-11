@@ -15,16 +15,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     // configuration object
-    //var config = TMDBConfig()
+    var config = Config()
     
     // authentication state
+    var sharedSession = NSURLSession.sharedSession()
     var requestToken: String? = nil
     var sessionID : String? = nil
     var userID : Int? = nil
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        config.updateIfDaysSinceUpdateExceeds(7)
+//        config.updateIfDaysSinceUpdateExceeds(7)
         return true
     }
 
