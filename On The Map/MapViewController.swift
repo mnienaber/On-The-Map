@@ -22,6 +22,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // The "locations" array is an array of dictionary objects that are similar to the JSON
         // data that you can download from parse.
         let locations = StudentLocationData()
+        print("locations: " + "\(locations)")
         
         // We will create an MKPointAnnotation for each dictionary in "locations". The
         // point annotations will be stored in this array, and then provided to the map view.
@@ -63,6 +64,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         print("after mapview")
         
     }
+    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -171,12 +173,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 return
             }
             
-            print(NSString(data: data, encoding: NSUTF8StringEncoding))
+            //print(NSString(data: data, encoding: NSUTF8StringEncoding))
             self.studentLocation = StudentLocationObjects.SLOFromResults(results)
-            performUIUpdatesOnMain {
-                self.mapView.reloadInputViews()
             print(results)
-            }
         }
         task.resume()
         return results

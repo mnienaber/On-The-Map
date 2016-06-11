@@ -170,10 +170,13 @@
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ENk-hG-wGn">
                                 <rect key="frame" x="205" y="427" width="190" height="46"/>
+                                <color key="backgroundColor" name="alternateSelectedControlColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="190" id="HcT-XC-bgp"/>
                                 </constraints>
-                                <state key="normal" title="Login"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleShadowColor" red="0.9789690375328064" green="0.92464280128479004" blue="0.0051918639801442623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="loginPressed:" destination="EHy-Ch-xUr" eventType="touchUpInside" id="QL7-Cj-gaa"/>
                                 </connections>
@@ -185,7 +188,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="WVY-1K-8kg" firstAttribute="top" secondItem="ENk-hG-wGn" secondAttribute="bottom" constant="127" id="2d9-gX-gF1"/>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="top" secondItem="kr3-ke-BLV" secondAttribute="bottom" constant="48" id="3Dd-oV-3Wq"/>

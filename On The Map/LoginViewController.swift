@@ -41,6 +41,7 @@ class LoginViewController: UIViewController {
     @IBAction func loginPressed(sender: AnyObject) {
         
         //userDidTapView(self)
+        loginButton.enabled = false
         
         let parameters: [String: String!] = [
             Client.Constants.ParameterKeys.Username: self.usernameTextField.text,
