@@ -73,6 +73,11 @@ extension Client {
             static let KeyboardDidShow: Selector = "keyboardDidShow:"
             static let KeyboardDidHide: Selector = "keyboardDidHide:"
         }
+        
+        struct JSONResponseKeys {
+            
+            static let StudentLocationResults = "results"
+        }
     }
 }
 

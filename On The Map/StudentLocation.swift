@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-struct StudentLocationObjects {
+struct StudentLocation {
     
     let objectId: String
     let uniqueKey: String
@@ -40,14 +40,20 @@ struct StudentLocationObjects {
         //ACL = dictionary[Constants.ParseResponseKeys.ACL] as! Bool
     }
     
-    static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocationObjects] {
+    static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
         
-        var studentLocationObjects = [StudentLocationObjects]()
+        var studentLocationObjects = [StudentLocation]()
         
         // iterate through array of dictionaries, each studentLocationObject is a dictionary
         for result in results {
-            studentLocationObjects.append(StudentLocationObjects(dictionary: result))
+            studentLocationObjects.append(StudentLocation(dictionary: result))
         }
         return studentLocationObjects
     }    
 }
+
+//extension : Equatable {}
+//
+//func ==(lhs: StudentLocation, rhs: StudentLocation) -> Bool {
+//    return lhs.id == rhs.id
+//}

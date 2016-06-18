@@ -11,7 +11,7 @@ import UIKit
 class ListViewController: UITableViewController {
     
     var appDelegate: AppDelegate!
-    var studentLocation: [StudentLocationObjects] = [StudentLocationObjects]()
+    var studentLocation: [StudentLocation] = [StudentLocation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,7 +77,7 @@ class ListViewController: UITableViewController {
             }
             
             //print(NSString(data: data, encoding: NSUTF8StringEncoding))
-            self.studentLocation = StudentLocationObjects.SLOFromResults(results)
+            self.studentLocation = StudentLocation.SLOFromResults(results)
             performUIUpdatesOnMain {
                 self.tableView.reloadData()
             }

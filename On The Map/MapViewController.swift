@@ -11,7 +11,7 @@ import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate {
     
-    var studentLocation: [StudentLocationObjects] = [StudentLocationObjects]()
+    var studentLocation: [StudentLocation] = [StudentLocation]()
 
     @IBOutlet weak var mapView: MKMapView!
     
@@ -21,7 +21,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         // The "locations" array is an array of dictionary objects that are similar to the JSON
         // data that you can download from parse.
-        let locations = StudentLocationData()
+        let locations = getMapLocations()
         print("locations: " + "\(locations)")
         
         // We will create an MKPointAnnotation for each dictionary in "locations". The
@@ -60,7 +60,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         print(annotations)
         self.mapView.delegate = self
         // When the array is complete, we add the annotations to the map.
-        self.mapView.addAnnotations(annotations)
+        performUIUpdatesOnMain() {
+            self.mapView.addAnnotations(annotations)
+        }
+        
         print("after mapview")
         
     }
@@ -119,67 +122,78 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // Some sample data. This is a dictionary that is more or less similar to the
     // JSON data that you will download from Parse.
     
-    func StudentLocationData() -> [[String:AnyObject]] {
+    func getMapLocations() {
         
-        var results:[[String:AnyObject]] = [] {
-            didSet {
-                NSNotificationCenter.defaultCenter().postNotificationName("results", object: nil)
+        Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
+            if let studentLocation = studentLocation {
+                self.studentLocation = studentLocation
+                performUIUpdatesOnMain {
+                    self.mapView.reloadInputViews()
+                }
             }
-        }
-        
-        //TODO: fix the variables for this server request:
-        
-        let request = NSMutableURLRequest(URL: NSURL(string: "\(Client.Constants.Scheme.ApiScheme)" + "\(Client.Constants.Scheme.ApiHost)" + "\(Client.Constants.Scheme.ApiPath)" + "\(Client.Constants.Scheme.LimitAndOrder)")!)
-        request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            guard (error == nil) else {
-                print("There was an error with your request: \(error)")
-                return
-            }
-            
-            /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                print("Your request returned a status code other than 2xx!")
-                return
-            }
-            
-            /* GUARD: Was there any data returned? */
-            guard let data = data else {
-                print("No data was returned by the request!")
-                return
-            }
-            
-            /* 5. Parse the data */
-            let parsedResult: AnyObject!
-            do {
-                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-            } catch {
-                print("Could not parse the data as JSON: '\(data)'")
-                return
-            }
-            
-            
-            /* GUARD: Did Parse return an error? */
-            if let _ = parsedResult[Client.Constants.ParseResponseKeys.ObjectId] as? String {
-                print("Parse returned an error. See the '\(Client.Constants.ParseResponseKeys.ObjectId)")
-                return
-            }
-            
-            /* GUARD: Is the "FirstName" key in parsedResult? */
-            guard let results = parsedResult["results"] as? [[String:AnyObject]] else {
-                print("Cannot find your key, the status code is \(statusCode) and the full response is \(parsedResult)")
-                return
-            }
-            
-            //print(NSString(data: data, encoding: NSUTF8StringEncoding))
-            self.studentLocation = StudentLocationObjects.SLOFromResults(results)
-            print(results)
-        }
-        task.resume()
-        return results
-        
+    }
+    
+//    func StudentLocationData() -> [[String:AnyObject]] {
+//        
+//        var results:[[String:AnyObject]] = [] {
+//            didSet {
+//                NSNotificationCenter.defaultCenter().postNotificationName("results", object: nil)
+//            }
+//        }
+//        
+//        //TODO: fix the variables for this server request:
+//        
+//        let request = NSMutableURLRequest(URL: NSURL(string: "\(Client.Constants.Scheme.ApiScheme)" + "\(Client.Constants.Scheme.ApiHost)" + "\(Client.Constants.Scheme.ApiPath)" + "\(Client.Constants.Scheme.LimitAndOrder)")!)
+//        request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
+//        request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+//        let session = NSURLSession.sharedSession()
+//        let task = session.dataTaskWithRequest(request) { data, response, error in
+//            guard (error == nil) else {
+//                print("There was an error with your request: \(error)")
+//                return
+//            }
+//            
+//            /* GUARD: Did we get a successful 2XX response? */
+//            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+//                print("Your request returned a status code other than 2xx!")
+//                return
+//            }
+//            
+//            /* GUARD: Was there any data returned? */
+//            guard let data = data else {
+//                print("No data was returned by the request!")
+//                return
+//            }
+//            
+//            /* 5. Parse the data */
+//            let parsedResult: AnyObject!
+//            do {
+//                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+//            } catch {
+//                print("Could not parse the data as JSON: '\(data)'")
+//                return
+//            }
+//            
+//            
+//            /* GUARD: Did Parse return an error? */
+//            if let _ = parsedResult[Client.Constants.ParseResponseKeys.ObjectId] as? String {
+//                print("Parse returned an error. See the '\(Client.Constants.ParseResponseKeys.ObjectId)")
+//                return
+//            }
+//            
+//            /* GUARD: Is the "FirstName" key in parsedResult? */
+//            guard let results = parsedResult["results"] as? [[String:AnyObject]] else {
+//                print("Cannot find your key, the status code is \(statusCode) and the full response is \(parsedResult)")
+//                return
+//            }
+//            
+//            //print(NSString(data: data, encoding: NSUTF8StringEncoding))
+//            self.studentLocation = StudentLocation.SLOFromResults(results)
+//            print(results)
+//        }
+//        task.resume()
+//        return results
+//        
     }
     
 }
