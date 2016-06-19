@@ -51,9 +51,3 @@ struct StudentLocation {
         return studentLocationObjects
     }    
 }
-
-//extension : Equatable {}
-//
-//func ==(lhs: StudentLocation, rhs: StudentLocation) -> Bool {
-//    return lhs.id == rhs.id
-//}
