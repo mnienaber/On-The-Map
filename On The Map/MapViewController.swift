@@ -20,54 +20,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.mapView.delegate = self
         getMapLocations()
     }
-        // Do any additional setup after loading the view, typically from a nib.
-        // The "locations" array is an array of dictionary objects that are similar to the JSON
-        // data that you can download from parse.
-        
-        // We will create an MKPointAnnotation for each dictionary in "locations". The
-        // point annotations will be stored in this array, and then provided to the map view.
-//        var annotations = [MKPointAnnotation]()
-//        
-//        // The "locations" array is loaded with the sample data below. We are using the dictionaries
-//        // to create map annotations. This would be more stylish if the dictionaries were being
-//        // used to create custom structs. Perhaps StudentLocation structs.
-//        
-//        for dictionary in locations {
-//            
-//            // Notice that the float values are being used to create CLLocationDegree values.
-//            // This is a version of the Double type.
-//            let lat = CLLocationDegrees(dictionary["latitude"] as! Double)
-//            let long = CLLocationDegrees(dictionary["longitude"] as! Double)
-//            
-//            // The lat and long are used to create a CLLocationCoordinates2D instance.
-//            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-//            
-//            let first = dictionary["firstName"] as! String
-//            let last = dictionary["lastName"] as! String
-//            let mediaURL = dictionary["mediaURL"] as! String
-//            print("after in for dic")
-//            
-//            // Here we create the annotation and set its coordiate, title, and subtitle properties
-//            let annotation = MKPointAnnotation()
-//            annotation.coordinate = coordinate
-//            annotation.title = "\(first) \(last)"
-//            annotation.subtitle = mediaURL
-//            
-//            // Finally we place the annotation in an array of annotations.
-//            annotations.append(annotation)
-//        
-//        }
-//        print(annotations)
-//        
-//        // When the array is complete, we add the annotations to the map.
-//        performUIUpdatesOnMain() {
-//            self.mapView.addAnnotations(annotations)
-//        }
-//
-//        print("after mapview")
-//        
-//    }
-//    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -126,7 +78,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
             if let studentLocation = studentLocation {
-                var students = [self.studentLocation = studentLocation]
+                [self.studentLocation = studentLocation]
                 var annotations = [MKPointAnnotation]()
                 performUIUpdatesOnMain {
                     for student in self.studentLocation {
@@ -141,14 +93,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         let first = student.firstName
                         let last = student.lastName
                         let mediaURL = student.mediaURL
-                        print("after in for dic")
                         
                         // Here we create the annotation and set its coordiate, title, and subtitle properties
                         let annotation = MKPointAnnotation()
                         annotation.coordinate = coordinate
                         annotation.title = "\(first) \(last)"
                         annotation.subtitle = mediaURL
-                        
+                        print(annotation.title)
                         // Finally we place the annotation in an array of annotations.
                         annotations.append(annotation)
                     }
