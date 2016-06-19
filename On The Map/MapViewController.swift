@@ -128,9 +128,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let studentLocation = studentLocation {
                 self.studentLocation = studentLocation
                 performUIUpdatesOnMain {
-                    self.mapView.reloadInputViews()
+                    self.mapView
                 }
             }
+            
     }
     
 //    func StudentLocationData() -> [[String:AnyObject]] {

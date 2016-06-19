@@ -23,7 +23,7 @@ class Client : NSObject {
         
         /* 2/3. Build the URL */
         
-        let urlString = urlString + Client.escapedParameters(parameters)
+        //let urlString = urlString + Client.escapedParameters(parameters)
         let url = NSURL(string: urlString)
         /* and configure the request */
         
