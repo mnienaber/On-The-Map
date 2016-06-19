@@ -28,62 +28,6 @@ class ListViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-//
-//        
-////     //TODO: fix the variables for this server request:
-//        
-//        let request = NSMutableURLRequest(URL: NSURL(string: "\(Client.Constants.Scheme.ApiScheme)" + "\(Client.Constants.Scheme.ApiHost)" + "\(Client.Constants.Scheme.ApiPath)" + "\(Client.Constants.Scheme.LimitAndOrder)")!)
-//        request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
-//        request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-//        let session = NSURLSession.sharedSession()
-//        let task = session.dataTaskWithRequest(request) { data, response, error in
-//            guard (error == nil) else {
-//                print("There was an error with your request: \(error)")
-//                return
-//            }
-//            
-//            /* GUARD: Did we get a successful 2XX response? */
-//            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-//                print("Your request returned a status code other than 2xx!")
-//                return
-//            }
-//            
-//            /* GUARD: Was there any data returned? */
-//            guard let data = data else {
-//                print("No data was returned by the request!")
-//                return
-//            }
-//            
-//            /* 5. Parse the data */
-//            let parsedResult: AnyObject!
-//            do {
-//                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-//            } catch {
-//                print("Could not parse the data as JSON: '\(data)'")
-//                return
-//            }
-//            
-//            
-//            /* GUARD: Did Parse return an error? */
-//            if let _ = parsedResult[Client.Constants.ParseResponseKeys.ObjectId] as? String {
-//                print("Parse returned an error. See the '\(Client.Constants.ParseResponseKeys.ObjectId)")
-//                return
-//            }
-//            
-//            /* GUARD: Is the "FirstName" key in parsedResult? */
-//            guard let results = parsedResult["results"] as? [[String:AnyObject]] else {
-//                print("Cannot find your key, the status code is \(statusCode) and the full response is \(parsedResult)")
-//                return
-//            }
-//            
-//            //print(NSString(data: data, encoding: NSUTF8StringEncoding))
-//            self.studentLocation = StudentLocation.SLOFromResults(results)
-//            performUIUpdatesOnMain {
-//                self.tableView.reloadData()
-//            }
-//        }
-//        task.resume()
     }
     
     func getStudentList() {

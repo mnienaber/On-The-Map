@@ -20,7 +20,7 @@ extension Client {
             Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
         ]
-        let url = Client.Constants.Scheme.ApiScheme + Client.Constants.Scheme.ApiHost + Client.Constants.Scheme.ApiPath + Client.Constants.Scheme.LimitAndOrder
+        let url = Client.Constants.Scheme.ApiScheme + Client.Constants.Scheme.ApiHost + Client.Constants.Scheme.ApiPath + Client.Constants.Scheme.Limit
         print(url)
         
         taskForGETMethod(url, parameters: parameters) { results, error in

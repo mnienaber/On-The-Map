@@ -20,7 +20,7 @@ extension Client {
             static let Limit = "?limit=100"
             static let Skip = "?limit=200&skip=400"
             static let Order = "?order=-updatedAt"
-            static let LimitAndOrder = "?limit=200&order=createdAt"
+            static let LimitAndOrder = "?limit=100&order=createdAt"
         }
         
         struct ParameterKeys {
