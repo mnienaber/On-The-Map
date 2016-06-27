@@ -87,7 +87,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 return
             }
             
-            
             [self.myStudentLocation = self.myStudentLocation]
             performUIUpdatesOnMain {
                 
@@ -125,14 +124,14 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         request.HTTPMethod = "POST"
         request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type"
-        request.HTTPBody = "{\"uniqueKey\": "Client.Constants.ParseResponseKeys.UniqueKey", \"firstName\":" Client.Constants.ParseResponseKeys.FirstName", \"lastName\": "Client.Constants.ParseResponseKeys.LastName",\"mapString\": "Client.Constants.ParseResponseKeys.MapString", \"mediaURL\": "Client.Constants.ParseResponseKeys.MediaURL",\"latitude\": "Client.Constants.ParseResponseKeys.Latitude", \"longitude\": "Client.Constants.ParseResponseKeys.UniqueKey"}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = "{\"uniqueKey\": \(Client.Constants.ParseResponseKeys.UniqueKey), \"firstName\":\(Client.Constants.ParseResponseKeys.FirstName), \"lastName\":\(Client.Constants.ParseResponseKeys.LastName),\"mapString\": \(Client.Constants.ParseResponseKeys.MapString), \"mediaURL\": \(Client.Constants.ParseResponseKeys.MediaURL),\"latitude\": \(Client.Constants.ParseResponseKeys.Latitude), \"longitude\": \(Client.Constants.ParseResponseKeys.UniqueKey);}".dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error…
                 return
             }
-            println(NSString(data: data, encoding: NSUTF8StringEncoding))
+            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
         
