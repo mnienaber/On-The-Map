@@ -14,6 +14,7 @@ extension Client {
         
         struct Scheme {
             
+            static let Method = "https://api.parse.com/1/classes/StudentLocation"
             static let ApiScheme = "https://"
             static let ApiHost = "api.parse.com"
             static let ApiPath = "/1/classes/StudentLocation"

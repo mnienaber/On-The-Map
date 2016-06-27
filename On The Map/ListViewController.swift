@@ -38,7 +38,6 @@ class ListViewController: UITableViewController {
                 performUIUpdatesOnMain {
                     for student in self.studentLocation {
                         
-                        //let first = students["firstName"] as! String
                         let first = student.firstName
                         let last = student.lastName
                         let mediaURL = student.mediaURL

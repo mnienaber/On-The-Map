@@ -20,13 +20,12 @@ extension Client {
             Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
         ]
-        let url = Client.Constants.Scheme.ApiScheme + Client.Constants.Scheme.ApiHost + Client.Constants.Scheme.ApiPath + Client.Constants.Scheme.Limit
+        let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.Limit
         print(url)
         
         taskForGETMethod(url, parameters: parameters) { results, error in
             if let error = error {
                 print(error)
-                //completionHandlerForGET(results: nil, errorString: "Getting all student locations failed")
             } else {
                 if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
                     let locations = StudentLocation.SLOFromResults(results)
@@ -38,6 +37,8 @@ extension Client {
         }
         
     }
+    
+    //func postToMap(pin: StudentLocation, completionHandler)
     
     
     
