@@ -15,6 +15,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     var myStudentLocation: [StudentLocation] = [StudentLocation]()
     let mapView = MapViewController()
     var annotations = [MKPointAnnotation]()
+
     
     @IBOutlet weak var textLocation: UITextField!
     @IBOutlet weak var findOnTheMap: UIButton!
@@ -22,6 +23,13 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     @IBOutlet weak var submitOutlet: UIButton!
     @IBOutlet weak var myMediaUrl: UITextField!
     @IBOutlet weak var questionText: UITextView!
+    
+    var appDelegate: AppDelegate!
+    var session: NSURLSession!
+    
+    var tapRecognizer: UITapGestureRecognizer? = nil
+    var keyboardAdjusted = false
+    var lastKeyboardOffset : CGFloat = 0.0
     
     let regionRadius: CLLocationDistance = 2000
     func centerMapOnLocation(location: CLLocation) {
@@ -45,26 +53,36 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     override func viewWillAppear(animated: Bool) {
         
+        
+        self.subscribeToKeyboardNotifications()
+        self.unsubscribeToKeyboardNotifications()
     }
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        let reuseId = "pin"
-        
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = true
-            pinView!.pinColor = .Red
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
-        }
-        else {
-            pinView!.annotation = annotation
-        }
-        
-        return pinView
+    override func viewWillDisappear(animated: Bool) {
+        self.removeKeyboardDismissRecognizer()
+        self.unsubscribeToKeyboardNotifications()
     }
+    
+
+    
+//    func mapVivarmapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+//        
+//        let reuseId = "pin"
+//        
+//        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+//        
+//        if pinView == nil {
+//            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+//            pinView!.canShowCallout = true
+//            pinView!.pinColor = .Red
+//            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+//        }
+//        else {
+//            pinView!.annotation = annotation
+//        }
+//        
+//        return pinView
+//    }
     
     @IBAction func findOnTheMap(sender: AnyObject) {
         
@@ -75,6 +93,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         findOnTheMap.hidden = true
         submitOutlet.hidden = false
         myMediaUrl.hidden = false
+        dismissAnyVisibleKeyboards()
         
         let request = MKLocalSearchRequest()
         request.naturalLanguageQuery = self.textLocation.text!
@@ -93,13 +112,14 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 for item in response.mapItems {
                     
                     let annotation = MKPointAnnotation()
-                    let lat = item.placemark.coordinate.latitude
-                    let long = item.placemark.coordinate.longitude
+                    var lat = item.placemark.coordinate.latitude
+                    var long = item.placemark.coordinate.longitude
                     let title = item.placemark.title
                     let initialLocation = CLLocation(latitude: lat, longitude: long)
                     self.centerMapOnLocation(initialLocation)
                     
                     let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                    
                     
                     annotation.coordinate = coordinate
                     annotation.title = title
@@ -125,7 +145,8 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = "{\"uniqueKey\": \(Client.Constants.ParseResponseKeys.UniqueKey), \"firstName\":\(Client.Constants.ParseResponseKeys.FirstName), \"lastName\":\(Client.Constants.ParseResponseKeys.LastName),\"mapString\": \(Client.Constants.ParseResponseKeys.MapString), \"mediaURL\": \(Client.Constants.ParseResponseKeys.MediaURL),\"latitude\": \(Client.Constants.ParseResponseKeys.Latitude), \"longitude\": \(Client.Constants.ParseResponseKeys.UniqueKey);}".dataUsingEncoding(NSUTF8StringEncoding)
+        request.HTTPBody = "{\"uniqueKey\": \"\(Client.Constants.ParseResponseKeys.UniqueKey)\", \"firstName\":\"\(Client.Constants.ParseResponseKeys.FirstName)\", \"lastName\":\"\(Client.Constants.ParseResponseKeys.LastName)\",\"mapString\": \"\(Client.Constants.ParseResponseKeys.MapString)\", \"mediaURL\": \"\(Client.Constants.ParseResponseKeys.MediaURL)\",\"latitude\": \"\(Client.Constants.ParseResponseKeys.Latitude)\", \"longitude\": \"\(Client.Constants.ParseResponseKeys.UniqueKey)\";}".dataUsingEncoding(NSUTF8StringEncoding)
+        print(request.HTTPBody)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil { // Handle error…
@@ -139,3 +160,57 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     }
 
 }
+
+extension LocationViewController {
+    
+    func addKeyboardDismissRecognizer() {
+        self.view.addGestureRecognizer(tapRecognizer!)
+    }
+    
+    func removeKeyboardDismissRecognizer() {
+        self.view.removeGestureRecognizer(tapRecognizer!)
+    }
+    
+    func handleSingleTap(recognizer: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+    }
+    
+    func subscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LocationViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LocationViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func unsubscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        
+        if keyboardAdjusted == false {
+            lastKeyboardOffset = getKeyboardHeight(notification) / 2
+            self.view.superview?.frame.origin.y -= lastKeyboardOffset
+            keyboardAdjusted = true
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        
+        if keyboardAdjusted == true {
+            self.view.superview?.frame.origin.y += lastKeyboardOffset
+            keyboardAdjusted = false
+        }
+    }
+    
+    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        return keyboardSize.CGRectValue().height
+    }
+    
+    func dismissAnyVisibleKeyboards() {
+        if textLocation.isFirstResponder() || myMediaUrl.isFirstResponder() {
+            self.view.endEditing(true)
+        }
+    }
+}
+

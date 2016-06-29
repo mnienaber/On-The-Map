@@ -91,7 +91,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dZf-47-0fy">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dZf-47-0fy">
                                 <rect key="frame" x="0.0" y="80" width="600" height="89"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -101,7 +101,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E51-gC-abb">
-                                <rect key="frame" x="224" y="433" width="153" height="45"/>
+                                <rect key="frame" x="224" y="205" width="153" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="153" id="Go8-8J-u37"/>
                                     <constraint firstAttribute="height" constant="45" id="vfJ-hW-kYI"/>
@@ -111,49 +111,50 @@
                                     <action selector="findOnTheMap:" destination="0nf-LG-OEF" eventType="touchUpInside" id="Ukp-sY-uTZ"/>
                                 </connections>
                             </button>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
                                 <rect key="frame" x="0.0" y="142" width="600" height="458"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="458" id="c9q-g3-38x"/>
                                 </constraints>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcY-Eh-Jkf">
-                                <rect key="frame" x="224" y="442" width="153" height="28"/>
-                                <state key="normal" title="SUBMIT"/>
-                                <connections>
-                                    <action selector="submitButton:" destination="0nf-LG-OEF" eventType="touchUpInside" id="dIN-jd-JmR"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Location here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="H8a-ue-Mmk">
+                            <textField opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Location here..." textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="H8a-ue-Mmk">
                                 <rect key="frame" x="138" y="160" width="324" height="30"/>
                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="324" id="WiN-am-f2U"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes" spellCheckingType="yes" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Paste URL Here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="naa-uf-Zfp">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Paste URL Here..." textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="naa-uf-Zfp">
                                 <rect key="frame" x="138" y="160" width="324" height="30"/>
                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcY-Eh-Jkf">
+                                <rect key="frame" x="224" y="214" width="153" height="28"/>
+                                <state key="normal" title="SUBMIT"/>
+                                <connections>
+                                    <action selector="submitButton:" destination="0nf-LG-OEF" eventType="touchUpInside" id="dIN-jd-JmR"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="dZf-47-0fy" secondAttribute="trailing" constant="-20" id="9jx-JS-OKn"/>
                             <constraint firstItem="naa-uf-Zfp" firstAttribute="baseline" secondItem="H8a-ue-Mmk" secondAttribute="baseline" id="AQ7-mA-8Uo"/>
                             <constraint firstItem="tcY-Eh-Jkf" firstAttribute="trailing" secondItem="E51-gC-abb" secondAttribute="trailing" id="ESR-4g-A8k"/>
+                            <constraint firstItem="kNb-P4-YwK" firstAttribute="leading" secondItem="dZf-47-0fy" secondAttribute="leading" id="IRV-lH-VWn"/>
                             <constraint firstItem="dZf-47-0fy" firstAttribute="leading" secondItem="n61-BZ-cJm" secondAttribute="leadingMargin" constant="-20" id="IeB-WT-iuP"/>
                             <constraint firstItem="H8a-ue-Mmk" firstAttribute="top" secondItem="Edn-hg-vds" secondAttribute="bottom" constant="140" id="LYk-zU-uDi"/>
-                            <constraint firstItem="Vzp-Ci-NdR" firstAttribute="top" secondItem="E51-gC-abb" secondAttribute="bottom" constant="122" id="Qpc-lU-2le"/>
+                            <constraint firstItem="Vzp-Ci-NdR" firstAttribute="top" secondItem="E51-gC-abb" secondAttribute="bottom" constant="350" id="Qpc-lU-2le"/>
                             <constraint firstItem="kNb-P4-YwK" firstAttribute="bottom" secondItem="Vzp-Ci-NdR" secondAttribute="top" id="T2v-kZ-8O8"/>
                             <constraint firstItem="tcY-Eh-Jkf" firstAttribute="leading" secondItem="E51-gC-abb" secondAttribute="leading" id="XQD-2q-bHk"/>
                             <constraint firstItem="H8a-ue-Mmk" firstAttribute="centerX" secondItem="kNb-P4-YwK" secondAttribute="centerX" id="Z1d-WL-TH7"/>
                             <constraint firstItem="H8a-ue-Mmk" firstAttribute="centerX" secondItem="dZf-47-0fy" secondAttribute="centerX" id="f7t-Jz-aqT"/>
-                            <constraint firstItem="tcY-Eh-Jkf" firstAttribute="centerY" secondItem="E51-gC-abb" secondAttribute="centerY" id="kCF-eH-Ub4"/>
-                            <constraint firstItem="dZf-47-0fy" firstAttribute="top" secondItem="n61-BZ-cJm" secondAttribute="topMargin" constant="81" id="kGb-i9-a31"/>
+                            <constraint firstItem="tcY-Eh-Jkf" firstAttribute="centerY" secondItem="E51-gC-abb" secondAttribute="centerY" constant="0.5" id="kCF-eH-Ub4"/>
+                            <constraint firstItem="dZf-47-0fy" firstAttribute="top" secondItem="n61-BZ-cJm" secondAttribute="topMargin" constant="80" id="kGb-i9-a31"/>
                             <constraint firstItem="H8a-ue-Mmk" firstAttribute="centerX" secondItem="tcY-Eh-Jkf" secondAttribute="centerX" id="mXH-JR-4g9"/>
                             <constraint firstItem="naa-uf-Zfp" firstAttribute="leading" secondItem="H8a-ue-Mmk" secondAttribute="leading" id="vn8-JD-gAJ"/>
                             <constraint firstItem="naa-uf-Zfp" firstAttribute="centerX" secondItem="kNb-P4-YwK" secondAttribute="centerX" id="yz9-oM-rDU"/>
