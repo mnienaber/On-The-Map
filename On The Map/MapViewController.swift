@@ -12,17 +12,22 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate {
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
+    
+    
 
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.mapView.delegate = self
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(buttonMethod))
+        
         getMapLocations()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
 
     }
     
@@ -53,6 +58,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     // This delegate method is implemented to respond to taps. It opens the system browser
     // to the URL specified in the annotationViews subtitle property.
+    
+    func buttonMethod() {
+        
+        getMapLocations()
+        print("refresh")
+    }
+    
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.sharedApplication()
@@ -98,7 +110,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         annotation.coordinate = coordinate
                         annotation.title = "\(first) \(last)"
                         annotation.subtitle = mediaURL
-                        print(annotation.coordinate)
+                        print(annotation.title)
                         // Finally we place the annotation in an array of annotations.
                         annotations.append(annotation)
                     }

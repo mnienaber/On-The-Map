@@ -10,6 +10,10 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
+    @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var debugText: UILabel!
     
     var appDelegate: AppDelegate!
     var keyboardOnScreen = false
@@ -18,11 +22,6 @@ class LoginViewController: UIViewController {
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
     
-    @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var loginButton: UIButton!
-    @IBOutlet weak var debugText: UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,13 +29,9 @@ class LoginViewController: UIViewController {
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         session = NSURLSession.sharedSession()
+        self.configureUI()
         
-        //self.configureUI()
-        
-        subscribeToNotification(UIKeyboardWillShowNotification, selector: Client.Constants.Selectors.KeyboardWillShow)
-        subscribeToNotification(UIKeyboardWillHideNotification, selector: Client.Constants.Selectors.KeyboardWillHide)
-        subscribeToNotification(UIKeyboardDidShowNotification, selector: Client.Constants.Selectors.KeyboardDidShow)
-        subscribeToNotification(UIKeyboardDidHideNotification, selector: Client.Constants.Selectors.KeyboardDidHide)
+
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -44,16 +39,17 @@ class LoginViewController: UIViewController {
         
         self.addKeyboardDismissRecognizer()
         self.subscribeToKeyboardNotifications()
+
     }
     
     override func viewWillDisappear(animated: Bool) {
+        
         self.removeKeyboardDismissRecognizer()
         self.unsubscribeToKeyboardNotifications()
     }
     
     @IBAction func loginPressed(sender: AnyObject) {
         
-        //userDidTapView(self)
         loginButton.enabled = false
         
         let parameters: [String: String!] = [
@@ -63,15 +59,16 @@ class LoginViewController: UIViewController {
         if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             debugText.text = "Username or Password Empty."
         } else {
-            setUIEnabled(false)
+            setUIEnabled(true)
             
-            var param = "{\"udacity\": {\"username\":\"\(self.usernameTextField.text!)\", \"password\":\"\(self.passwordTextField.text)\"}}"
+            var param = "{\"udacity\": {\"username\":\"\(self.usernameTextField.text!)\", \"password\":\"\(self.passwordTextField.text!)\"}}"
             let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
             request.HTTPMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.HTTPBody = param.dataUsingEncoding(NSUTF8StringEncoding)
             let session = NSURLSession.sharedSession()
+            print(param)
             let task = session.dataTaskWithRequest(request) { data, response, error in
                 // if an error occurs, print it and re-enable the UI
                 
@@ -101,43 +98,45 @@ class LoginViewController: UIViewController {
                     return
                 }
                 
-                /* 5. Parse the data */
-                let parsedResult: AnyObject!
-                do {
-                    parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-                } catch {
-                    displayError("Could not parse the data as JSON: '\(data)'")
-                    return
-                }
+//                /* 5. Parse the data */
+//                let parsedResult: AnyObject!
+//                do {
+//                    parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+//                } catch {
+//                    displayError("Could not parse the data as JSON: '\(data)'")
+//                    return
+//                }
+//                
+//                /* GUARD: Did TheMovieDB return an error? */
+//                if let _ = parsedResult[Client.Constants.UdacityResponseKeys.Session_Id] as? Int {
+//                    displayError("Udacity returned an error. See the statuscode in \(parsedResult)")
+//                    return
+//                }
+//                
+//                /* GUARD: Is the "sessionID" key in parsedResult? */
+//                guard let sessionID = parsedResult[Client.Constants.UdacityResponseKeys.Session_Id] as? String else {
+//                    displayError("Cannot find session ID)' in \(parsedResult)")
+//                    return
+//                }
                 
-                /* GUARD: Did TheMovieDB return an error? */
-                if let _ = parsedResult[Client.Constants.UdacityResponseKeys.Session_Id] as? Int {
-                    displayError("TheMovieDB returned an error. See the statuscode in \(parsedResult)")
-                    return
-                }
-                
-                /* GUARD: Is the "sessionID" key in parsedResult? */
-                guard let sessionID = parsedResult[Client.Constants.UdacityResponseKeys.Session_Id] as? String else {
-                    displayError("Cannot find session ID)' in \(parsedResult)")
-                    return
-                }
-                
-                /* 6. Use the data! */
-                self.appDelegate.sessionID = sessionID
-                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
-                for items in parsedResult["account"] as! NSDictionary {
-                    print(items)
-                }
-                print(NSString(data: newData, encoding: NSUTF8StringEncoding))
+//                /* 6. Use the data! */
+//                self.appDelegate.sessionID = sessionID
+//                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
+//                for items in parsedResult["session"] as! NSDictionary {
+//                    print(items)
+//                }
+                print(NSString(data: data, encoding: NSUTF8StringEncoding))
             }
             task.resume()
+            
         }
+        completeLogin()
     }
     
     func completeLogin() {
         dispatch_async(dispatch_get_main_queue(), {
             self.debugText.text = ""
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController") 
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("NavigationController")
             self.presentViewController(controller, animated: true, completion: nil)
         })
     }
@@ -164,7 +163,13 @@ extension LoginViewController {
         }
     }
     
-//    private func configureUI() {
+    func configureUI() {
+        
+        tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")
+        tapRecognizer?.numberOfTapsRequired = 1
+    }
+    
+
 //        
 //        // configure background gradient
 //        let backgroundGradient = CAGradientLayer()

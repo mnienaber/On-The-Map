@@ -15,7 +15,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     var myStudentLocation: [StudentLocation] = [StudentLocation]()
     let mapView = MapViewController()
     var annotations = [MKPointAnnotation]()
-
     
     @IBOutlet weak var textLocation: UITextField!
     @IBOutlet weak var findOnTheMap: UIButton!
@@ -53,12 +52,12 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     override func viewWillAppear(animated: Bool) {
         
-        
         self.subscribeToKeyboardNotifications()
         self.unsubscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(animated: Bool) {
+        
         self.removeKeyboardDismissRecognizer()
         self.unsubscribeToKeyboardNotifications()
     }
@@ -120,13 +119,11 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                     
                     let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
                     
-                    
                     annotation.coordinate = coordinate
                     annotation.title = title
                     print(annotation.title)
                     print(annotation.coordinate)
-                    self.annotations.append(annotation)
-                    
+                    self.annotations.append(annotation)                    
                 }
                 self.myMiniMapView.addAnnotations(self.annotations)
             }
@@ -135,31 +132,61 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
     }
     
+    func getPostToMap() {
+        
+        Client.sharedInstance().postToMap { (statusCode, error) in
+            if let error = error {
+                print(error)
+                
+            } else {
+                
+                performUIUpdatesOnMain {
+                    
+                    print("success")
+                    
+                }
+                
+            }
+        }
+        
+    }
+    
     
     @IBAction func submitButton(sender: AnyObject) {
-        
-        //TODO write function to post pin
-        
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
-        request.HTTPMethod = "POST"
-        request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = "{\"uniqueKey\": \"\(Client.Constants.ParseResponseKeys.UniqueKey)\", \"firstName\":\"\(Client.Constants.ParseResponseKeys.FirstName)\", \"lastName\":\"\(Client.Constants.ParseResponseKeys.LastName)\",\"mapString\": \"\(Client.Constants.ParseResponseKeys.MapString)\", \"mediaURL\": \"\(Client.Constants.ParseResponseKeys.MediaURL)\",\"latitude\": \"\(Client.Constants.ParseResponseKeys.Latitude)\", \"longitude\": \"\(Client.Constants.ParseResponseKeys.UniqueKey)\";}".dataUsingEncoding(NSUTF8StringEncoding)
-        print(request.HTTPBody)
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error…
-                return
-            }
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+            
+            self.getPostToMap()
+            
         }
-        task.resume()
+        
+        
+        
+        
+//        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
+//        request.HTTPMethod = "POST"
+//        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
+//        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.HTTPBody = "{\"uniqueKey\": \"1234\", \"firstName\": \"Test\", \"lastName\": \"McTestFace\",\"mapString\": \"Sydney, NSW\", \"mediaURL\": \"https://udacity.com\",\"latitude\": 37.386052, \"longitude\": -122.083851}".dataUsingEncoding(NSUTF8StringEncoding)
+//        let session = NSURLSession.sharedSession()
+//        let task = session.dataTaskWithRequest(request) { data, response, error in
+//            if error != nil { // Handle error…
+//                return
+//            }
+//            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+//        }
+//        task.resume()
+//        }
+//        
+//        
+//    }
         
         
     }
+    
 
-}
+
+
+
 
 extension LocationViewController {
     
@@ -206,11 +233,10 @@ extension LocationViewController {
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
         return keyboardSize.CGRectValue().height
     }
-    
+
     func dismissAnyVisibleKeyboards() {
         if textLocation.isFirstResponder() || myMediaUrl.isFirstResponder() {
             self.view.endEditing(true)
         }
     }
 }
-

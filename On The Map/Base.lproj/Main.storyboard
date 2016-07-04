@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="i1E-fF-jWs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="EHy-Ch-xUr">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -211,8 +211,11 @@
                                     <action selector="loginPressed:" destination="EHy-Ch-xUr" eventType="touchUpInside" id="QL7-Cj-gaa"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Debug Text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JBs-W6-Gi3">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Debug Text" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JBs-W6-Gi3">
                                 <rect key="frame" x="168" y="230" width="265" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="265" id="LNa-wt-E3q"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -222,10 +225,12 @@
                         <constraints>
                             <constraint firstItem="WVY-1K-8kg" firstAttribute="top" secondItem="ENk-hG-wGn" secondAttribute="bottom" constant="127" id="2d9-gX-gF1"/>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="top" secondItem="kr3-ke-BLV" secondAttribute="bottom" constant="48" id="3Dd-oV-3Wq"/>
+                            <constraint firstItem="kr3-ke-BLV" firstAttribute="top" secondItem="JBs-W6-Gi3" secondAttribute="bottom" constant="34" id="47Q-oz-t07"/>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="trailing" secondItem="kr3-ke-BLV" secondAttribute="trailing" id="A8U-WW-fmh"/>
                             <constraint firstItem="ENk-hG-wGn" firstAttribute="centerX" secondItem="bXw-g5-NSd" secondAttribute="centerX" id="QjT-b2-oRu"/>
                             <constraint firstItem="ENk-hG-wGn" firstAttribute="top" secondItem="bXw-g5-NSd" secondAttribute="bottom" constant="34" id="cMB-ls-47e"/>
                             <constraint firstItem="kr3-ke-BLV" firstAttribute="centerX" secondItem="mtn-ud-juv" secondAttribute="centerX" id="eMl-Tc-3CH"/>
+                            <constraint firstItem="JBs-W6-Gi3" firstAttribute="centerX" secondItem="kr3-ke-BLV" secondAttribute="centerX" id="nXJ-JI-pn7"/>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="leading" secondItem="kr3-ke-BLV" secondAttribute="leading" id="tQf-YS-3k7"/>
                             <constraint firstItem="kr3-ke-BLV" firstAttribute="leading" secondItem="mtn-ud-juv" secondAttribute="leadingMargin" constant="94" id="vOn-eW-FB2"/>
                             <constraint firstItem="kr3-ke-BLV" firstAttribute="centerY" secondItem="mtn-ud-juv" secondAttribute="centerY" id="yGr-TX-NC8"/>
@@ -235,7 +240,7 @@
                         <outlet property="debugText" destination="JBs-W6-Gi3" id="mGO-y7-gGQ"/>
                         <outlet property="loginButton" destination="ENk-hG-wGn" id="5Be-vd-58K"/>
                         <outlet property="passwordTextField" destination="bXw-g5-NSd" id="VIK-Je-TQp"/>
-                        <outlet property="userNameTextField" destination="kr3-ke-BLV" id="mmT-sN-F0K"/>
+                        <outlet property="usernameTextField" destination="kr3-ke-BLV" id="XI2-oq-6CS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gl3-Vq-CzE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -245,7 +250,7 @@
         <!--Navigation Controller-->
         <scene sceneID="IPJ-bK-97v">
             <objects>
-                <navigationController id="i1E-fF-jWs" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavigationController" id="i1E-fF-jWs" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="C6m-HE-yuB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -268,7 +273,10 @@
                                 <segue destination="0nf-LG-OEF" kind="presentation" id="HKN-O5-uZx"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="CeP-04-sEf"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="xbs-Zn-Ksx"/>
+                        <connections>
+                            <outlet property="rightBarButtonItem" destination="xbs-Zn-Ksx" id="Oqt-wh-YLz"/>
+                        </connections>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">

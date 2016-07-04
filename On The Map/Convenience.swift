@@ -20,8 +20,7 @@ extension Client {
             Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
         ]
-        let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.Limit
-        print(url)
+        let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder
         
         taskForGETMethod(url, parameters: parameters) { results, error in
             if let error = error {
@@ -38,10 +37,30 @@ extension Client {
         
     }
     
-    //func postToMap(pin: StudentLocation, completionHandler
-
-    
-    
-    
-    
+    func postToMap(completionHandlerForPOST: (result: Int?, error: NSError?) -> Void) {
+        
+        /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
+        let parameters = [
+            Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
+            Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
+            ]
+        
+        let jsonBody = "{\"uniqueKey\": \"1234\", \"firstName\": \"Susan\", \"lastName\": \"Roads\",\"mapString\": \"Cape Town\", \"mediaURL\": \"https://udacity.com\",\"latitude\": -33.55555, \"longitude\": 18.22222}"
+        
+        let url = Client.Constants.Scheme.Method
+        
+        taskForPOSTMethod(url, parameters: parameters, jsonBody: jsonBody) { results, error in
+            if let error = error {
+                print(error)
+            } else {
+                if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? Int {
+                    //let locations = StudentLocation.SLOFromResults(results)
+                    completionHandlerForPOST(result: results, error: nil)
+                } else {
+                    completionHandlerForPOST(result: nil, error: error)
+                }
+            }
+        }
+        
+    }
 }
