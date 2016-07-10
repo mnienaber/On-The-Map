@@ -15,6 +15,7 @@ extension Client {
         struct Scheme {
             
             static let Method = "https://api.parse.com/1/classes/StudentLocation"
+            static let UdacUserMethod = "https://www.udacity.com/api/users/"
             static let ApiScheme = "https://"
             static let ApiHost = "api.parse.com"
             static let ApiPath = "/1/classes/StudentLocation"
@@ -46,7 +47,7 @@ extension Client {
             static let LastName = "lastName"
             static let MapString = "mapString"
             static let MediaURL = "mediaURL"
-            static let Latitude = "latitude"
+            static var Latitude = "latitude"
             static let Longitude = "longitude"
             static let CreatedAt = "createdAt"
             static let UpdatedAt = "updatedAt"

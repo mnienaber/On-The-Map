@@ -20,6 +20,7 @@ extension Client {
             Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
         ]
+        
         let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder
         
         taskForGETMethod(url, parameters: parameters) { results, error in
@@ -45,7 +46,7 @@ extension Client {
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
             ]
         
-        let jsonBody = "{\"uniqueKey\": \"1234\", \"firstName\": \"Susan\", \"lastName\": \"Roads\",\"mapString\": \"Cape Town\", \"mediaURL\": \"https://udacity.com\",\"latitude\": -33.55555, \"longitude\": 18.22222}"
+        let jsonBody = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.londitude!)}"
         
         let url = Client.Constants.Scheme.Method
         
@@ -58,6 +59,30 @@ extension Client {
                     completionHandlerForPOST(result: results, error: nil)
                 } else {
                     completionHandlerForPOST(result: nil, error: error)
+                }
+            }
+        }
+        
+    }
+    
+    func getUserInfo(accountKey: String, completionHandlerForStudentLocations: (result: [StudentLocation]?, error: NSError?) -> Void) {
+
+        let parameters = [
+            Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
+            Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
+            ]
+            
+        let url = Client.Constants.Scheme.UdacUserMethod + accountKey
+        
+        taskForGETMethod(url, parameters: parameters) { results, error in
+            if let error = error {
+                print(error)
+            } else {
+                if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
+                    let locations = StudentLocation.SLOFromResults(results)
+                    completionHandlerForStudentLocations(result: locations, error: nil)
+                } else {
+                    completionHandlerForStudentLocations(result: nil, error: error)
                 }
             }
         }

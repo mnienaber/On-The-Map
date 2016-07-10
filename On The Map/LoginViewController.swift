@@ -155,12 +155,14 @@ class LoginViewController: UIViewController {
                     }
                     print("Could not find sessEx")
                 }
-                //print(parsedResult)
+                print(self.appDelegate.accountKey!)
+             
             }
             task.resume()
         }
         completeLogin()
     }
+    
     
     func completeLogin() {
         dispatch_async(dispatch_get_main_queue(), {
@@ -169,7 +171,7 @@ class LoginViewController: UIViewController {
             self.presentViewController(controller, animated: true, completion: nil)
         })
     }
-
+    
 }
 
     // MARK: - LoginViewController (Configure UI)

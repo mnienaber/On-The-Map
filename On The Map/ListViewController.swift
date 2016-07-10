@@ -28,6 +28,7 @@ class ListViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        print(self.appDelegate.accountKey!)
     }
     
     func getStudentList() {
@@ -37,10 +38,6 @@ class ListViewController: UITableViewController {
                 [self.studentLocation = studentLocation]
                 performUIUpdatesOnMain {
                     for student in self.studentLocation {
-                        
-                        let first = student.firstName
-                        let last = student.lastName
-                        let mediaURL = student.mediaURL
                         
                         self.tableView.reloadData()
                     }

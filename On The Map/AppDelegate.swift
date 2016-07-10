@@ -26,6 +26,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var sessionID: String? = nil
     var userID: Int? = nil
     var keyID: Int? = nil
+    var latitude: Double?
+    var londitude: Double?
+    var mediaUrl: String?
+    var mapString: String?
+    var firstName: String?
+    var lastName: String?
+    
+    
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

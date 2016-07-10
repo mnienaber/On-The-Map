@@ -14,6 +14,7 @@ class Client : NSObject {
     // shared session
     var session = NSURLSession.sharedSession()
     var config = Config()
+    var appDelegate: AppDelegate!
     
     override init() {
         super.init()

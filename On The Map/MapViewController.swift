@@ -9,25 +9,26 @@ import UIKit
 import MapKit
 
 
-class MapViewController: UIViewController, MKMapViewDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate {
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
-    
+    var appDelegate: AppDelegate!
     
 
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.mapView.delegate = self
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(buttonMethod))
-        
+        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         getMapLocations()
+        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
 
     }
     
@@ -62,6 +63,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     func buttonMethod() {
         
         getMapLocations()
+        
         print("refresh")
     }
     
@@ -120,5 +122,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    func getUsersInfo(accountKey: String) {
+        
+        Client.sharedInstance().getUserInfo(accountKey) { results, error in
+            if let error = error {
+                print(error)
+            } else {
+                print(results!)
+            }
+        }
+    }
 }
 
