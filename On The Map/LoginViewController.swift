@@ -15,6 +15,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var debugText: UILabel!
     
+    var studentLocation: [StudentLocation] = [StudentLocation]()
+    
     var appDelegate: AppDelegate!
     var keyboardOnScreen = false
     var session: NSURLSession!
@@ -61,6 +63,7 @@ class LoginViewController: UIViewController {
         } else {
             setUIEnabled(true)
             
+            //var param = "{\"udacity\": {\"username\":\"mnienaber@google.com\", \"password\":\"M1230taur\"}}"
             var param = "{\"udacity\": {\"username\":\"\(self.usernameTextField.text!)\", \"password\":\"\(self.passwordTextField.text!)\"}}"
             let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
             request.HTTPMethod = "POST"
@@ -97,38 +100,64 @@ class LoginViewController: UIViewController {
                     displayError("No data was returned by the request!")
                     return
                 }
+                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 
-//                /* 5. Parse the data */
-//                let parsedResult: AnyObject!
-//                do {
-//                    parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-//                } catch {
-//                    displayError("Could not parse the data as JSON: '\(data)'")
-//                    return
-//                }
-//                
-//                /* GUARD: Did TheMovieDB return an error? */
-//                if let _ = parsedResult[Client.Constants.UdacityResponseKeys.Session_Id] as? Int {
-//                    displayError("Udacity returned an error. See the statuscode in \(parsedResult)")
-//                    return
-//                }
-//                
-//                /* GUARD: Is the "sessionID" key in parsedResult? */
-//                guard let sessionID = parsedResult[Client.Constants.UdacityResponseKeys.Session_Id] as? String else {
-//                    displayError("Cannot find session ID)' in \(parsedResult)")
-//                    return
-//                }
+                let parsedResult: AnyObject!
+                do {
+                    parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
+                    //print(parsedResult)
+                } catch {
+                    print("Error: Parsing JSON data")
+                    return
+                }
                 
-//                /* 6. Use the data! */
-//                self.appDelegate.sessionID = sessionID
-//                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5)) /* subset response data! */
-//                for items in parsedResult["session"] as! NSDictionary {
-//                    print(items)
-//                }
-                print(NSString(data: data, encoding: NSUTF8StringEncoding))
+                let account = parsedResult["account"]!
+                let sessionDict = parsedResult["session"]!
+            
+                if let accountKey = account!["key"] as? String {
+                    self.appDelegate.accountKey = accountKey
+                    print(self.appDelegate.accountKey!)
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.debugText.text = "Login Failed (accountKey)."
+                    }
+                    print("Could not find accountKey")
+                }
+                
+                if let accountRegistered = account!["registered"] as? Int {
+                    
+                    self.appDelegate.accountRegistered = accountRegistered
+                    print(self.appDelegate.accountRegistered!)
+
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.debugText.text = "Login Failed (accountRegistered)."
+                    }
+                    print("Could not find rego")
+                }
+                
+                if let sessionExpiration = sessionDict!["expiration"] as? String {
+                    self.appDelegate.sessionExpiration = sessionExpiration
+                    print(self.appDelegate.sessionExpiration!)
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.debugText.text = "Login Failed (accountKey)."
+                    }
+                    print("Could not find accountKey")
+                }
+                
+                if let sessionID = sessionDict!["id"] as? String {
+                    self.appDelegate.sessionID = sessionID
+                    print(self.appDelegate.sessionID!)
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.debugText.text = "Login Failed (sessExpiration)."
+                    }
+                    print("Could not find sessEx")
+                }
+                //print(parsedResult)
             }
             task.resume()
-            
         }
         completeLogin()
     }

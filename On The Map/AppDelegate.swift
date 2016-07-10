@@ -20,8 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // authentication state
     var sharedSession = NSURLSession.sharedSession()
     var requestToken: String? = nil
-    var sessionID : String? = nil
-    var userID : Int? = nil
+    var accountRegistered: Int? = nil
+    var accountKey: String? = nil
+    var sessionExpiration: String? = nil
+    var sessionID: String? = nil
+    var userID: Int? = nil
+    var keyID: Int? = nil
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

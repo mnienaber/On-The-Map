@@ -110,7 +110,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                         annotation.coordinate = coordinate
                         annotation.title = "\(first) \(last)"
                         annotation.subtitle = mediaURL
-                        print(annotation.title)
+                        //print(annotation.title)
                         // Finally we place the annotation in an array of annotations.
                         annotations.append(annotation)
                     }
