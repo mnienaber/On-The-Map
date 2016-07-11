@@ -166,10 +166,7 @@ class LoginViewController: UIViewController {
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("NavigationController")
             self.presentViewController(controller, animated: true, completion: nil)
         })
-    }
-    
-    
-    
+    } 
 }
 
 extension LoginViewController {

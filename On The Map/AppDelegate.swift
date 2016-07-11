@@ -26,12 +26,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var sessionID: String? = nil
     var userID: Int? = nil
     var keyID: Int? = nil
-    var latitude: Double?
-    var longitude: Double?
-    var mediaUrl: String?
-    var mapString: String?
-    var firstName: String?
-    var lastName: String?
+    var latitude: Double? = nil
+    var longitude: Double? = nil
+    var mediaUrl: String? = nil
+    var mapString: String? = nil
+    var firstName: String? = nil
+    var lastName: String? = nil
     
     
 

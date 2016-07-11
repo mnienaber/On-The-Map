@@ -135,9 +135,9 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         }
     }
     
-    func getPostToMap() {
+    func getPostToMap(jsonBody: String) {
         
-        Client.sharedInstance().postToMap { (statusCode, error) in
+        Client.sharedInstance().postToMap(jsonBody) { (statusCode, error) in
             if let error = error {
                 print(error)
                 
@@ -211,9 +211,9 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                     print("Login Failed (firstname).")
                 }
                 print("Could not find firstname")
-                print(user!)
-                //print(parsedResult!)
+                
             }
+            
         }
         task.resume()
     }
@@ -221,15 +221,10 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     @IBAction func submitButton(sender: AnyObject) {
         
         self.appDelegate.mediaUrl = self.myMediaUrl.text!
-        print(self.appDelegate.mediaUrl!)
-        print(self.appDelegate.firstName!)
-        print(self.appDelegate.lastName!)
-        print(self.appDelegate.latitude!)
-        print(self.appDelegate.longitude!)
-        print(self.appDelegate.mapString!)
-        print(self.appDelegate.accountKey!)
-        
-        self.getPostToMap()
+        let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}}"
+        print(jsonBody)
+
+        self.getPostToMap(jsonBody)
     }
 }
 
