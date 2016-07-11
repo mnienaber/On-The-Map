@@ -78,12 +78,13 @@ extension Client {
             if let error = error {
                 print(error)
             } else {
-                if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
-                    let locations = StudentLocation.SLOFromResults(results)
-                    completionHandlerForStudentLocations(result: locations, error: nil)
-                } else {
-                    completionHandlerForStudentLocations(result: nil, error: error)
-                }
+//                if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
+//                    let locations = StudentLocation.SLOFromResults(results)
+//                    completionHandlerForStudentLocations(result: locations, error: nil)
+//                } else {
+//                    completionHandlerForStudentLocations(result: nil, error: error)
+//                }
+                print(results)
             }
         }
         

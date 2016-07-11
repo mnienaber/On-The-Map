@@ -49,6 +49,8 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         questionText.textAlignment = .Center
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
+    
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -95,8 +97,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         myMediaUrl.hidden = false
         dismissAnyVisibleKeyboards()
         
-        print("from location view" + "\(self.appDelegate.accountKey)")
-        
         let request = MKLocalSearchRequest()
         request.naturalLanguageQuery = self.textLocation.text!
         request.region = myMiniMapView.region
@@ -131,6 +131,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                     self.appDelegate.latitude = lat
                     self.appDelegate.londitude = long
                     self.appDelegate.mapString = title
+                    
                 }
                 self.myMiniMapView.addAnnotations(self.annotations)
                 
@@ -156,19 +157,12 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
     }
     
-    
-    
-    
     @IBAction func submitButton(sender: AnyObject) {
-
-            self.getPostToMap()
         
-            
-        }
+        self.appDelegate.mediaUrl = self.myMediaUrl.text!
+        self.getPostToMap()
     }
-
-
-
+}
 
 extension LocationViewController {
     

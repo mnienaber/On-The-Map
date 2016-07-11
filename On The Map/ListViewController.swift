@@ -19,6 +19,7 @@ class ListViewController: UITableViewController {
         // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         getStudentList()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,6 +30,7 @@ class ListViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         print(self.appDelegate.accountKey!)
+        
     }
     
     func getStudentList() {

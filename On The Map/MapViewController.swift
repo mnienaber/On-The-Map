@@ -29,6 +29,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
 
     }
     
@@ -131,6 +132,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                 print(results!)
             }
         }
+        
     }
+    
 }
 
