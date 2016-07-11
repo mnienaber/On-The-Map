@@ -63,7 +63,6 @@ class LoginViewController: UIViewController {
         } else {
             setUIEnabled(true)
             
-            //var param = "{\"udacity\": {\"username\":\"mnienaber@google.com\", \"password\":\"M1230taur\"}}"
             var param = "{\"udacity\": {\"username\":\"\(self.usernameTextField.text!)\", \"password\":\"\(self.passwordTextField.text!)\"}}"
             let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
             request.HTTPMethod = "POST"
