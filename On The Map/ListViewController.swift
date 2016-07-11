@@ -16,21 +16,17 @@ class ListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         getStudentList()
-        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         print(self.appDelegate.accountKey!)
-        
     }
     
     func getStudentList() {
@@ -39,10 +35,7 @@ class ListViewController: UITableViewController {
             if let studentLocation = studentLocation {
                 [self.studentLocation = studentLocation]
                 performUIUpdatesOnMain {
-                    for student in self.studentLocation {
-                        
-                        self.tableView.reloadData()
-                    }
+                    self.tableView.reloadData()
                 }
             }
         
@@ -55,12 +48,10 @@ extension ListViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        // get cell type
         let cellReuseIdentifier = "TableViewCell"
         let location = studentLocation[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
         
-        // set cell defaults
         cell.textLabel!.text = location.firstName + " " + location.lastName
 
         return cell

@@ -31,7 +31,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
     
-    let regionRadius: CLLocationDistance = 2000
+    let regionRadius: CLLocationDistance = 1000
     func centerMapOnLocation(location: CLLocation) {
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate,
                                                                   regionRadius * 3.0, regionRadius * 1.0)
@@ -62,27 +62,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         self.removeKeyboardDismissRecognizer()
         self.unsubscribeToKeyboardNotifications()
     }
-    
-
-    
-//    func mapVivarmapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-//        
-//        let reuseId = "pin"
-//        
-//        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
-//        
-//        if pinView == nil {
-//            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-//            pinView!.canShowCallout = true
-//            pinView!.pinColor = .Red
-//            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
-//        }
-//        else {
-//            pinView!.annotation = annotation
-//        }
-//        
-//        return pinView
-//    }
     
     @IBAction func findOnTheMap(sender: AnyObject) {
         
@@ -225,7 +204,15 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         print(jsonBody)
 
         self.getPostToMap(jsonBody)
+//        backToMapViewController()
     }
+    
+//    func backToMapViewController() {
+//        dispatch_async(dispatch_get_main_queue(), {
+//            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("NavigationController")
+//            self.presentViewController(controller, animated: true, completion: nil)
+//        })
+//    }
 }
 
 extension LocationViewController {

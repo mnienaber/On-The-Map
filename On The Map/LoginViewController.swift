@@ -26,10 +26,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         session = NSURLSession.sharedSession()
         self.configureUI()
     }
@@ -191,31 +188,7 @@ extension LoginViewController {
         tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")
         tapRecognizer?.numberOfTapsRequired = 1
     }
-    
 
-//        
-//        // configure background gradient
-//        let backgroundGradient = CAGradientLayer()
-//        backgroundGradient.colors = [Client.Constants.UI.LoginColorTop, Client.Constants.UI.LoginColorBottom]
-//        backgroundGradient.locations = [0.0, 1.0]
-//        backgroundGradient.frame = view.frame
-//        view.layer.insertSublayer(backgroundGradient, atIndex: 0)
-//        
-//        configureTextField(usernameTextField)
-//        configureTextField(passwordTextField)
-//    }
-    
-//    private func configureTextField(textField: UITextField) {
-//        let textFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0)
-//        let textFieldPaddingView = UIView(frame: textFieldPaddingViewFrame)
-//        textField.leftView = textFieldPaddingView
-//        textField.leftViewMode = .Always
-//        textField.backgroundColor = Client.Constants.UI.GreyColor
-//        textField.textColor = Client.Constants.UI.BlueColor
-//        textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
-//        textField.tintColor = Client.Constants.UI.BlueColor
-//        textField.delegate = self
-//    }
 }
 
 extension LoginViewController {
