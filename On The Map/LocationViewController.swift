@@ -125,7 +125,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                     annotation.title = title
                     self.annotations.append(annotation)
                     self.appDelegate.latitude = lat
-                    self.appDelegate.londitude = long
+                    self.appDelegate.longitude = long
                     self.appDelegate.mapString = title
                     
                 }
@@ -221,6 +221,14 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     @IBAction func submitButton(sender: AnyObject) {
         
         self.appDelegate.mediaUrl = self.myMediaUrl.text!
+        print(self.appDelegate.mediaUrl!)
+        print(self.appDelegate.firstName!)
+        print(self.appDelegate.lastName!)
+        print(self.appDelegate.latitude!)
+        print(self.appDelegate.longitude!)
+        print(self.appDelegate.mapString!)
+        print(self.appDelegate.accountKey!)
+        
         self.getPostToMap()
     }
 }

@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var userID: Int? = nil
     var keyID: Int? = nil
     var latitude: Double?
-    var londitude: Double?
+    var longitude: Double?
     var mediaUrl: String?
     var mapString: String?
     var firstName: String?
