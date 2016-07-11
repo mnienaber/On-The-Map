@@ -13,10 +13,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
     var appDelegate: AppDelegate!
-    
 
     @IBOutlet weak var mapView: MKMapView!
-    
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -123,17 +122,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         }
     }
     
-    func getUsersInfo(accountKey: String) {
-        
-        Client.sharedInstance().getUserInfo(accountKey) { results, error in
-            if let error = error {
-                print(error)
-            } else {
-                print(results!)
-            }
-        }
-        
-    }
+
     
 }
 

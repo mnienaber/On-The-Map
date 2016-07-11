@@ -16,6 +16,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     let mapView = MapViewController()
     var annotations = [MKPointAnnotation]()
     
+    
     @IBOutlet weak var textLocation: UITextField!
     @IBOutlet weak var findOnTheMap: UIButton!
     @IBOutlet weak var myMiniMapView: MKMapView!
@@ -48,9 +49,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         questionText.text = "Where are you studying today?"
         questionText.textAlignment = .Center
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-    
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -125,8 +123,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                     
                     annotation.coordinate = coordinate
                     annotation.title = title
-                    print(annotation.title)
-                    print(annotation.coordinate)
                     self.annotations.append(annotation)
                     self.appDelegate.latitude = lat
                     self.appDelegate.londitude = long
@@ -134,7 +130,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                     
                 }
                 self.myMiniMapView.addAnnotations(self.annotations)
-                
+                self.getUserInfo(self.appDelegate.accountKey!)
             }
         }
     }
@@ -148,13 +144,78 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             } else {
                 
                 performUIUpdatesOnMain {
-                    
                     print("success")
                 }
-                
             }
         }
+    }
+    
+    func getUserInfo(accountKey: String) {
         
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + (accountKey))!)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            func displayError(error: String, debugLabelText: String? = nil) {
+                print(error)
+                performUIUpdatesOnMain {
+                    print("looking good")
+                }
+            }
+            
+            /* GUARD: Was there an error? */
+            guard (error == nil) else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                displayError("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            /* GUARD: Was there any data returned? */
+            guard let data = data else {
+                displayError("No data was returned by the request!")
+                return
+            }
+            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            
+            let parsedResult: AnyObject!
+            do {
+                parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
+                //print(parsedResult)
+            } catch {
+                print("Error: Parsing JSON data")
+                return
+            }
+            
+            let user = parsedResult["user"]!
+            //let sessionDict = parsedResult["session"]!
+            
+            if let lastName = user!["last_name"] as? String {
+                self.appDelegate.lastName = lastName
+                print(self.appDelegate.lastName!)
+            } else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    print("Login Failed (lastname).")
+                }
+                print("Could not find accountKey")
+            }
+            
+            if let firstName = user!["first_name"] as? String {
+                self.appDelegate.firstName = firstName
+                print(self.appDelegate.firstName!)
+            } else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    print("Login Failed (firstname).")
+                }
+                print("Could not find firstname")
+                print(user!)
+                //print(parsedResult!)
+            }
+        }
+        task.resume()
     }
     
     @IBAction func submitButton(sender: AnyObject) {

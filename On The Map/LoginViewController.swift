@@ -32,8 +32,6 @@ class LoginViewController: UIViewController {
         
         session = NSURLSession.sharedSession()
         self.configureUI()
-        
-
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -41,7 +39,6 @@ class LoginViewController: UIViewController {
         
         self.addKeyboardDismissRecognizer()
         self.subscribeToKeyboardNotifications()
-
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -160,8 +157,8 @@ class LoginViewController: UIViewController {
             task.resume()
         }
         completeLogin()
+        //self.getUserInfo(self.appDelegate.accountKey!)
     }
-    
     
     func completeLogin() {
         dispatch_async(dispatch_get_main_queue(), {
@@ -171,10 +168,9 @@ class LoginViewController: UIViewController {
         })
     }
     
+    
+    
 }
-
-    // MARK: - LoginViewController (Configure UI)
-
 
 extension LoginViewController {
     
