@@ -273,10 +273,6 @@
                                 <segue destination="0nf-LG-OEF" kind="presentation" id="HKN-O5-uZx"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="xbs-Zn-Ksx"/>
-                        <connections>
-                            <outlet property="rightBarButtonItem" destination="xbs-Zn-Ksx" id="Oqt-wh-YLz"/>
-                        </connections>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="W28-zg-YXA">
