@@ -12,6 +12,8 @@ class ListViewController: UITableViewController {
     
     var appDelegate: AppDelegate!
     var studentLocation: [StudentLocation] = [StudentLocation]()
+    let studentSegueIdentifier = "ShowStudentDetail"
+    var studentDetailDict = [StudentLocation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +31,6 @@ class ListViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        print(self.appDelegate.accountKey!)
-        
     }
     
     func getStudentList() {
@@ -69,6 +69,24 @@ extension ListViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return studentLocation.count
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let row = indexPath.row
+        studentDetailDict = [studentLocation[row]]
+        //print(studentDetailDict)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if  (segue.identifier == studentSegueIdentifier) {
+            
+            let destination = segue.destinationViewController as? StudentDetailController
+            let studentIndex = tableView.indexPathForSelectedRow?.row
+            destination?.studentDetailLocation = studentDetailDict
+        }
+        
     }
 
 

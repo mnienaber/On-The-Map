@@ -50,6 +50,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         questionText.text = "Where are you studying today?"
         questionText.textAlignment = .Center
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.hideKeyboardWhenTappedAround()
     }
     
     override func viewWillAppear(animated: Bool) {

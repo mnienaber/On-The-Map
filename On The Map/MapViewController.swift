@@ -22,6 +22,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         self.mapView.delegate = self
         //navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(buttonMethod))
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.hideKeyboardWhenTappedAround()
         getMapLocations()
         
     }
@@ -108,5 +109,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     }
 
     
+}
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
 

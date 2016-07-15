@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2E240A451D001919004BC3D0 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E240A441D001919004BC3D0 /* Config.swift */; };
+		2EA80F211D38D0B700BFC968 /* StudentDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */; };
 		2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */; };
 		2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180141CF2EFF700D6EB19 /* MapViewController.swift */; };
 		2EE180171CF2EFF700D6EB19 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180161CF2EFF700D6EB19 /* ListViewController.swift */; };
@@ -44,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		2E240A441D001919004BC3D0 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentDetailController.swift; sourceTree = "<group>"; };
 		2EE1800F1CF2EFF700D6EB19 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EE180141CF2EFF700D6EB19 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				2EE180141CF2EFF700D6EB19 /* MapViewController.swift */,
 				2EE180161CF2EFF700D6EB19 /* ListViewController.swift */,
 				2EE180451CF31B1000D6EB19 /* LocationViewController.swift */,
+				2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 				2EE1804A1CF31E2F00D6EB19 /* Client.swift in Sources */,
 				2E240A451D001919004BC3D0 /* Config.swift in Sources */,
 				2EE1804C1CF326D000D6EB19 /* Convenience.swift in Sources */,
+				2EA80F211D38D0B700BFC968 /* StudentDetailController.swift in Sources */,
 				2EE180531CF5B1CB00D6EB19 /* BlackBox.swift in Sources */,
 				2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */,
 				2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */,
