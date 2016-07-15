@@ -29,7 +29,7 @@ class LoginViewController: UIViewController {
         
         // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
+        self.debugText.text = "Please login to Udacity"
         session = NSURLSession.sharedSession()
         self.configureUI()
     }
@@ -163,7 +163,7 @@ class LoginViewController: UIViewController {
     func completeLogin() {
         dispatch_async(dispatch_get_main_queue(), {
             self.debugText.text = ""
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("NavigationController")
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
             self.presentViewController(controller, animated: true, completion: nil)
         })
     } 

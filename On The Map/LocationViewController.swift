@@ -17,6 +17,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     var annotations = [MKPointAnnotation]()
     
     
+    @IBOutlet weak var cancelButtonOutlet: UIBarButtonItem!
     @IBOutlet weak var textLocation: UITextField!
     @IBOutlet weak var findOnTheMap: UIButton!
     @IBOutlet weak var myMiniMapView: MKMapView!
@@ -59,30 +60,9 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     override func viewWillDisappear(animated: Bool) {
         
-        self.removeKeyboardDismissRecognizer()
+        //self.removeKeyboardDismissRecognizer()
         self.unsubscribeToKeyboardNotifications()
     }
-    
-
-    
-//    func mapVivarmapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-//        
-//        let reuseId = "pin"
-//        
-//        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
-//        
-//        if pinView == nil {
-//            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-//            pinView!.canShowCallout = true
-//            pinView!.pinColor = .Red
-//            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
-//        }
-//        else {
-//            pinView!.annotation = annotation
-//        }
-//        
-//        return pinView
-//    }
     
     @IBAction func findOnTheMap(sender: AnyObject) {
         
@@ -148,6 +128,24 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 }
             }
         }
+    }
+    
+    @IBAction func cancelButtonAction(sender: AnyObject) {
+        
+        self.appDelegate.mediaUrl = nil
+        self.appDelegate.mapString = nil
+        self.appDelegate.latitude = nil
+        self.appDelegate.longitude = nil
+        
+        returnToMapView()
+    }
+    
+    func returnToMapView() {
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
+            self.presentViewController(controller, animated: true, completion: nil)
+        })
     }
     
     func getUserInfo(accountKey: String) {
@@ -220,11 +218,20 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     @IBAction func submitButton(sender: AnyObject) {
         
-        self.appDelegate.mediaUrl = self.myMediaUrl.text!
+        if (self.myMediaUrl.text!.rangeOfString("http://") != nil) {
+            
+            self.appDelegate.mediaUrl = self.myMediaUrl.text!
+        } else {
+            
+            self.appDelegate.mediaUrl = Client.Constants.Scheme.ApiScheme + self.myMediaUrl.text!
+        }
+        
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}}"
         print(jsonBody)
-
+        
+        
         self.getPostToMap(jsonBody)
+        returnToMapView()
     }
 }
 
@@ -234,9 +241,9 @@ extension LocationViewController {
         self.view.addGestureRecognizer(tapRecognizer!)
     }
     
-    func removeKeyboardDismissRecognizer() {
-        self.view.removeGestureRecognizer(tapRecognizer!)
-    }
+//    func removeKeyboardDismissRecognizer() {
+//        self.view.removeGestureRecognizer(tapRecognizer!)
+//    }
     
     func handleSingleTap(recognizer: UITapGestureRecognizer) {
         self.view.endEditing(true)

@@ -20,7 +20,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         super.viewDidLoad()
         
         self.mapView.delegate = self
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(buttonMethod))
+        //navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(buttonMethod))
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         getMapLocations()
         
@@ -57,16 +57,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     }
     
     
-    // This delegate method is implemented to respond to taps. It opens the system browser
-    // to the URL specified in the annotationViews subtitle property.
-    
-    func buttonMethod() {
-        
-        getMapLocations()
-        
-        print("refresh")
-    }
-    
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.sharedApplication()
@@ -75,18 +65,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             }
         }
     }
-    //    func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-    //
-    //        if control == annotationView.rightCalloutAccessoryView {
-    //            let app = UIApplication.sharedApplication()
-    //            app.openURL(NSURL(string: annotationView.annotation.subtitle))
-    //        }
-    //    }
-    
-    // MARK: - Sample Data
-    
-    // Some sample data. This is a dictionary that is more or less similar to the
-    // JSON data that you will download from Parse.
+
     
     func getMapLocations() {
         
@@ -122,6 +101,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         }
     }
     
+    @IBAction func buttonMethod(sender: AnyObject) {
+        
+        getMapLocations()
+        print("refresh")
+    }
 
     
 }
