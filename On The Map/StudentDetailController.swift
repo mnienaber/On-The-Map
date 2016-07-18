@@ -22,7 +22,7 @@ class StudentDetailController: UIViewController, MKMapViewDelegate {
         self.hideKeyboardWhenTappedAround()
         
         self.mapViewOutlet.delegate = self
-
+        print(studentDetailLocation)
     
     }
     

@@ -80,17 +80,13 @@ extension ListViewController {
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print("prep1")
+        
         if  (segue.identifier == studentSegueIdentifier) {
-            print("prep2")
             
             let destination = segue.destinationViewController as? StudentDetailController
-            print("prep3")
             let studentIndex = tableView.indexPathForSelectedRow?.row
-            print("prep4")
             studentDetailDict = [studentLocation[studentIndex!]]
             destination?.studentDetailLocation = studentDetailDict
-            print("prep5")
         }
         
     }
