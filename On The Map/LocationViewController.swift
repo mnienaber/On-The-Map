@@ -218,7 +218,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     @IBAction func submitButton(sender: AnyObject) {
         
-        if (self.myMediaUrl.text!.rangeOfString("http://") != nil) {
+        if ((self.myMediaUrl.text!.rangeOfString("http://") != nil) && (self.myMediaUrl.text!.rangeOfString("https://")) != nil) {
             
             self.appDelegate.mediaUrl = self.myMediaUrl.text!
         } else {
@@ -227,8 +227,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         }
         
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}}"
-        print(jsonBody)
-        
         
         self.getPostToMap(jsonBody)
         returnToMapView()

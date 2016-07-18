@@ -9,10 +9,12 @@ import UIKit
 import MapKit
 
 
-class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate, CLLocationManagerDelegate {
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
     var appDelegate: AppDelegate!
+    let locationManager = CLLocationManager()
+    let regionRadius: CLLocationDistance = 2000
 
     @IBOutlet weak var mapView: MKMapView!
  
@@ -20,9 +22,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         super.viewDidLoad()
         
         self.mapView.delegate = self
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(buttonMethod))
+        locationManager.delegate = self
+        locationManager.requestLocation()
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
         self.hideKeyboardWhenTappedAround()
+        //centerMapOnLocation(userLocation)
         getMapLocations()
         
     }
@@ -33,6 +40,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
 
     }
     
+    
+    func centerMapOnLocation(location: CLLocation) {
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate,
+                                                                  regionRadius * 3.0, regionRadius * 1.0)
+        mapView.setRegion(coordinateRegion, animated: true)
+    }
+    
     // MARK: - MKMapViewDelegate
     
     // Here we create a view with a "right callout accessory view". You might choose to look into other
@@ -41,7 +55,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
-        
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
@@ -107,6 +120,24 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         getMapLocations()
         print("refresh")
     }
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == .AuthorizedWhenInUse {
+            locationManager.requestLocation()
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            let span = MKCoordinateSpanMake(0.05, 0.05)
+            let region = MKCoordinateRegion(center: location.coordinate, span: span)
+            mapView.setRegion(region, animated: true)
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print("error:: \(error)")
+    }
 
     
 }
@@ -120,5 +151,11 @@ extension UIViewController {
     func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    
+    
+
+    
+    
 }
 
