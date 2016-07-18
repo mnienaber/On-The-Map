@@ -23,9 +23,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         
         self.mapView.delegate = self
         locationManager.delegate = self
-        locationManager.requestLocation()
+        
         locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         self.hideKeyboardWhenTappedAround()
@@ -36,7 +35,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
+        locationManager.requestLocation()
 
     }
     
@@ -46,12 +45,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                                                                   regionRadius * 3.0, regionRadius * 1.0)
         mapView.setRegion(coordinateRegion, animated: true)
     }
-    
-    // MARK: - MKMapViewDelegate
-    
-    // Here we create a view with a "right callout accessory view". You might choose to look into other
-    // decoration alternatives. Notice the similarity between this method and the cellForRowAtIndexPath
-    // method in TableViewDataSource.
+
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
@@ -69,7 +63,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         
         return pinView
     }
-    
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
@@ -99,14 +92,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                         let first = student.firstName
                         let last = student.lastName
                         let mediaURL = student.mediaURL
-                        
-                        // Here we create the annotation and set its coordiate, title, and subtitle properties
                         let annotation = MKPointAnnotation()
                         annotation.coordinate = coordinate
                         annotation.title = "\(first) \(last)"
                         annotation.subtitle = mediaURL
-                        //print(annotation.title)
-                        // Finally we place the annotation in an array of annotations.
                         annotations.append(annotation)
                     }
                     self.mapView.addAnnotations(annotations)

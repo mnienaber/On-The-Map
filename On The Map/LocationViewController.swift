@@ -239,9 +239,9 @@ extension LocationViewController {
         self.view.addGestureRecognizer(tapRecognizer!)
     }
     
-//    func removeKeyboardDismissRecognizer() {
-//        self.view.removeGestureRecognizer(tapRecognizer!)
-//    }
+    func removeKeyboardDismissRecognizer() {
+        self.view.removeGestureRecognizer(tapRecognizer!)
+    }
     
     func handleSingleTap(recognizer: UITapGestureRecognizer) {
         self.view.endEditing(true)

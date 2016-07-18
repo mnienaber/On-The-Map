@@ -13,12 +13,14 @@ import MapKit
 class StudentDetailController: UIViewController, MKMapViewDelegate {
     
     
-    var studentDetailLocation = [StudentLocation]()
+    var studentDetailLocation: [StudentLocation] = [StudentLocation]()
     
     let latitude = 47.619729999999997
     let longitude = -122.143
     @IBOutlet weak var mapViewOutlet: MKMapView!
     @IBOutlet weak var cancelButtonOutlet: UIBarButtonItem!
+    
+    
     
 
     override func viewDidLoad() {
@@ -28,13 +30,11 @@ class StudentDetailController: UIViewController, MKMapViewDelegate {
         self.hideKeyboardWhenTappedAround()
         self.mapViewOutlet.delegate = self
         getLocationManager(locationManager, didUpdateLocations: location)
-        //print(studentDetailLocation)
     
     }
     
     override func viewWillAppear(animated: Bool) {
-        
-        
+
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
@@ -47,8 +47,7 @@ class StudentDetailController: UIViewController, MKMapViewDelegate {
             pinView!.canShowCallout = true
             pinView!.pinColor = .Red
             pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
-        }
-        else {
+        } else {
             
             pinView!.annotation = annotation
         }
@@ -70,27 +69,19 @@ class StudentDetailController: UIViewController, MKMapViewDelegate {
     
     func getLocationManager(manager: CLLocationManager, didUpdateLocations locations: CLLocationCoordinate2D) {
         
-        if locations.latitude != 0 {
-            let span = MKCoordinateSpanMake(0.05, 0.05)
-            let region = MKCoordinateRegionMake(locations, span)
-            mapViewOutlet.setRegion(region, animated: true)
-            print("set the region")
-            var annotations = [MKPointAnnotation]()
-            var pinsToDrop = [CLLocationCoordinate2D]()
-            pinsToDrop.append(locations)
-            print(pinsToDrop)
-            for _ in pinsToDrop {
-                performUIUpdatesOnMain {
-                    
-                    let coordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coordinate
-                    annotation.title = "Fake Title"
-                    annotations.append(annotation)
-                    print(coordinate)
-                    self.mapViewOutlet.addAnnotations(annotations)
-                }
-            }
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegionMake(locations, span)
+        mapViewOutlet.setRegion(region, animated: true)
+        var annotations = [MKPointAnnotation]()
+        [self.studentDetailLocation = self.studentDetailLocation]
+        performUIUpdatesOnMain {
+            
+            let coordinate = CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotation.title = "Fake Title"
+            annotations.append(annotation)
+            self.mapViewOutlet.addAnnotations(annotations)
         }
     }
 

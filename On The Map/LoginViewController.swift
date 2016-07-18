@@ -33,6 +33,7 @@ class LoginViewController: UIViewController {
         self.hideKeyboardWhenTappedAround()
         session = NSURLSession.sharedSession()
         self.configureUI()
+        self.subscribeToKeyboardNotifications()
     }
     
     override func viewWillAppear(animated: Bool) {

@@ -275,7 +275,7 @@
                         <viewControllerLayoutGuide type="top" id="l8C-g2-lKf"/>
                         <viewControllerLayoutGuide type="bottom" id="WVY-1K-8kg"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="mtn-ud-juv">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="mtn-ud-juv">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -315,7 +315,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="selectedControlColor" catalog="System" colorSpace="catalog"/>
                         <constraints>
                             <constraint firstItem="WVY-1K-8kg" firstAttribute="top" secondItem="ENk-hG-wGn" secondAttribute="bottom" constant="127" id="2d9-gX-gF1"/>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="top" secondItem="kr3-ke-BLV" secondAttribute="bottom" constant="48" id="3Dd-oV-3Wq"/>

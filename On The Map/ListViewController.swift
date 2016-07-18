@@ -13,20 +13,17 @@ class ListViewController: UITableViewController {
     var appDelegate: AppDelegate!
     var studentLocation: [StudentLocation] = [StudentLocation]()
     let studentSegueIdentifier = "ShowStudentDetail"
-    var studentDetailDict = [StudentLocation]()
+    //var studentDetailDict: [StudentLocation] = [StudentLocation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         getStudentList()
-        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -35,12 +32,10 @@ class ListViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        // get cell type
         let cellReuseIdentifier = "TableViewCell"
         let location = studentLocation[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
         
-        // set cell defaults
         cell.textLabel!.text = location.firstName + " " + location.lastName
         
         return cell
@@ -51,13 +46,6 @@ class ListViewController: UITableViewController {
         return studentLocation.count
     }
     
-//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-//        let row = indexPath.row
-//        studentDetailDict = [studentLocation[row]]
-//        print("tableview1")
-//    }
-    
     func getStudentList() {
         
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
@@ -65,7 +53,7 @@ class ListViewController: UITableViewController {
                 [self.studentLocation = studentLocation]
                 performUIUpdatesOnMain {
                     for student in self.studentLocation {
-                        
+
                         self.tableView.reloadData()
                     }
                 }
@@ -78,14 +66,13 @@ class ListViewController: UITableViewController {
 
 extension ListViewController {
     
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if  (segue.identifier == studentSegueIdentifier) {
             
             let destination = segue.destinationViewController as? StudentDetailController
             let studentIndex = tableView.indexPathForSelectedRow?.row
-            studentDetailDict = [studentLocation[studentIndex!]]
+            let studentDetailDict = [studentLocation[studentIndex!]]
             destination?.studentDetailLocation = studentDetailDict
         }
         
