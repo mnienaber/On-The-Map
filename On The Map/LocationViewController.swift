@@ -190,7 +190,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             }
             
             let user = parsedResult["user"]!
-            //let sessionDict = parsedResult["session"]!
             
             if let lastName = user!["last_name"] as? String {
                 self.appDelegate.lastName = lastName

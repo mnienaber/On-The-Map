@@ -28,7 +28,7 @@ class StudentDetailController: UIViewController, MKMapViewDelegate {
     
     override func viewWillAppear(animated: Bool) {
         
-        print(studentDetailLocation)
+        
     }
     
     @IBAction func cancelButton(sender: AnyObject) {

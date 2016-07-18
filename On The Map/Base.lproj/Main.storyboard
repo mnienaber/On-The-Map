@@ -61,7 +61,7 @@
             </objects>
             <point key="canvasLocation" x="750" y="-320"/>
         </scene>
-        <!--List-->
+        <!--On The Map-->
         <scene sceneID="PWA-qn-2Mb">
             <objects>
                 <tableViewController storyboardIdentifier="ListViewController" id="cZd-HX-D2Q" customClass="ListViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
@@ -71,7 +71,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="TableViewCell" focusStyle="custom" textLabel="aae-Rt-Ncg" imageView="GIJ-zv-YoQ" rowHeight="46" style="IBUITableViewCellStyleDefault" id="PbE-F3-qzm">
-                                <rect key="frame" x="0.0" y="28" width="600" height="46"/>
+                                <rect key="frame" x="0.0" y="92" width="600" height="46"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PbE-F3-qzm" id="Uhz-Lv-92T">
                                     <rect key="frame" x="0.0" y="0.0" width="533" height="45.5"/>
@@ -91,7 +91,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="5sN-QE-03f" kind="show" id="sN5-x3-8ui"/>
+                                    <segue destination="5sN-QE-03f" kind="show" identifier="ShowStudentDetail" id="02r-ZH-nlx"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -100,11 +100,11 @@
                             <outlet property="delegate" destination="cZd-HX-D2Q" id="pey-Zq-yPO"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="List" image="listIcon" id="otg-8b-rxU"/>
+                    <navigationItem key="navigationItem" title="On The Map" id="VSU-us-7eh"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etk-WB-8zc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="387"/>
+            <point key="canvasLocation" x="1562" y="387"/>
         </scene>
         <!--Student Detail Controller-->
         <scene sceneID="MdQ-gu-jPa">
@@ -153,7 +153,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PBF-1Y-sOQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1446" y="387"/>
+            <point key="canvasLocation" x="2258" y="387"/>
         </scene>
         <!--Location View Controller-->
         <scene sceneID="ooK-3d-fke">
@@ -356,12 +356,31 @@
                     </tabBar>
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
-                        <segue destination="cZd-HX-D2Q" kind="relationship" relationship="viewControllers" id="0ft-SD-G4F"/>
+                        <segue destination="KlK-tV-Uoi" kind="relationship" relationship="viewControllers" id="0ft-SD-G4F"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
+        </scene>
+        <!--List-->
+        <scene sceneID="vBE-Zc-2tq">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KlK-tV-Uoi" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="List" image="listIcon" id="otg-8b-rxU"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hJh-dw-anw">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="cZd-HX-D2Q" kind="relationship" relationship="rootViewController" id="EGn-5L-SdM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZzI-LY-xtQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="750" y="387"/>
         </scene>
     </scenes>
     <resources>

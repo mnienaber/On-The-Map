@@ -33,6 +33,31 @@ class ListViewController: UITableViewController {
         super.viewWillAppear(animated)
     }
     
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        // get cell type
+        let cellReuseIdentifier = "TableViewCell"
+        let location = studentLocation[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
+        
+        // set cell defaults
+        cell.textLabel!.text = location.firstName + " " + location.lastName
+        
+        return cell
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return studentLocation.count
+    }
+    
+//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+//        let row = indexPath.row
+//        studentDetailDict = [studentLocation[row]]
+//        print("tableview1")
+//    }
+    
     func getStudentList() {
         
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
@@ -53,38 +78,19 @@ class ListViewController: UITableViewController {
 
 extension ListViewController {
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        // get cell type
-        let cellReuseIdentifier = "TableViewCell"
-        let location = studentLocation[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
-        
-        // set cell defaults
-        cell.textLabel!.text = location.firstName + " " + location.lastName
-
-        return cell
-    }
-    
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return studentLocation.count
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let row = indexPath.row
-        studentDetailDict = [studentLocation[row]]
-        //print(studentDetailDict)
-    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
+        print("prep1")
         if  (segue.identifier == studentSegueIdentifier) {
+            print("prep2")
             
             let destination = segue.destinationViewController as? StudentDetailController
+            print("prep3")
             let studentIndex = tableView.indexPathForSelectedRow?.row
+            print("prep4")
+            studentDetailDict = [studentLocation[studentIndex!]]
             destination?.studentDetailLocation = studentDetailDict
+            print("prep5")
         }
         
     }
