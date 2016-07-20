@@ -47,6 +47,7 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
+        
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
@@ -54,10 +55,11 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
             pinView!.canShowCallout = true
             pinView!.pinColor = .Red
             pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
-        } else {
-            
+        }
+        else {
             pinView!.annotation = annotation
         }
+        
         return pinView
     }
     

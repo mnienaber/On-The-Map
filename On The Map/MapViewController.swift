@@ -53,38 +53,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         
         mapView.setRegion(region, animated: true)
         locationManager.stopUpdatingLocation()
-        
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print("error:: \(error)")
-    }
-
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        let reuseId = "pin"
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
-        
-        if pinView == nil {
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.canShowCallout = true
-            pinView!.pinColor = .Red
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
-        }
-        else {
-            pinView!.annotation = annotation
-        }
-        
-        return pinView
-    }
-    
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if control == view.rightCalloutAccessoryView {
-            let app = UIApplication.sharedApplication()
-            if let toOpen = view.annotation?.subtitle! {
-                app.openURL(NSURL(string: toOpen)!)
-            }
-        }
     }
 
     
@@ -97,23 +69,47 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                 performUIUpdatesOnMain {
                     for student in self.studentLocation {
                         
-                        let lat = CLLocationDegrees(student.latitude)
-                        let long = CLLocationDegrees(student.longitude)
-                        
-                        // The lat and long are used to create a CLLocationCoordinates2D instance.
-                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                        
-                        let first = student.firstName
-                        let last = student.lastName
-                        let mediaURL = student.mediaURL
+                        let coordinate = CLLocationCoordinate2D(latitude: student.latitude, longitude: student.longitude)
                         let annotation = MKPointAnnotation()
                         annotation.coordinate = coordinate
-                        annotation.title = "\(first) \(last)"
-                        annotation.subtitle = mediaURL
+                        annotation.title = student.firstName + student.lastName
+                        annotation.subtitle = student.mediaURL
                         annotations.append(annotation)
                     }
                     self.mapView.addAnnotations(annotations)
                 }
+            }
+        }
+    }
+    
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        let reuseId = "pin"
+        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView!.canShowCallout = true
+            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+            pinView!.pinColor = .Red
+            pinView!.animatesDrop = true
+            
+        } else {
+            
+            pinView!.annotation = annotation
+        }
+        return pinView
+    }
+    
+    
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        if control == view.rightCalloutAccessoryView {
+            
+            let app = UIApplication.sharedApplication()
+            if let toOpen = view.annotation?.subtitle! {
+                
+                app.openURL(NSURL(string: toOpen)!)
             }
         }
     }
