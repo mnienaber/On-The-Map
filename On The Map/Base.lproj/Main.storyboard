@@ -70,15 +70,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="TableViewCell" focusStyle="custom" textLabel="aae-Rt-Ncg" imageView="GIJ-zv-YoQ" rowHeight="46" style="IBUITableViewCellStyleDefault" id="PbE-F3-qzm">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TableViewCell" focusStyle="custom" textLabel="aae-Rt-Ncg" imageView="GIJ-zv-YoQ" rowHeight="46" style="IBUITableViewCellStyleDefault" id="PbE-F3-qzm">
                                 <rect key="frame" x="0.0" y="92" width="600" height="46"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PbE-F3-qzm" id="Uhz-Lv-92T">
-                                    <rect key="frame" x="0.0" y="0.0" width="533" height="45.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="45.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aae-Rt-Ncg">
-                                            <rect key="frame" x="62" y="0.0" width="471" height="45.5"/>
+                                            <rect key="frame" x="62" y="0.0" width="503" height="45.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
