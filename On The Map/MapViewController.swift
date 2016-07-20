@@ -8,7 +8,6 @@
 import UIKit
 import MapKit
 
-
 class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate, CLLocationManagerDelegate {
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
@@ -21,29 +20,44 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.mapView.delegate = self
         locationManager.delegate = self
-        
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        mapView.showsUserLocation = true
+        
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         self.hideKeyboardWhenTappedAround()
-        //centerMapOnLocation(userLocation)
         getMapLocations()
         
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        locationManager.requestLocation()
 
     }
     
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == .AuthorizedWhenInUse {
+            print("yay")
+        }
+    }
     
-    func centerMapOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate,
-                                                                  regionRadius * 3.0, regionRadius * 1.0)
-        mapView.setRegion(coordinateRegion, animated: true)
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let location = locations.last
+        let center = CLLocationCoordinate2D(latitude: location!.coordinate.latitude, longitude: location!.coordinate.longitude)
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.65, longitudeDelta: 0.65))
+        
+        mapView.setRegion(region, animated: true)
+        locationManager.stopUpdatingLocation()
+        
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print("error:: \(error)")
     }
 
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
@@ -109,25 +123,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         getMapLocations()
         print("refresh")
     }
-    
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == .AuthorizedWhenInUse {
-            locationManager.requestLocation()
-        }
-    }
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            let span = MKCoordinateSpanMake(0.05, 0.05)
-            let region = MKCoordinateRegion(center: location.coordinate, span: span)
-            mapView.setRegion(region, animated: true)
-        }
-    }
-    
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        print("error:: \(error)")
-    }
-
     
 }
 

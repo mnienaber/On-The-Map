@@ -13,17 +13,12 @@ class ListViewController: UITableViewController {
     var appDelegate: AppDelegate!
     var studentLocation: [StudentLocation] = [StudentLocation]()
     let studentSegueIdentifier = "ShowStudentDetail"
-    //var studentDetailDict: [StudentLocation] = [StudentLocation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         getStudentList()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -58,9 +53,12 @@ class ListViewController: UITableViewController {
                     }
                 }
             }
-        
         }
-    
+    }
+    @IBAction func refreshButton(sender: AnyObject) {
+        
+        getStudentList()
+        print("refresh")
     }
 }
 
@@ -75,10 +73,7 @@ extension ListViewController {
             let studentDetailDict = [studentLocation[studentIndex!]]
             destination?.studentDetailLocation = studentDetailDict
         }
-        
     }
-
-
 }
 
 

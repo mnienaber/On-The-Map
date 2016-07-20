@@ -223,7 +223,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             self.appDelegate.mediaUrl = self.myMediaUrl.text!
         } else {
             
-            self.appDelegate.mediaUrl = Client.Constants.Scheme.ApiScheme + self.myMediaUrl.text!
+            self.appDelegate.mediaUrl = Client.Constants.Scheme.http + self.myMediaUrl.text!
         }
         
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}}"

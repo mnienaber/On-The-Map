@@ -100,7 +100,18 @@
                             <outlet property="delegate" destination="cZd-HX-D2Q" id="pey-Zq-yPO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="On The Map" id="VSU-us-7eh"/>
+                    <navigationItem key="navigationItem" title="On The Map" id="VSU-us-7eh">
+                        <barButtonItem key="leftBarButtonItem" image="pinIcon" id="PBC-Jb-ZiC">
+                            <connections>
+                                <segue destination="0nf-LG-OEF" kind="presentation" id="5qC-a1-hu6"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Opm-LI-kan">
+                            <connections>
+                                <action selector="refreshButton:" destination="cZd-HX-D2Q" id="PRl-Wo-oyZ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etk-WB-8zc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -176,7 +187,7 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E51-gC-abb">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E51-gC-abb">
                                 <rect key="frame" x="224" y="205" width="153" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="153" id="Go8-8J-u37"/>
@@ -188,7 +199,7 @@
                                     <action selector="findOnTheMap:" destination="0nf-LG-OEF" eventType="touchUpInside" id="Ukp-sY-uTZ"/>
                                 </connections>
                             </button>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
                                 <rect key="frame" x="0.0" y="142" width="600" height="458"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="458" id="c9q-g3-38x"/>
@@ -265,7 +276,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G5a-jq-z3O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.0" y="713"/>
+            <point key="canvasLocation" x="124" y="1085"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="CpS-7C-D9Y">
@@ -388,4 +399,7 @@
         <image name="mapIcon" width="32" height="32"/>
         <image name="pinIcon" width="32" height="32"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="5qC-a1-hu6"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -29,24 +29,24 @@ class LoginViewController: UIViewController {
         
         // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        self.debugText.text = "Please login to Udacity"
-        self.hideKeyboardWhenTappedAround()
+        debugText.text = "Please login to Udacity"
+        hideKeyboardWhenTappedAround()
         session = NSURLSession.sharedSession()
-        self.configureUI()
-        self.subscribeToKeyboardNotifications()
+        configureUI()
+        subscribeToKeyboardNotifications()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.addKeyboardDismissRecognizer()
-        self.subscribeToKeyboardNotifications()
+        addKeyboardDismissRecognizer()
+        subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(animated: Bool) {
         
-        self.removeKeyboardDismissRecognizer()
-        self.unsubscribeToKeyboardNotifications()
+        removeKeyboardDismissRecognizer()
+        unsubscribeToKeyboardNotifications()
     }
     
     @IBAction func loginPressed(sender: AnyObject) {
@@ -103,7 +103,6 @@ class LoginViewController: UIViewController {
                 let parsedResult: AnyObject!
                 do {
                     parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-                    //print(parsedResult)
                 } catch {
                     print("Error: Parsing JSON data")
                     return
@@ -114,52 +113,40 @@ class LoginViewController: UIViewController {
             
                 if let accountKey = account!["key"] as? String {
                     self.appDelegate.accountKey = accountKey
-                    print(self.appDelegate.accountKey!)
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.debugText.text = "Login Failed (accountKey)."
                     }
-                    print("Could not find accountKey")
                 }
                 
                 if let accountRegistered = account!["registered"] as? Int {
                     
                     self.appDelegate.accountRegistered = accountRegistered
-                    print(self.appDelegate.accountRegistered!)
-
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.debugText.text = "Login Failed (accountRegistered)."
                     }
-                    print("Could not find rego")
                 }
                 
                 if let sessionExpiration = sessionDict!["expiration"] as? String {
                     self.appDelegate.sessionExpiration = sessionExpiration
-                    print(self.appDelegate.sessionExpiration!)
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.debugText.text = "Login Failed (accountKey)."
                     }
-                    print("Could not find accountKey")
                 }
                 
                 if let sessionID = sessionDict!["id"] as? String {
                     self.appDelegate.sessionID = sessionID
-                    print(self.appDelegate.sessionID!)
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.debugText.text = "Login Failed (sessExpiration)."
                     }
-                    print("Could not find sessEx")
                 }
-                print(self.appDelegate.accountKey!)
-             
             }
             task.resume()
         }
         completeLogin()
-        //self.getUserInfo(self.appDelegate.accountKey!)
     }
     
     func completeLogin() {
@@ -180,7 +167,6 @@ extension LoginViewController {
         debugText.text = ""
         debugText.enabled = enabled
         
-        // adjust login button alpha
         if enabled {
             loginButton.alpha = 1.0
         } else {
