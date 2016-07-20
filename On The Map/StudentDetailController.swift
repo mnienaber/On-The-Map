@@ -37,7 +37,6 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
     
     func getCoordinates(studentDetailLocation: [StudentLocation]) -> CLLocationCoordinate2D {
         
-        
         for result in studentDetailLocation {
             
             locations = CLLocationCoordinate2D(latitude: result.latitude, longitude: result.longitude)
@@ -102,5 +101,4 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
             self.presentViewController(controller, animated: true, completion: nil)
         })
     }
-    
 }
