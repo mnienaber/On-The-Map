@@ -144,14 +144,13 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     func returnToMapView() {
         
         dispatch_async(dispatch_get_main_queue(), {
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-            self.presentViewController(controller, animated: true, completion: nil)
+            self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
     
-    func getUserInfo(accountKey: String) {
+    func getUserInfo(accountKey: Int) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + (accountKey))!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + String(accountKey))!)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             func displayError(error: String, debugLabelText: String? = nil) {

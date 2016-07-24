@@ -50,113 +50,48 @@ class LoginViewController: UIViewController {
         unsubscribeToKeyboardNotifications()
     }
     
-    @IBAction func loginPressed(sender: AnyObject) {
-        
-        loginButton.enabled = false
-        
-        let parameters: [String: String!] = [
-            Client.Constants.ParameterKeys.Username: self.usernameTextField.text,
-            Client.Constants.ParameterKeys.Password: self.passwordTextField.text]
-        
-        if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
-            debugText.text = "Username or Password Empty."
-        } else {
-            setUIEnabled(true)
-            
-            var param = "{\"udacity\": {\"username\":\"\(self.usernameTextField.text!)\", \"password\":\"\(self.passwordTextField.text!)\"}}"
-            let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
-            request.HTTPMethod = "POST"
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = param.dataUsingEncoding(NSUTF8StringEncoding)
-            let session = NSURLSession.sharedSession()
-            print(param)
-            let task = session.dataTaskWithRequest(request) { data, response, error in
-                // if an error occurs, print it and re-enable the UI
-                
-                func displayError(error: String, debugLabelText: String? = nil) {
-                    print(error)
-                    performUIUpdatesOnMain {
-                        self.setUIEnabled(true)
-                        self.debugText.text = "Login Failed (Session ID)."
-                    }
-                }
-                
-                /* GUARD: Was there an error? */
-                guard (error == nil) else {
-                    displayError("There was an error with your request: \(error)")
-                    return
-                }
-                
-                /* GUARD: Did we get a successful 2XX response? */
-                guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                    displayError("Your request returned a status code other than 2xx!")
-                    return
-                }
-                
-                /* GUARD: Was there any data returned? */
-                guard let data = data else {
-                    displayError("No data was returned by the request!")
-                    return
-                }
-                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-                
-                let parsedResult: AnyObject!
-                do {
-                    parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-                } catch {
-                    print("Error: Parsing JSON data")
-                    return
-                }
-                
-                let account = parsedResult["account"]!
-                let sessionDict = parsedResult["session"]!
-            
-                if let accountKey = account!["key"] as? String {
-                    self.appDelegate.accountKey = accountKey
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (accountKey)."
-                    }
-                }
-                
-                if let accountRegistered = account!["registered"] as? Int {
-                    
-                    self.appDelegate.accountRegistered = accountRegistered
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (accountRegistered)."
-                    }
-                }
-                
-                if let sessionExpiration = sessionDict!["expiration"] as? String {
-                    self.appDelegate.sessionExpiration = sessionExpiration
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (accountKey)."
-                    }
-                }
-                
-                if let sessionID = sessionDict!["id"] as? String {
-                    self.appDelegate.sessionID = sessionID
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (sessExpiration)."
-                    }
-                }
-            }
-            task.resume()
-        }
-        completeLogin()
-    }
-    
     func completeLogin() {
         dispatch_async(dispatch_get_main_queue(), {
             self.debugText.text = ""
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
             self.presentViewController(controller, animated: true, completion: nil)
         })
-    } 
+    }
+    
+    @IBAction func loginPressed(sender: AnyObject) {
+        
+        loginButton.enabled = false
+        
+//        let parameters: [String: String!] = [
+//            Client.Constants.ParameterKeys.Username: self.usernameTextField.text,
+//            Client.Constants.ParameterKeys.Password: self.passwordTextField.text]
+        
+        if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
+            debugText.text = "Username or Password Empty."
+        } else {
+            //setUIEnabled(true)
+            Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (studentLocation, error) in
+                
+                if let studentLocation = studentLocation {
+                    [self.studentLocation = studentLocation]
+                    performUIUpdatesOnMain {
+                        for student in self.studentLocation {
+
+                            if self.appDelegate.accountRegistered == 1 {
+                                self.completeLogin()
+                            } else {
+                                
+                                self.debugText.text = "You're email address is not known to Udacity - please create an account"
+                                self.usernameTextField.text = nil
+                                self.passwordTextField.text = nil
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 extension LoginViewController {

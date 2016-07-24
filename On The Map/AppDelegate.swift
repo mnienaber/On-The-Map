@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var sharedSession = NSURLSession.sharedSession()
     var requestToken: String? = nil
     var accountRegistered: Int? = nil
-    var accountKey: String? = nil
+    var accountKey: Int? = nil
     var sessionExpiration: String? = nil
     var sessionID: String? = nil
     var userID: Int? = nil
@@ -36,6 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        FIRApp.configure()
         // Override point for customization after application launch.
 //        config.updateIfDaysSinceUpdateExceeds(7)
         return true
