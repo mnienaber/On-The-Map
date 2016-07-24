@@ -25,6 +25,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
+        self.mapView.delegate = self
         mapView.showsUserLocation = true
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -58,46 +59,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print("error:: \(error)")
     }
-
-    
-    func getMapLocations() {
-        
-        Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
-            if let studentLocation = studentLocation {
-                [self.studentLocation = studentLocation]
-                var annotations = [MKPointAnnotation]()
-                performUIUpdatesOnMain {
-                    for student in self.studentLocation {
-                        
-                        let coordinate = CLLocationCoordinate2D(latitude: student.latitude, longitude: student.longitude)
-                        let annotation = MKPointAnnotation()
-                        annotation.coordinate = coordinate
-                        annotation.title = student.firstName + student.lastName
-                        annotation.subtitle = student.mediaURL
-                        annotations.append(annotation)
-                    }
-                    self.mapView.addAnnotations(annotations)
-                }
-            }
-        }
-    }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
+        
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
             pinView!.pinColor = .Red
-            pinView!.animatesDrop = true
-            
-        } else {
-            
+            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+        }
+        else {
             pinView!.annotation = annotation
         }
+        
         return pinView
     }
     
@@ -113,6 +91,33 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             }
         }
     }
+    
+    func getMapLocations() {
+        
+        Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
+            if let studentLocation = studentLocation {
+                [self.studentLocation = studentLocation]
+                var annotations = [MKPointAnnotation]()
+                performUIUpdatesOnMain {
+                    for student in self.studentLocation {
+                        
+                        let lat = student.latitude
+                        let long = student.longitude
+                        let mediaURL = student.mediaURL
+                        let annotation = MKPointAnnotation()
+                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                        
+                        annotation.coordinate = coordinate
+                        annotation.title = student.firstName + student.lastName
+                        annotation.subtitle = mediaURL
+                        annotations.append(annotation)
+                    }
+                    self.mapView.addAnnotations(annotations)
+                }
+            }
+        }
+    }
+
     
     @IBAction func buttonMethod(sender: AnyObject) {
         
