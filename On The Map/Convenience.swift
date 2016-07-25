@@ -48,7 +48,7 @@ extension Client {
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil {
                 
                 func displayError(error: String, debugLabelText: String? = nil) {
                     print(error)
@@ -62,13 +62,11 @@ extension Client {
                     return
                 }
                 
-                /* GUARD: Did we get a successful 2XX response? */
                 guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                     displayError("Your request returned a status code other than 2xx!")
                     return
                 }
                 
-                /* GUARD: Was there any data returned? */
                 guard let data = data else {
                     displayError("No data was returned by the request!")
                     return
@@ -87,10 +85,9 @@ extension Client {
             print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
-        
     }
     
-    func loginToApp(username: String, password: String, completionHandlerForLogin: (result: [StudentLocation]?, error: NSError?) -> Void) {
+    func loginToApp(username: String, password: String, completionHandlerForLogin: (statusCode: Int?, error: NSError?) -> Void) {
         
         var param = "{\"udacity\": {\"username\":\"\(username)\", \"password\":\"\(password)\"}}"
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
@@ -101,7 +98,6 @@ extension Client {
         let session = NSURLSession.sharedSession()
         print(param)
         let task = session.dataTaskWithRequest(request) { data, response, error in
-            // if an error occurs, print it and re-enable the UI
             
             func displayError(error: String, debugLabelText: String? = nil) {
                 print(error)
@@ -120,7 +116,6 @@ extension Client {
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                 displayError("Your request returned a status code other than 2xx!")
-                
                 return
             }
             
