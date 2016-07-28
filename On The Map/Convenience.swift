@@ -8,14 +8,11 @@
 //
 import UIKit
 import Foundation
-//
-////TODO: move all get and post methods and completion handlers here
-////
+
 extension Client {
     
     func getStudentLocations(completionHandlerForStudentLocations: (result: [StudentLocation]?, error: NSError?) -> Void) {
-        
-        /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
+
         let parameters = [
             Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
@@ -48,7 +45,7 @@ extension Client {
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil {
                 
                 func displayError(error: String, debugLabelText: String? = nil) {
                     print(error)
@@ -62,13 +59,11 @@ extension Client {
                     return
                 }
                 
-                /* GUARD: Did we get a successful 2XX response? */
                 guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                     displayError("Your request returned a status code other than 2xx!")
                     return
                 }
                 
-                /* GUARD: Was there any data returned? */
                 guard let data = data else {
                     displayError("No data was returned by the request!")
                     return
@@ -87,6 +82,28 @@ extension Client {
             print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
+    }
+    
+    func loginToApp(username: String, password: String, completionHandlerForLOGIN: (details: [AccountVerification]?, error: NSError?) -> Void) {
         
+        let param = "{\"udacity\": {\"username\":\"\(username)\", \"password\":\"\(password)\"}}"
+        
+        print(param)
+        
+        taskForLOGINMethod(param) { (results, error) in
+            
+            if let error = error {
+                print(error)
+            } else {
+                
+                if let results = results[Client.Constants.UdacityResponseKeys.Account_Details] as? [[String:AnyObject]] {
+                    let accountDetails = AccountVerification.LOGFromResults(results)
+                    print("accountDetails")
+                    completionHandlerForLOGIN(details: accountDetails, error: nil)
+                } else {
+                    completionHandlerForLOGIN(details: nil, error: error)
+                }
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ extension Client {
             static let Method = "https://api.parse.com/1/classes/StudentLocation"
             static let UdacUserMethod = "https://www.udacity.com/api/users/"
             static let ApiScheme = "https://"
+            static let http = "http://"
             static let ApiHost = "api.parse.com"
             static let ApiPath = "/1/classes/StudentLocation"
             static let Limit = "?limit=100"
@@ -54,12 +55,18 @@ extension Client {
             static let ACL = "ACL"
         }
         
-        struct UdacityResponseKeys {
+        struct UdacityAccountDetails {
             
             static let Account_Registered = "registered"
             static let Account_Key = "key"
             static let Session_Id = "id"
             static let Session_Expiration = "expiration"
+        }
+        
+        struct UdacityResponseKeys {
+            
+            static let Account_Details = "results"
+            
         }
         
         struct UI {

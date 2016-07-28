@@ -8,35 +8,58 @@
 import UIKit
 import MapKit
 
-
-class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate, CLLocationManagerDelegate {
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
     var appDelegate: AppDelegate!
+    let locationManager = CLLocationManager()
+    let regionRadius: CLLocationDistance = 2000
 
     @IBOutlet weak var mapView: MKMapView!
  
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
         self.mapView.delegate = self
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(buttonMethod))
+        mapView.showsUserLocation = true
+        
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        self.hideKeyboardWhenTappedAround()
         getMapLocations()
         
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
 
     }
     
-    // MARK: - MKMapViewDelegate
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == .AuthorizedWhenInUse {
+            print("yay")
+        }
+    }
     
-    // Here we create a view with a "right callout accessory view". You might choose to look into other
-    // decoration alternatives. Notice the similarity between this method and the cellForRowAtIndexPath
-    // method in TableViewDataSource.
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let location = locations.last
+        let center = CLLocationCoordinate2D(latitude: location!.coordinate.latitude, longitude: location!.coordinate.longitude)
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.65, longitudeDelta: 0.65))
+        
+        mapView.setRegion(region, animated: true)
+        locationManager.stopUpdatingLocation()
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print("error:: \(error)")
+    }
+    
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
@@ -58,14 +81,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
         if control == view.rightCalloutAccessoryView {
+            
             let app = UIApplication.sharedApplication()
             if let toOpen = view.annotation?.subtitle! {
+                
                 app.openURL(NSURL(string: toOpen)!)
             }
         }
     }
-
     
     func getMapLocations() {
         
@@ -76,23 +101,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                 performUIUpdatesOnMain {
                     for student in self.studentLocation {
                         
-                        let lat = CLLocationDegrees(student.latitude)
-                        let long = CLLocationDegrees(student.longitude)
-                        
-                        // The lat and long are used to create a CLLocationCoordinates2D instance.
+                        let lat = student.latitude
+                        let long = student.longitude
+                        let mediaURL = student.mediaURL
+                        let annotation = MKPointAnnotation()
                         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
                         
-                        let first = student.firstName
-                        let last = student.lastName
-                        let mediaURL = student.mediaURL
-                        
-                        // Here we create the annotation and set its coordiate, title, and subtitle properties
-                        let annotation = MKPointAnnotation()
                         annotation.coordinate = coordinate
-                        annotation.title = "\(first) \(last)"
+                        annotation.title = student.firstName + student.lastName
                         annotation.subtitle = mediaURL
-                        //print(annotation.title)
-                        // Finally we place the annotation in an array of annotations.
                         annotations.append(annotation)
                     }
                     self.mapView.addAnnotations(annotations)
@@ -100,13 +117,30 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             }
         }
     }
+
     
     @IBAction func buttonMethod(sender: AnyObject) {
         
         getMapLocations()
         print("refresh")
     }
+    
+}
 
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    
+    
+
+    
     
 }
 

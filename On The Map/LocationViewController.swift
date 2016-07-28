@@ -50,6 +50,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         questionText.text = "Where are you studying today?"
         questionText.textAlignment = .Center
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.hideKeyboardWhenTappedAround()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -143,14 +144,13 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     func returnToMapView() {
         
         dispatch_async(dispatch_get_main_queue(), {
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-            self.presentViewController(controller, animated: true, completion: nil)
+            self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
     
-    func getUserInfo(accountKey: String) {
+    func getUserInfo(accountKey: Int) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + (accountKey))!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + String(accountKey))!)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { data, response, error in
             func displayError(error: String, debugLabelText: String? = nil) {
@@ -189,7 +189,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             }
             
             let user = parsedResult["user"]!
-            //let sessionDict = parsedResult["session"]!
             
             if let lastName = user!["last_name"] as? String {
                 self.appDelegate.lastName = lastName
@@ -218,17 +217,15 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     @IBAction func submitButton(sender: AnyObject) {
         
-        if (self.myMediaUrl.text!.rangeOfString("http://") != nil) {
+        if ((self.myMediaUrl.text!.rangeOfString("http://") != nil) && (self.myMediaUrl.text!.rangeOfString("https://")) != nil) {
             
             self.appDelegate.mediaUrl = self.myMediaUrl.text!
         } else {
             
-            self.appDelegate.mediaUrl = Client.Constants.Scheme.ApiScheme + self.myMediaUrl.text!
+            self.appDelegate.mediaUrl = Client.Constants.Scheme.http + self.myMediaUrl.text!
         }
         
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}}"
-        print(jsonBody)
-        
         
         self.getPostToMap(jsonBody)
         returnToMapView()
@@ -241,9 +238,9 @@ extension LocationViewController {
         self.view.addGestureRecognizer(tapRecognizer!)
     }
     
-//    func removeKeyboardDismissRecognizer() {
-//        self.view.removeGestureRecognizer(tapRecognizer!)
-//    }
+    func removeKeyboardDismissRecognizer() {
+        self.view.removeGestureRecognizer(tapRecognizer!)
+    }
     
     func handleSingleTap(recognizer: UITapGestureRecognizer) {
         self.view.endEditing(true)

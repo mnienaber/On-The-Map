@@ -11,7 +11,6 @@ import Foundation
 
 class Client : NSObject {
     
-    // shared session
     var session = NSURLSession.sharedSession()
     var config = Config()
     var appDelegate: AppDelegate!
@@ -40,13 +39,11 @@ class Client : NSObject {
                 return
             }
             
-            /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                 sendError("Your request returned a status code other than 2xx!")
                 return
             }
             
-            /* GUARD: Was there any data returned? */
             guard let data = data else {
                 sendError("No data was returned by the request!")
                 return
@@ -101,11 +98,58 @@ class Client : NSObject {
         
     }
     
+    func taskForLOGINMethod(parameters: String, completionHandlerForLOGIN: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        
+        let url = "https://www.udacity.com/api/session"
+        let request = NSMutableURLRequest(URL: NSURL(string: url)!)
+        request.HTTPMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = parameters.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            
+            func displayError(error: String) {
+                
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                completionHandlerForLOGIN(result: nil, error: NSError(domain: "taskForLOGINMethod", code: 1, userInfo: userInfo))
+                
+            }
+            
+            /* GUARD: Was there an error? */
+            guard (error == nil) else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            /* GUARD: Did we get a successful 2XX response? */
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                displayError("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            /* GUARD: Was there any data returned? */
+            guard let data = data else {
+                displayError("No data was returned by the request!")
+                return
+            }
+            
+            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+            
+            self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForLOGIN)
+            print("new data")
+        }
+        task.resume()
+        return task
+    }
+
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
         
         var parsedResult: AnyObject!
         do {
             parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            print(parsedResult!)
         } catch {
             let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
             completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))

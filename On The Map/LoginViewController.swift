@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginViewController: UIViewController {
     
@@ -16,6 +17,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var debugText: UILabel!
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
+    var accountVerification: [AccountVerification] = [AccountVerification]()
     
     var appDelegate: AppDelegate!
     var keyboardOnScreen = false
@@ -24,140 +26,30 @@ class LoginViewController: UIViewController {
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        self.debugText.text = "Please login to Udacity"
+        debugText.text = "Please login to Udacity"
+        hideKeyboardWhenTappedAround()
         session = NSURLSession.sharedSession()
-        self.configureUI()
+        configureUI()
+        subscribeToKeyboardNotifications()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.addKeyboardDismissRecognizer()
-        self.subscribeToKeyboardNotifications()
+        addKeyboardDismissRecognizer()
+        subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(animated: Bool) {
         
-        self.removeKeyboardDismissRecognizer()
-        self.unsubscribeToKeyboardNotifications()
-    }
-    
-    @IBAction func loginPressed(sender: AnyObject) {
-        
-        loginButton.enabled = false
-        
-        let parameters: [String: String!] = [
-            Client.Constants.ParameterKeys.Username: self.usernameTextField.text,
-            Client.Constants.ParameterKeys.Password: self.passwordTextField.text]
-        
-        if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
-            debugText.text = "Username or Password Empty."
-        } else {
-            setUIEnabled(true)
-            
-            var param = "{\"udacity\": {\"username\":\"\(self.usernameTextField.text!)\", \"password\":\"\(self.passwordTextField.text!)\"}}"
-            let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
-            request.HTTPMethod = "POST"
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.HTTPBody = param.dataUsingEncoding(NSUTF8StringEncoding)
-            let session = NSURLSession.sharedSession()
-            print(param)
-            let task = session.dataTaskWithRequest(request) { data, response, error in
-                // if an error occurs, print it and re-enable the UI
-                
-                func displayError(error: String, debugLabelText: String? = nil) {
-                    print(error)
-                    performUIUpdatesOnMain {
-                        self.setUIEnabled(true)
-                        self.debugText.text = "Login Failed (Session ID)."
-                    }
-                }
-                
-                /* GUARD: Was there an error? */
-                guard (error == nil) else {
-                    displayError("There was an error with your request: \(error)")
-                    return
-                }
-                
-                /* GUARD: Did we get a successful 2XX response? */
-                guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                    displayError("Your request returned a status code other than 2xx!")
-                    return
-                }
-                
-                /* GUARD: Was there any data returned? */
-                guard let data = data else {
-                    displayError("No data was returned by the request!")
-                    return
-                }
-                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-                
-                let parsedResult: AnyObject!
-                do {
-                    parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-                    //print(parsedResult)
-                } catch {
-                    print("Error: Parsing JSON data")
-                    return
-                }
-                
-                let account = parsedResult["account"]!
-                let sessionDict = parsedResult["session"]!
-            
-                if let accountKey = account!["key"] as? String {
-                    self.appDelegate.accountKey = accountKey
-                    print(self.appDelegate.accountKey!)
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (accountKey)."
-                    }
-                    print("Could not find accountKey")
-                }
-                
-                if let accountRegistered = account!["registered"] as? Int {
-                    
-                    self.appDelegate.accountRegistered = accountRegistered
-                    print(self.appDelegate.accountRegistered!)
-
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (accountRegistered)."
-                    }
-                    print("Could not find rego")
-                }
-                
-                if let sessionExpiration = sessionDict!["expiration"] as? String {
-                    self.appDelegate.sessionExpiration = sessionExpiration
-                    print(self.appDelegate.sessionExpiration!)
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (accountKey)."
-                    }
-                    print("Could not find accountKey")
-                }
-                
-                if let sessionID = sessionDict!["id"] as? String {
-                    self.appDelegate.sessionID = sessionID
-                    print(self.appDelegate.sessionID!)
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.debugText.text = "Login Failed (sessExpiration)."
-                    }
-                    print("Could not find sessEx")
-                }
-                print(self.appDelegate.accountKey!)
-             
-            }
-            task.resume()
-        }
-        completeLogin()
-        //self.getUserInfo(self.appDelegate.accountKey!)
+        removeKeyboardDismissRecognizer()
+        unsubscribeToKeyboardNotifications()
     }
     
     func completeLogin() {
@@ -166,7 +58,55 @@ class LoginViewController: UIViewController {
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
             self.presentViewController(controller, animated: true, completion: nil)
         })
-    } 
+    }
+    
+    func executeLogin() {
+        
+        Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
+            
+            print(details)
+            if let results = details {
+                print("results")
+                [self.accountVerification = results]
+                
+                performUIUpdatesOnMain {
+                    
+                    for result in results {
+                        print("result")
+                        print(result.accountKey)
+                        if result.accountRegistered == 1 {
+                            
+                            print("before completeLogin")
+                            self.completeLogin()
+                        } else {
+                            
+                            let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
+                            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                            self.presentViewController(failLoginAlert, animated: true, completion: nil)
+                            self.debugText.text = "You're email address is not known to Udacity - please create an account"
+                            self.usernameTextField.text = nil
+                            self.passwordTextField.text = nil
+                        }
+                    }
+                }
+            } else {
+                self.debugText.text! = String(error)
+            }
+        }
+    }
+    
+    @IBAction func loginPressed(sender: AnyObject) {
+        
+        loginButton.enabled = false
+        
+        if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
+            debugText.text = "Username or Password Empty."
+        } else {
+            
+            executeLogin()
+            
+        }
+    }
 }
 
 extension LoginViewController {
@@ -178,7 +118,6 @@ extension LoginViewController {
         debugText.text = ""
         debugText.enabled = enabled
         
-        // adjust login button alpha
         if enabled {
             loginButton.alpha = 1.0
         } else {
@@ -191,34 +130,6 @@ extension LoginViewController {
         tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")
         tapRecognizer?.numberOfTapsRequired = 1
     }
-    
-
-//        
-//        // configure background gradient
-//        let backgroundGradient = CAGradientLayer()
-//        backgroundGradient.colors = [Client.Constants.UI.LoginColorTop, Client.Constants.UI.LoginColorBottom]
-//        backgroundGradient.locations = [0.0, 1.0]
-//        backgroundGradient.frame = view.frame
-//        view.layer.insertSublayer(backgroundGradient, atIndex: 0)
-//        
-//        configureTextField(usernameTextField)
-//        configureTextField(passwordTextField)
-//    }
-    
-//    private func configureTextField(textField: UITextField) {
-//        let textFieldPaddingViewFrame = CGRectMake(0.0, 0.0, 13.0, 0.0)
-//        let textFieldPaddingView = UIView(frame: textFieldPaddingViewFrame)
-//        textField.leftView = textFieldPaddingView
-//        textField.leftViewMode = .Always
-//        textField.backgroundColor = Client.Constants.UI.GreyColor
-//        textField.textColor = Client.Constants.UI.BlueColor
-//        textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
-//        textField.tintColor = Client.Constants.UI.BlueColor
-//        textField.delegate = self
-//    }
-}
-
-extension LoginViewController {
     
     private func subscribeToNotification(notification: String, selector: Selector) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
@@ -270,5 +181,14 @@ extension LoginViewController {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
         return keyboardSize.CGRectValue().height
+    }
+    
+    override func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    }
+    
+    override func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
