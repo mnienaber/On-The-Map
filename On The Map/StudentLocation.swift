@@ -63,7 +63,6 @@ struct AccountVerification {
 
     }
     
-    
     static func LOGFromResults(results: [[String:AnyObject]]) -> [AccountVerification] {
         
         var accountVerificationObjects = [AccountVerification]()
@@ -71,6 +70,7 @@ struct AccountVerification {
         for result in results {
             accountVerificationObjects.append(AccountVerification(dictionary: result))
         }
+        print(accountVerificationObjects)
         return accountVerificationObjects
     }
 }

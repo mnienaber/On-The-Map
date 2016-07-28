@@ -60,6 +60,41 @@ class LoginViewController: UIViewController {
         })
     }
     
+    func executeLogin() {
+        
+        Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
+            
+            print(details)
+            if let results = details {
+                print("results")
+                [self.accountVerification = results]
+                
+                performUIUpdatesOnMain {
+                    
+                    for result in results {
+                        print("result")
+                        print(result.accountKey)
+                        if result.accountRegistered == 1 {
+                            
+                            print("before completeLogin")
+                            self.completeLogin()
+                        } else {
+                            
+                            let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
+                            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                            self.presentViewController(failLoginAlert, animated: true, completion: nil)
+                            self.debugText.text = "You're email address is not known to Udacity - please create an account"
+                            self.usernameTextField.text = nil
+                            self.passwordTextField.text = nil
+                        }
+                    }
+                }
+            } else {
+                self.debugText.text! = String(error)
+            }
+        }
+    }
+    
     @IBAction func loginPressed(sender: AnyObject) {
         
         loginButton.enabled = false
@@ -68,35 +103,8 @@ class LoginViewController: UIViewController {
             debugText.text = "Username or Password Empty."
         } else {
             
-            Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (results, error) in
-                
-                if let results = results {
-                    [self.accountVerification = results]
-                    print("results")
-                    for result in results {
-                        
-                        if result.accountRegistered == 1 {
-                            
-                            performUIUpdatesOnMain {
-                                
-                                print("before completeLogin")
-                                self.completeLogin()
-                            }} else {
-                            
-                            performUIUpdatesOnMain {
-                                
-                                let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
-                                failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                                self.presentViewController(failLoginAlert, animated: true, completion: nil)
-                                self.debugText.text = "You're email address is not known to Udacity - please create an account"
-                                self.usernameTextField.text = nil
-                                self.passwordTextField.text = nil
-                            }
-                            
-                        }
-                    }
-                }
-            }
+            executeLogin()
+            
         }
     }
 }

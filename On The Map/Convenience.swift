@@ -8,14 +8,11 @@
 //
 import UIKit
 import Foundation
-//
-////TODO: move all get and post methods and completion handlers here
-////
+
 extension Client {
     
     func getStudentLocations(completionHandlerForStudentLocations: (result: [StudentLocation]?, error: NSError?) -> Void) {
-        
-        /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
+
         let parameters = [
             Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
@@ -87,13 +84,14 @@ extension Client {
         task.resume()
     }
     
-    func loginToApp(username: String, password: String, completionHandlerForLogin: (results: [AccountVerification]?, error: NSError?) -> Void) {
+    func loginToApp(username: String, password: String, completionHandlerForLOGIN: (details: [AccountVerification]?, error: NSError?) -> Void) {
         
         let param = "{\"udacity\": {\"username\":\"\(username)\", \"password\":\"\(password)\"}}"
         
         print(param)
         
-        taskForLOGINMethod(param) { results, error in
+        taskForLOGINMethod(param) { (results, error) in
+            
             if let error = error {
                 print(error)
             } else {
@@ -101,13 +99,11 @@ extension Client {
                 if let results = results[Client.Constants.UdacityResponseKeys.Account_Details] as? [[String:AnyObject]] {
                     let accountDetails = AccountVerification.LOGFromResults(results)
                     print("accountDetails")
-                    completionHandlerForLogin(results: accountDetails, error: nil)
+                    completionHandlerForLOGIN(details: accountDetails, error: nil)
                 } else {
-                    completionHandlerForLogin(results: nil, error: error)
+                    completionHandlerForLOGIN(details: nil, error: error)
                 }
             }
         }
-        
     }
-
 }
