@@ -298,6 +298,7 @@
 				TargetAttributes = {
 					2EE1800E1CF2EFF700D6EB19 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = ZXKDF4ZF72;
 					};
 					2EE180241CF2EFF700D6EB19 = {
 						CreatedOnToolsVersion = 7.2;
@@ -637,6 +638,7 @@
 			baseConfigurationReference = DCB1D07167C79477D86CECED /* Pods-On The Map.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "On The Map/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelnienaber.On-The-Map";
@@ -649,6 +651,7 @@
 			baseConfigurationReference = 664330FB78F1BA3D3A181956 /* Pods-On The Map.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "On The Map/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelnienaber.On-The-Map";

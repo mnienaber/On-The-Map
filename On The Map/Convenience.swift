@@ -87,97 +87,27 @@ extension Client {
         task.resume()
     }
     
-    func loginToApp(username: String, password: String, completionHandlerForLogin: (statusCode: Int?, error: NSError?) -> Void) {
+    func loginToApp(username: String, password: String, completionHandlerForLogin: (results: [AccountVerification]?, error: NSError?) -> Void) {
         
-        var param = "{\"udacity\": {\"username\":\"\(username)\", \"password\":\"\(password)\"}}"
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/session")!)
-        request.HTTPMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = param.dataUsingEncoding(NSUTF8StringEncoding)
-        let session = NSURLSession.sharedSession()
+        let param = "{\"udacity\": {\"username\":\"\(username)\", \"password\":\"\(password)\"}}"
+        
         print(param)
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            
-            func displayError(error: String, debugLabelText: String? = nil) {
+        
+        taskForLOGINMethod(param) { results, error in
+            if let error = error {
                 print(error)
-                performUIUpdatesOnMain {
-//                    self.setUIEnabled(true)
-//                    self.debugText.text = "Login Failed (Session ID)."
-                }
-            }
-            
-            /* GUARD: Was there an error? */
-            guard (error == nil) else {
-                displayError("There was an error with your request: \(error)")
-                return
-            }
-            
-            /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                displayError("Your request returned a status code other than 2xx!")
-                return
-            }
-            
-            /* GUARD: Was there any data returned? */
-            guard let data = data else {
-                displayError("No data was returned by the request!")
-                return
-            }
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-            
-            let parsedResult: AnyObject!
-            do {
-                parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-            } catch {
-                print("Error: Parsing JSON data")
-                return
-            }
-            
-            let account = parsedResult["account"]!
-            print(account)
-            let sessionDict = parsedResult["session"]!
-            print(sessionDict)
-            
-            if let accountKey = account!["key"] as? Int {
-                self.appDelegate.accountKey = accountKey
-                print(accountKey)
             } else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    //self.debugText.text = "Login Failed (accountKey)."
-                    print("Login Failed (accountKey).")
-                }
-            }
-            
-            if let accountRegistered = account!["registered"] as? Int {
                 
-                self.appDelegate.accountRegistered = accountRegistered
-            } else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    //self.debugText.text = "Login Failed (accountRegistered)."
-                    print("Login Failed (accountRegistered).")
-                }
-            }
-            
-            if let sessionExpiration = sessionDict!["expiration"] as? String {
-                self.appDelegate.sessionExpiration = sessionExpiration
-            } else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    //self.debugText.text = "Login Failed (accountKey)."
-                    print("Login Failed (accountKey).")
-                }
-            }
-            
-            if let sessionID = sessionDict!["id"] as? String {
-                self.appDelegate.sessionID = sessionID
-            } else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    //self.debugText.text = "Login Failed (sessExpiration)."
-                    print("Login Failed (sessExpiration).")
+                if let results = results[Client.Constants.UdacityResponseKeys.Account_Details] as? [[String:AnyObject]] {
+                    let accountDetails = AccountVerification.LOGFromResults(results)
+                    print("accountDetails")
+                    completionHandlerForLogin(results: accountDetails, error: nil)
+                } else {
+                    completionHandlerForLogin(results: nil, error: error)
                 }
             }
         }
-        task.resume()
+        
     }
 
 }

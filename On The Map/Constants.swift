@@ -55,12 +55,18 @@ extension Client {
             static let ACL = "ACL"
         }
         
-        struct UdacityResponseKeys {
+        struct UdacityAccountDetails {
             
             static let Account_Registered = "registered"
             static let Account_Key = "key"
             static let Session_Id = "id"
             static let Session_Expiration = "expiration"
+        }
+        
+        struct UdacityResponseKeys {
+            
+            static let Account_Details = "results"
+            
         }
         
         struct UI {

@@ -21,10 +21,7 @@ struct StudentLocation {
     let longitude: Double
     let createdAt: String
     let updatedAt: String
-    //let ACL: Bool
 
-
-    // construct a StudentLocationObject from a dictionary
     init(dictionary: [String:AnyObject]) {
         
         objectId = dictionary[Client.Constants.ParseResponseKeys.ObjectId] as! String
@@ -37,17 +34,43 @@ struct StudentLocation {
         longitude = dictionary[Client.Constants.ParseResponseKeys.Longitude] as! Double
         createdAt = dictionary[Client.Constants.ParseResponseKeys.CreatedAt] as! String
         updatedAt = dictionary[Client.Constants.ParseResponseKeys.UpdatedAt] as! String
-        //ACL = dictionary[Constants.ParseResponseKeys.ACL] as! Bool
     }
     
     static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
         
         var studentLocationObjects = [StudentLocation]()
         
-        // iterate through array of dictionaries, each studentLocationObject is a dictionary
         for result in results {
             studentLocationObjects.append(StudentLocation(dictionary: result))
         }
         return studentLocationObjects
     }    
+}
+
+struct AccountVerification {
+    
+    let accountRegistered: Int
+    let accountKey: Int
+    let sessionId: String
+    let sessionExpiration: String
+    
+    init(dictionary: [String: AnyObject]) {
+        
+        accountRegistered = dictionary[Client.Constants.UdacityAccountDetails.Account_Registered] as! Int
+        accountKey = dictionary[Client.Constants.UdacityAccountDetails.Account_Key] as! Int
+        sessionId = dictionary[Client.Constants.UdacityAccountDetails.Session_Id] as! String
+        sessionExpiration = dictionary[Client.Constants.UdacityAccountDetails.Session_Expiration] as! String
+
+    }
+    
+    
+    static func LOGFromResults(results: [[String:AnyObject]]) -> [AccountVerification] {
+        
+        var accountVerificationObjects = [AccountVerification]()
+
+        for result in results {
+            accountVerificationObjects.append(AccountVerification(dictionary: result))
+        }
+        return accountVerificationObjects
+    }
 }
