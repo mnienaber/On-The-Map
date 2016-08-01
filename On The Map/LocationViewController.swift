@@ -148,7 +148,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         })
     }
     
-    func getUserInfo(accountKey: Int) {
+    func getUserInfo(accountKey: AnyObject) {
         
         let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + String(accountKey))!)
         let session = NSURLSession.sharedSession()
@@ -160,19 +160,16 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 }
             }
             
-            /* GUARD: Was there an error? */
             guard (error == nil) else {
                 displayError("There was an error with your request: \(error)")
                 return
             }
-            
-            /* GUARD: Did we get a successful 2XX response? */
+
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                 displayError("Your request returned a status code other than 2xx!")
                 return
             }
-            
-            /* GUARD: Was there any data returned? */
+
             guard let data = data else {
                 displayError("No data was returned by the request!")
                 return
@@ -181,9 +178,10 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             
             let parsedResult: AnyObject!
             do {
+                
                 parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-                //print(parsedResult)
             } catch {
+                
                 print("Error: Parsing JSON data")
                 return
             }

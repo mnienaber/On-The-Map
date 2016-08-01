@@ -84,23 +84,21 @@ extension Client {
         task.resume()
     }
     
-    func loginToApp(username: String, password: String, completionHandlerForLOGIN: (details: [AccountVerification]?, error: NSError?) -> Void) {
+    func loginToApp(username: String, password: String, completionHandlerForLOGIN: (details: [String: AnyObject]?, error: NSError?) -> Void) {
         
         let param = "{\"udacity\": {\"username\":\"\(username)\", \"password\":\"\(password)\"}}"
-        
-        print(param)
         
         taskForLOGINMethod(param) { (results, error) in
             
             if let error = error {
+                
                 print(error)
             } else {
                 
-                if let results = results[Client.Constants.UdacityResponseKeys.Account_Details] as? [[String:AnyObject]] {
-                    let accountDetails = AccountVerification.LOGFromResults(results)
-                    print("accountDetails")
-                    completionHandlerForLOGIN(details: accountDetails, error: nil)
+                if let results = results["account"] as? [String: AnyObject]? {
+                    completionHandlerForLOGIN(details: results, error: nil)
                 } else {
+                    
                     completionHandlerForLOGIN(details: nil, error: error)
                 }
             }
