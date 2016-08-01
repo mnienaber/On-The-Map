@@ -18,21 +18,24 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
     let locationManager = CLLocationManager()
     var locations = CLLocationCoordinate2D()
     
+    @IBOutlet weak var navBarOutlet: UINavigationBar!
     @IBOutlet weak var mapViewOutlet: MKMapView!
     @IBOutlet weak var cancelButtonOutlet: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.hideKeyboardWhenTappedAround()
         self.mapViewOutlet.delegate = self
         getLocationManager(locationManager, didUpdateLocations: self.getCoordinates(self.studentDetailLocation))
-    
     }
     
     override func viewWillAppear(animated: Bool) {
-
+        
+        self.navBarOutlet.hidden = true
+        self.navigationController?.navigationBarHidden = true
     }
     
     func getCoordinates(studentDetailLocation: [StudentLocation]) -> CLLocationCoordinate2D {

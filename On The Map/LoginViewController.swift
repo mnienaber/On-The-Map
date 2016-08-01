@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UIApplicationDelegate {
     
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -30,7 +30,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // get the app delegate
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         debugText.text = "Please login to Udacity"
         hideKeyboardWhenTappedAround()
@@ -64,33 +63,27 @@ class LoginViewController: UIViewController {
         
         Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
             
-            print(details)
-            if let results = details {
-                print("results")
-                [self.accountVerification = results]
+            if error != nil {
                 
                 performUIUpdatesOnMain {
                     
-                    for result in results {
-                        print("result")
-                        print(result.accountKey)
-                        if result.accountRegistered == 1 {
+                    self.failAlert()
+                }
+            } else {
+
+                self.appDelegate.accountKey = details!["key"]!
+                if let detail = details!["registered"] as? Int {
+                    
+                    if detail == 1 {
+                        
+                        self.appDelegate.accountRegistered = detail
+                        performUIUpdatesOnMain{
                             
-                            print("before completeLogin")
                             self.completeLogin()
-                        } else {
                             
-                            let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
-                            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                            self.presentViewController(failLoginAlert, animated: true, completion: nil)
-                            self.debugText.text = "You're email address is not known to Udacity - please create an account"
-                            self.usernameTextField.text = nil
-                            self.passwordTextField.text = nil
                         }
                     }
                 }
-            } else {
-                self.debugText.text! = String(error)
             }
         }
     }
@@ -101,9 +94,36 @@ class LoginViewController: UIViewController {
         
         if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             debugText.text = "Username or Password Empty."
+            setUIEnabled(true)
+            loginButton.enabled = true
         } else {
             
             executeLogin()
+        }
+    }
+    
+    func failAlert() {
+        
+        let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
+        failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failLoginAlert, animated: true, completion: nil)
+        self.debugText.text = "You're email address is not known to Udacity - please create an account"
+        setUIEnabled(true)
+//        self.usernameTextField.text = nil
+//        self.passwordTextField.text = nil
+//        self.loginButton.enabled = true
+//        self.debugText.text! = "Try again:)"
+    }
+    
+    func setAccountKey(details: [String: AnyObject]) {
+        
+        performUIUpdatesOnMain {
+            
+            if let accountDetail = details["key"]! as? Int {
+                
+                self.appDelegate.accountKey = accountDetail
+                print(accountDetail)
+            }
             
         }
     }
@@ -115,15 +135,16 @@ extension LoginViewController {
         usernameTextField.enabled = enabled
         passwordTextField.enabled = enabled
         loginButton.enabled = enabled
-        debugText.text = ""
+        debugText.text = "Please try again!"
         debugText.enabled = enabled
         
         if enabled {
-            loginButton.alpha = 1.0
+            loginButton.hidden = false
         } else {
-            loginButton.alpha = 0.5
+            loginButton.hidden = true
         }
     }
+    
     
     func configureUI() {
         

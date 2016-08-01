@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var sharedSession = NSURLSession.sharedSession()
     var requestToken: String? = nil
     var accountRegistered: Int? = nil
-    var accountKey: Int? = nil
+    var accountKey: AnyObject? = nil
     var sessionExpiration: String? = nil
     var sessionID: String? = nil
     var userID: Int? = nil

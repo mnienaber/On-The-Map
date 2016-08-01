@@ -113,6 +113,7 @@ class Client : NSObject {
                 
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
+
                 completionHandlerForLOGIN(result: nil, error: NSError(domain: "taskForLOGINMethod", code: 1, userInfo: userInfo))
                 
             }
@@ -138,7 +139,6 @@ class Client : NSObject {
             let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
             
             self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForLOGIN)
-            print("new data")
         }
         task.resume()
         return task
@@ -164,22 +164,16 @@ class Client : NSObject {
         
         for (key, value) in parameters {
             
-            /* Make sure that it is a string value */
             let stringValue = "\(value)"
             
-            /* Escape it */
             let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
             
-            /* Append it */
             urlVars += [key + "=" + "\(escapedValue!)"]
             
         }
         
         return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
     }
-    // create a URL from parameters
-    
-    // MARK: Shared Instance
     
     class func sharedInstance() -> Client {
         struct Singleton {
