@@ -15,6 +15,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var debugText: UILabel!
+    @IBOutlet weak var activityIndicatorOutlet: UIActivityIndicatorView!
+    @IBOutlet weak var dimScreenOutlet: UIView!
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
     var accountVerification: [AccountVerification] = [AccountVerification]()
@@ -36,6 +38,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         session = NSURLSession.sharedSession()
         configureUI()
         subscribeToKeyboardNotifications()
+        dimScreenOutlet.alpha = 0
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -52,6 +56,9 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     }
     
     func completeLogin() {
+        
+        dimScreenOutlet.alpha = 0
+        activityIndicatorOutlet.stopAnimating()
         dispatch_async(dispatch_get_main_queue(), {
             self.debugText.text = ""
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
@@ -91,7 +98,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBAction func loginPressed(sender: AnyObject) {
         
         loginButton.enabled = false
-        
+        dimScreenOutlet.alpha = 1
+        activityIndicatorOutlet.startAnimating()
         if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             debugText.text = "Username or Password Empty."
             setUIEnabled(true)
@@ -109,10 +117,6 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         self.presentViewController(failLoginAlert, animated: true, completion: nil)
         self.debugText.text = "You're email address is not known to Udacity - please create an account"
         setUIEnabled(true)
-//        self.usernameTextField.text = nil
-//        self.passwordTextField.text = nil
-//        self.loginButton.enabled = true
-//        self.debugText.text! = "Try again:)"
     }
     
     func setAccountKey(details: [String: AnyObject]) {

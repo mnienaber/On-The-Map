@@ -340,21 +340,35 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="cZP-WL-Pr7">
+                                <rect key="frame" x="290" y="208" width="20" height="20"/>
+                                <color key="color" red="0.084708981215953827" green="0.24380606412887573" blue="0.39744049310684204" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Nu-AD-PXL">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.054916910827159882" green="0.14488434791564941" blue="0.17011740803718567" alpha="0.27384159482758619" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" name="selectedControlColor" catalog="System" colorSpace="catalog"/>
                         <constraints>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="top" secondItem="kr3-ke-BLV" secondAttribute="bottom" constant="37" id="3Dd-oV-3Wq"/>
                             <constraint firstItem="kr3-ke-BLV" firstAttribute="top" secondItem="JBs-W6-Gi3" secondAttribute="bottom" constant="34" id="47Q-oz-t07"/>
+                            <constraint firstItem="bXw-g5-NSd" firstAttribute="top" secondItem="cZP-WL-Pr7" secondAttribute="bottom" constant="8" symbolic="YES" id="8h1-m9-lZ8"/>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="trailing" secondItem="kr3-ke-BLV" secondAttribute="trailing" id="A8U-WW-fmh"/>
                             <constraint firstItem="PGA-8X-6cj" firstAttribute="top" secondItem="pWV-aV-hd9" secondAttribute="bottom" constant="8" symbolic="YES" id="ASN-6N-Asm"/>
                             <constraint firstItem="pWV-aV-hd9" firstAttribute="leading" secondItem="mtn-ud-juv" secondAttribute="leading" constant="292" id="CZy-8U-FH0"/>
+                            <constraint firstItem="cZP-WL-Pr7" firstAttribute="centerX" secondItem="bXw-g5-NSd" secondAttribute="centerX" id="EVo-fi-BsL"/>
+                            <constraint firstItem="4Nu-AD-PXL" firstAttribute="leading" secondItem="mtn-ud-juv" secondAttribute="leading" id="NGE-j4-2KQ"/>
                             <constraint firstItem="ENk-hG-wGn" firstAttribute="centerX" secondItem="bXw-g5-NSd" secondAttribute="centerX" id="QjT-b2-oRu"/>
                             <constraint firstAttribute="bottom" secondItem="pWV-aV-hd9" secondAttribute="bottom" constant="212" id="WOg-bA-ohY"/>
                             <constraint firstItem="PGA-8X-6cj" firstAttribute="top" secondItem="ENk-hG-wGn" secondAttribute="bottom" constant="39" id="Yom-Ar-Rp2"/>
+                            <constraint firstItem="4Nu-AD-PXL" firstAttribute="centerX" secondItem="cZP-WL-Pr7" secondAttribute="centerX" id="aen-Iu-c67"/>
                             <constraint firstItem="ENk-hG-wGn" firstAttribute="top" secondItem="bXw-g5-NSd" secondAttribute="bottom" constant="45" id="cMB-ls-47e"/>
                             <constraint firstItem="kr3-ke-BLV" firstAttribute="centerX" secondItem="mtn-ud-juv" secondAttribute="centerX" id="eMl-Tc-3CH"/>
+                            <constraint firstItem="4Nu-AD-PXL" firstAttribute="bottom" secondItem="WVY-1K-8kg" secondAttribute="top" id="kt0-8U-5sv"/>
                             <constraint firstItem="JBs-W6-Gi3" firstAttribute="centerX" secondItem="kr3-ke-BLV" secondAttribute="centerX" id="nXJ-JI-pn7"/>
                             <constraint firstItem="PGA-8X-6cj" firstAttribute="trailing" secondItem="ENk-hG-wGn" secondAttribute="trailing" id="pPp-og-2KN"/>
+                            <constraint firstItem="4Nu-AD-PXL" firstAttribute="top" secondItem="mtn-ud-juv" secondAttribute="top" id="t3q-YD-QHf"/>
                             <constraint firstItem="bXw-g5-NSd" firstAttribute="leading" secondItem="kr3-ke-BLV" secondAttribute="leading" id="tQf-YS-3k7"/>
                             <constraint firstItem="kr3-ke-BLV" firstAttribute="leading" secondItem="mtn-ud-juv" secondAttribute="leadingMargin" constant="36" id="vOn-eW-FB2"/>
                             <constraint firstItem="PGA-8X-6cj" firstAttribute="leading" secondItem="ENk-hG-wGn" secondAttribute="leading" id="wbS-TY-VWp"/>
@@ -362,7 +376,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicatorOutlet" destination="cZP-WL-Pr7" id="7bW-l4-5Pt"/>
                         <outlet property="debugText" destination="JBs-W6-Gi3" id="mGO-y7-gGQ"/>
+                        <outlet property="dimScreenOutlet" destination="4Nu-AD-PXL" id="bqg-hg-Ate"/>
                         <outlet property="loginButton" destination="ENk-hG-wGn" id="5Be-vd-58K"/>
                         <outlet property="passwordTextField" destination="bXw-g5-NSd" id="VIK-Je-TQp"/>
                         <outlet property="usernameTextField" destination="kr3-ke-BLV" id="XI2-oq-6CS"/>
