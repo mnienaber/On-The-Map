@@ -11,6 +11,7 @@ pod ‘Firebase/Core’
 pod ‘Firebase/Database’
 pod ‘Firebase/Auth’
 pod 'Google/SignIn'
+pod 'Material', '~> 1.0'
 
 
   target 'On The MapTests' do
