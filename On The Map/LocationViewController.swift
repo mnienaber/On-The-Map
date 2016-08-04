@@ -120,7 +120,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
         Client.sharedInstance().postToMap(jsonBody) { (statusCode, error) in
             if let error = error {
-                print(error)
+                print("getPostToMap \(error)")
                 
             } else {
                 

@@ -4,7 +4,7 @@
 //
 //  Created by Michael Nienaber on 23/05/2016.
 //  Copyright © 2016 Michael Nienaber. All rights reserved.
-//
+// 
 
 import UIKit
 
@@ -14,12 +14,12 @@ extension Client {
         
         struct Scheme {
             
-            static let Method = "https://api.parse.com/1/classes/StudentLocation"
+            static let Method = "https://parse.udacity.com/parse/classes/StudentLocation"
             static let UdacUserMethod = "https://www.udacity.com/api/users/"
             static let ApiScheme = "https://"
             static let http = "http://"
-            static let ApiHost = "api.parse.com"
-            static let ApiPath = "/1/classes/StudentLocation"
+            static let ApiHost = "parse.udacity.com"
+            static let ApiPath = "parse/classes/StudentLocation"
             static let Limit = "?limit=100"
             static let Skip = "?limit=200&skip=400"
             static let Order = "?order=-updatedAt"

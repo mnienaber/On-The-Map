@@ -15,6 +15,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var debugText: UILabel!
+    @IBOutlet weak var dimOulet: UIView!
+    @IBOutlet weak var activityOutlet: UIActivityIndicatorView!
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
     var accountVerification: [AccountVerification] = [AccountVerification]()
@@ -36,6 +38,7 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         session = NSURLSession.sharedSession()
         configureUI()
         subscribeToKeyboardNotifications()
+        dimOulet.hidden = true
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -52,6 +55,9 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     }
     
     func completeLogin() {
+        
+        activityOutlet.stopAnimating()
+        dimOulet.hidden = true
         dispatch_async(dispatch_get_main_queue(), {
             self.debugText.text = ""
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
@@ -91,6 +97,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBAction func loginPressed(sender: AnyObject) {
         
         loginButton.enabled = false
+        dimOulet.hidden = false
+        activityOutlet.startAnimating()
         
         if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             debugText.text = "Username or Password Empty."

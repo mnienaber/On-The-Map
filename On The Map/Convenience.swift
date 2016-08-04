@@ -37,13 +37,16 @@ extension Client {
     
     func postToMap(jsonBody: String, completionHandlerForPOST: (result: Int?, error: NSError?) -> Void) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation")!)
+        print("topofposttomap")
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.HTTPMethod = "POST"
         request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
+        print("afterrequest")
+        print(request)
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
                 
@@ -53,22 +56,23 @@ extension Client {
                         "fail"
                     }
                 }
-                
+                print("newdata0")
                 guard (error == nil) else {
                     displayError("There was an error with your request: \(error)")
                     return
                 }
-                
+                print("newdata")
                 guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                     displayError("Your request returned a status code other than 2xx!")
                     return
                 }
-                
+                print("newdata1")
                 guard let data = data else {
                     displayError("No data was returned by the request!")
                     return
                 }
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+                print("newdata2")
                 
                 let parsedResult: AnyObject!
                 do {
@@ -79,6 +83,7 @@ extension Client {
                     return
                 }
             }
+            print("newdata3")
             print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
