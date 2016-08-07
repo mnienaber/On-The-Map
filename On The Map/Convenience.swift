@@ -18,7 +18,7 @@ extension Client {
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
         ]
         
-        let url = Client.Constants.Scheme.Method
+        let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder // + Client.Constants.Scheme.Order*/
         
         taskForGETMethod(url, parameters: parameters) { results, error in
             if let error = error {

@@ -14,15 +14,15 @@ extension Client {
         
         struct Scheme {
             
-            static let Method = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=createdAt"
+            static let Method = "https://parse.udacity.com/parse/classes/StudentLocation"
             static let UdacUserMethod = "https://www.udacity.com/api/users/"
             static let ApiScheme = "https://"
             static let http = "http://"
             static let ApiHost = "parse.udacity.com"
             static let ApiPath = "parse/classes/StudentLocation"
-            static let Limit = "?limit=100"
+            static let Limit = "?limit=50"
             static let Skip = "?limit=200&skip=400"
-            static let Order = "?order=-updatedAt"
+            static let Order = "?order=-createdAt"
             static let LimitAndOrder = "?limit=100&order=createdAt"
         }
         

@@ -71,27 +71,31 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         
         Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
             
-            print("details are \(details)")
-            print("error is \(error)")
             if error != nil {
                 
                 performUIUpdatesOnMain{
                     
                     self.failAlert()
                 }
-                
             } else {
 
-                self.appDelegate.accountKey = details!["key"]!
                 if let detail = details!["registered"] as? Int {
                     
                     if detail == 1 {
                         
                         self.appDelegate.accountRegistered = detail
-                        performUIUpdatesOnMain{
-                            
-                            self.completeLogin()
-                        }
+                        print(detail)
+                    }
+                 
+                    if let keyDetail = details!["key"] as? Int {
+                        
+                        self.appDelegate.accountKey = keyDetail
+                        print(keyDetail)
+                    }
+                    
+                    performUIUpdatesOnMain{
+                        
+                        self.completeLogin()
                     }
                 }
             }
