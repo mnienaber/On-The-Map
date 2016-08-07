@@ -78,19 +78,14 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
                     self.failAlert()
                 }
             } else {
+                
+                self.appDelegate.accountKey = details!["key"]!
 
                 if let detail = details!["registered"] as? Int {
                     
                     if detail == 1 {
                         
                         self.appDelegate.accountRegistered = detail
-                        print(detail)
-                    }
-                 
-                    if let keyDetail = details!["key"] as? Int {
-                        
-                        self.appDelegate.accountKey = keyDetail
-                        print(keyDetail)
                     }
                     
                     performUIUpdatesOnMain{

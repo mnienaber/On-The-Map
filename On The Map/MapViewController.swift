@@ -7,6 +7,7 @@
 //
 import UIKit
 import MapKit
+import AudioToolbox
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate, CLLocationManagerDelegate {
     
@@ -36,6 +37,21 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+    }
+    
+    override internal func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override internal func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+        if motion == .MotionShake {
+            print("Shaked")
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Click 'OK' to Logout - we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
+            failLogoutAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failLogoutAlert, animated: true, completion: nil)
+        }
+        
     }
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -142,6 +158,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         self.presentViewController(failDataAlert, animated: true, completion: nil)
         }))
     }
+    
+    func logOut() {
+        
+//        Client.sharedInstance().logoutWithUdacity(OTMClient.sharedInstance().sessionID!) { success, error in
+//            
+//            if let error = error {
+//                print("Logout failed due to error: \(error)")
+//            } else {
+//                
+//                if success {
+//                    // Segue back to login screen
+//                    self.dismissViewControllerAnimated(true, completion: nil)
+//                }
+//            }
+//        }
+    }
 }
 
 extension UIViewController {
@@ -153,5 +185,7 @@ extension UIViewController {
     func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    
 }
 
