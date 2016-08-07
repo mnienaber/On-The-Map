@@ -78,7 +78,6 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
                 performUIUpdatesOnMain{
                     
                     self.failAlert()
-                    
                 }
                 
             } else {
@@ -92,7 +91,6 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
                         performUIUpdatesOnMain{
                             
                             self.completeLogin()
-                            
                         }
                     }
                 }
@@ -123,7 +121,6 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
             let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
             failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(failLoginAlert, animated: true, completion: nil)
-            //self.debugText.text = "You're email address is not known to Udacity - please create an account"
             setUIEnabled(true)
             usernameTextField.text = nil
             passwordTextField.text = nil
@@ -168,7 +165,6 @@ extension LoginViewController {
         usernameTextField.enabled = enabled
         passwordTextField.enabled = enabled
         loginButton.enabled = enabled
-        debugText.text = "Please try again!"
         debugText.enabled = enabled
         
         if enabled {

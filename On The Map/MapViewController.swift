@@ -32,17 +32,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         
         self.hideKeyboardWhenTappedAround()
         getMapLocations()
-        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-
     }
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        
         if status == .AuthorizedWhenInUse {
-            print("yay")
         }
     }
     
@@ -95,24 +93,34 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     func getMapLocations() {
         
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
-            if let studentLocation = studentLocation {
-                [self.studentLocation = studentLocation]
-                var annotations = [MKPointAnnotation]()
-                performUIUpdatesOnMain {
-                    for student in self.studentLocation {
-                        
-                        let lat = student.latitude
-                        let long = student.longitude
-                        let mediaURL = student.mediaURL
-                        let annotation = MKPointAnnotation()
-                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                        
-                        annotation.coordinate = coordinate
-                        annotation.title = student.firstName + student.lastName
-                        annotation.subtitle = mediaURL
-                        annotations.append(annotation)
+            
+            if errorString != nil {
+                
+                performUIUpdatesOnMain{
+                    
+                    self.failStudentLocations()
+                }
+            } else {
+                
+                if let studentLocation = studentLocation {
+                    [self.studentLocation = studentLocation]
+                    var annotations = [MKPointAnnotation]()
+                    performUIUpdatesOnMain {
+                        for student in self.studentLocation {
+                            
+                            let lat = student.latitude
+                            let long = student.longitude
+                            let mediaURL = student.mediaURL
+                            let annotation = MKPointAnnotation()
+                            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                            
+                            annotation.coordinate = coordinate
+                            annotation.title = student.firstName + student.lastName
+                            annotation.subtitle = mediaURL
+                            annotations.append(annotation)
+                        }
+                        self.mapView.addAnnotations(annotations)
                     }
-                    self.mapView.addAnnotations(annotations)
                 }
             }
         }
@@ -122,9 +130,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     @IBAction func buttonMethod(sender: AnyObject) {
         
         getMapLocations()
-        print("refresh")
     }
     
+    func failStudentLocations() {
+        
+        let failDataAlert = UIAlertController(title: "Sorry", message: "There was a problem with retrieving Student Location data", preferredStyle: UIAlertControllerStyle.Alert)
+        failDataAlert.addAction(UIAlertAction(title: "I'll Come Back Later", style: UIAlertActionStyle.Default, handler: nil))
+        failDataAlert.addAction(UIAlertAction(title: "Leave Feedback", style: UIAlertActionStyle.Default, handler: { alertAction in
+            UIApplication.sharedApplication().openURL(NSURL(string : "mailto:mnienaber@google.com")!)
+            failDataAlert.dismissViewControllerAnimated(true, completion: nil)
+        self.presentViewController(failDataAlert, animated: true, completion: nil)
+        }))
+    }
 }
 
 extension UIViewController {
@@ -136,11 +153,5 @@ extension UIViewController {
     func dismissKeyboard() {
         view.endEditing(true)
     }
-    
-    
-    
-
-    
-    
 }
 
