@@ -37,7 +37,6 @@ extension Client {
     
     func postToMap(jsonBody: String, completionHandlerForPOST: (result: Int?, error: NSError?) -> Void) {
         
-        print("topofposttomap")
         let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.HTTPMethod = "POST"
         request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
@@ -56,23 +55,23 @@ extension Client {
                         "fail"
                     }
                 }
-                print("newdata0")
+                
                 guard (error == nil) else {
                     displayError("There was an error with your request: \(error)")
                     return
                 }
-                print("newdata")
+                
                 guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                     displayError("Your request returned a status code other than 2xx!")
                     return
                 }
-                print("newdata1")
+                
                 guard let data = data else {
                     displayError("No data was returned by the request!")
                     return
                 }
+                
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-                print("newdata2")
                 
                 let parsedResult: AnyObject!
                 do {
@@ -97,7 +96,8 @@ extension Client {
             
             if let error = error {
                 
-                print(error)
+                completionHandlerForLOGIN(details: nil, error: error)
+                
             } else {
                 
                 if let results = results["account"] as? [String: AnyObject]? {

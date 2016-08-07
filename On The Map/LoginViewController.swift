@@ -27,6 +27,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     var tapRecognizer: UITapGestureRecognizer? = nil
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
+    let loginLimit = 2
+    var loginCount = 0
     
     
     override func viewDidLoad() {
@@ -69,12 +71,16 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         
         Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
             
+            print("details are \(details)")
+            print("error is \(error)")
             if error != nil {
                 
-                performUIUpdatesOnMain {
+                performUIUpdatesOnMain{
                     
                     self.failAlert()
+                    
                 }
+                
             } else {
 
                 self.appDelegate.accountKey = details!["key"]!
@@ -112,15 +118,34 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     
     func failAlert() {
         
-        let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
-        failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failLoginAlert, animated: true, completion: nil)
-        self.debugText.text = "You're email address is not known to Udacity - please create an account"
-        setUIEnabled(true)
-//        self.usernameTextField.text = nil
-//        self.passwordTextField.text = nil
-//        self.loginButton.enabled = true
-//        self.debugText.text! = "Try again:)"
+        if self.loginCount <= self.loginLimit {
+            
+            let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
+            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failLoginAlert, animated: true, completion: nil)
+            //self.debugText.text = "You're email address is not known to Udacity - please create an account"
+            setUIEnabled(true)
+            usernameTextField.text = nil
+            passwordTextField.text = nil
+            loginButton.enabled = true
+            activityOutlet.stopAnimating()
+            dimOulet.hidden = true
+            self.debugText.text! = "Try again:)"
+            loginCount += 1
+        } else {
+            
+            let failLoginAlert = UIAlertController(title: "Forgotten your Username or Password?", message: "Please check your credentials with Udacity and try again later", preferredStyle: UIAlertControllerStyle.Alert)
+            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failLoginAlert, animated: true, completion: nil)
+            setUIEnabled(false)
+            usernameTextField.text = nil
+            passwordTextField.text = nil
+            loginButton.enabled = true
+            activityOutlet.stopAnimating()
+            dimOulet.hidden = true
+            self.debugText.text! = ""
+        }
+        
     }
     
     func setAccountKey(details: [String: AnyObject]) {
