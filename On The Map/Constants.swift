@@ -14,7 +14,7 @@ extension Client {
         
         struct Scheme {
             
-            static let Method = "https://api.parse.com/1/classes/StudentLocation"
+            static let Method = "https://parse.udacity.com/parse/classes/StudentLocation"
             static let UdacUserMethod = "https://www.udacity.com/api/users/"
             static let ApiScheme = "https://"
             static let http = "http://"
