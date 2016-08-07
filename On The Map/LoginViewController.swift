@@ -30,7 +30,6 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     let loginLimit = 2
     var loginCount = 0
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

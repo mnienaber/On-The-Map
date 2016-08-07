@@ -47,8 +47,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         if motion == .MotionShake {
             print("Shaked")
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Click 'OK' to Logout - we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
-            failLogoutAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
+            failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: nil))
+            failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(failLogoutAlert, animated: true, completion: nil)
         }
         
