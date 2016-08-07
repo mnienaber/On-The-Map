@@ -78,16 +78,21 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
                     self.failAlert()
                 }
             } else {
-                
-                self.appDelegate.accountKey = details!["key"]!
 
-                if let detail = details!["registered"] as? Int {
+                if let account = details as [String: AnyObject]! {
                     
-                    if detail == 1 {
+                    let accountDetail = account["account"] as! [String: AnyObject]
+                    let sessionDetail = account["session"] as! [String: AnyObject]
+                    
+                    let registeredDetail = accountDetail["registered"]! as! Int
+                    if registeredDetail == 1 {
                         
-                        self.appDelegate.accountRegistered = detail
+                        self.appDelegate.accountRegistered = registeredDetail
+                        self.appDelegate.accountKey = accountDetail["key"] as AnyObject!
+                        self.appDelegate.sessionID = sessionDetail["id"] as? String
+                        self.appDelegate.sessionExpiration = sessionDetail["expiration"] as? String
                     }
-                    
+
                     performUIUpdatesOnMain{
                         
                         self.completeLogin()
@@ -133,15 +138,19 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
             let failLoginAlert = UIAlertController(title: "Forgotten your Username or Password?", message: "Please check your credentials with Udacity and try again later", preferredStyle: UIAlertControllerStyle.Alert)
             failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(failLoginAlert, animated: true, completion: nil)
-            setUIEnabled(false)
+            failLoginAlert.addAction(UIAlertAction(title: "Go To Udacity", style: UIAlertActionStyle.Default, handler: {
+                (action:UIAlertAction!) in
+                UIApplication.sharedApplication().openURL(NSURL(string: "https://www.udacity.com/account/auth#!/signup")!)
+        }))
+            setUIEnabled(true)
             usernameTextField.text = nil
             passwordTextField.text = nil
             loginButton.enabled = true
             activityOutlet.stopAnimating()
             dimOulet.hidden = true
             self.debugText.text! = ""
+            loginCount = 0
         }
-        
     }
     
     func setAccountKey(details: [String: AnyObject]) {

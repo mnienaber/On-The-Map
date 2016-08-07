@@ -161,18 +161,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     func logOut() {
         
-//        Client.sharedInstance().logoutWithUdacity(OTMClient.sharedInstance().sessionID!) { success, error in
-//            
-//            if let error = error {
-//                print("Logout failed due to error: \(error)")
-//            } else {
-//                
-//                if success {
-//                    // Segue back to login screen
-//                    self.dismissViewControllerAnimated(true, completion: nil)
-//                }
-//            }
-//        }
     }
 }
 

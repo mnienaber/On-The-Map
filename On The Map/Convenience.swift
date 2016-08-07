@@ -100,7 +100,7 @@ extension Client {
                 
             } else {
                 
-                if let results = results["account"] as? [String: AnyObject]? {
+                if let results = results as? [String: AnyObject]? {
                     completionHandlerForLOGIN(details: results, error: nil)
                 } else {
                     
