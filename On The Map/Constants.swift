@@ -4,7 +4,7 @@
 //
 //  Created by Michael Nienaber on 23/05/2016.
 //  Copyright © 2016 Michael Nienaber. All rights reserved.
-//
+// 
 
 import UIKit
 
@@ -18,11 +18,11 @@ extension Client {
             static let UdacUserMethod = "https://www.udacity.com/api/users/"
             static let ApiScheme = "https://"
             static let http = "http://"
-            static let ApiHost = "api.parse.com"
-            static let ApiPath = "/1/classes/StudentLocation"
-            static let Limit = "?limit=100"
+            static let ApiHost = "parse.udacity.com"
+            static let ApiPath = "parse/classes/StudentLocation"
+            static let Limit = "?limit=50"
             static let Skip = "?limit=200&skip=400"
-            static let Order = "?order=-updatedAt"
+            static let Order = "?order=-createdAt"
             static let LimitAndOrder = "?limit=100&order=createdAt"
         }
         

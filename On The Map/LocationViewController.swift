@@ -61,7 +61,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     override func viewWillDisappear(animated: Bool) {
         
-        //self.removeKeyboardDismissRecognizer()
         self.unsubscribeToKeyboardNotifications()
     }
     
@@ -119,9 +118,10 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     func getPostToMap(jsonBody: String) {
         
         Client.sharedInstance().postToMap(jsonBody) { (statusCode, error) in
-            if let error = error {
-                print(error)
+            
+            if error != nil {
                 
+                self.failPost()
             } else {
                 
                 performUIUpdatesOnMain {
@@ -227,6 +227,13 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
         self.getPostToMap(jsonBody)
         returnToMapView()
+    }
+    
+    func failPost() {
+        
+        let failPostAlert = UIAlertController(title: "Yikes", message: "There seems to be a problem, your post didn't execute!", preferredStyle: UIAlertControllerStyle.Alert)
+        failPostAlert.addAction(UIAlertAction(title: "I'll try again later", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failPostAlert, animated: true, completion: { self.returnToMapView() })
     }
 }
 

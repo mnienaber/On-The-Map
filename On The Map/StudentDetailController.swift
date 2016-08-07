@@ -90,7 +90,7 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
                 let region = MKCoordinateRegionMake(coordinate, span)
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = coordinate
-                annotation.title = result.firstName + result.lastName
+                annotation.title = result.firstName + " " + result.lastName
                 annotation.subtitle = result.mediaURL
                 annotations.append(annotation)
                 self.mapViewOutlet.addAnnotations(annotations)

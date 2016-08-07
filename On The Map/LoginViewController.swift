@@ -15,8 +15,13 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var debugText: UILabel!
+<<<<<<< HEAD
     @IBOutlet weak var activityIndicatorOutlet: UIActivityIndicatorView!
     @IBOutlet weak var dimScreenOutlet: UIView!
+=======
+    @IBOutlet weak var dimOulet: UIView!
+    @IBOutlet weak var activityOutlet: UIActivityIndicatorView!
+>>>>>>> udacity_heeellllp
     
     var studentLocation: [StudentLocation] = [StudentLocation]()
     var accountVerification: [AccountVerification] = [AccountVerification]()
@@ -27,7 +32,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     var tapRecognizer: UITapGestureRecognizer? = nil
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
-    
+    let loginLimit = 2
+    var loginCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +44,12 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         session = NSURLSession.sharedSession()
         configureUI()
         subscribeToKeyboardNotifications()
+<<<<<<< HEAD
         dimScreenOutlet.alpha = 0
         
+=======
+        dimOulet.hidden = true
+>>>>>>> udacity_heeellllp
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -57,8 +67,13 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     
     func completeLogin() {
         
+<<<<<<< HEAD
         dimScreenOutlet.alpha = 0
         activityIndicatorOutlet.stopAnimating()
+=======
+        activityOutlet.stopAnimating()
+        dimOulet.hidden = true
+>>>>>>> udacity_heeellllp
         dispatch_async(dispatch_get_main_queue(), {
             self.debugText.text = ""
             let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
@@ -72,23 +87,29 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
             
             if error != nil {
                 
-                performUIUpdatesOnMain {
+                performUIUpdatesOnMain{
                     
                     self.failAlert()
                 }
             } else {
 
-                self.appDelegate.accountKey = details!["key"]!
-                if let detail = details!["registered"] as? Int {
+                if let account = details as [String: AnyObject]! {
                     
-                    if detail == 1 {
+                    let accountDetail = account["account"] as! [String: AnyObject]
+                    let sessionDetail = account["session"] as! [String: AnyObject]
+                    
+                    let registeredDetail = accountDetail["registered"]! as! Int
+                    if registeredDetail == 1 {
                         
-                        self.appDelegate.accountRegistered = detail
-                        performUIUpdatesOnMain{
-                            
-                            self.completeLogin()
-                            
-                        }
+                        self.appDelegate.accountRegistered = registeredDetail
+                        self.appDelegate.accountKey = accountDetail["key"] as AnyObject!
+                        self.appDelegate.sessionID = sessionDetail["id"] as? String
+                        self.appDelegate.sessionExpiration = sessionDetail["expiration"] as? String
+                    }
+
+                    performUIUpdatesOnMain{
+                        
+                        self.completeLogin()
                     }
                 }
             }
@@ -98,8 +119,14 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBAction func loginPressed(sender: AnyObject) {
         
         loginButton.enabled = false
+<<<<<<< HEAD
         dimScreenOutlet.alpha = 1
         activityIndicatorOutlet.startAnimating()
+=======
+        dimOulet.hidden = false
+        activityOutlet.startAnimating()
+        
+>>>>>>> udacity_heeellllp
         if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             debugText.text = "Username or Password Empty."
             setUIEnabled(true)
@@ -112,11 +139,45 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     
     func failAlert() {
         
+<<<<<<< HEAD
         let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
         failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(failLoginAlert, animated: true, completion: nil)
         self.debugText.text = "You're email address is not known to Udacity - please create an account"
         setUIEnabled(true)
+=======
+        if self.loginCount <= self.loginLimit {
+            
+            let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
+            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failLoginAlert, animated: true, completion: nil)
+            setUIEnabled(true)
+            usernameTextField.text = nil
+            passwordTextField.text = nil
+            loginButton.enabled = true
+            activityOutlet.stopAnimating()
+            dimOulet.hidden = true
+            self.debugText.text! = "Try again:)"
+            loginCount += 1
+        } else {
+            
+            let failLoginAlert = UIAlertController(title: "Forgotten your Username or Password?", message: "Please check your credentials with Udacity and try again later", preferredStyle: UIAlertControllerStyle.Alert)
+            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failLoginAlert, animated: true, completion: nil)
+            failLoginAlert.addAction(UIAlertAction(title: "Go To Udacity", style: UIAlertActionStyle.Default, handler: {
+                (action:UIAlertAction!) in
+                UIApplication.sharedApplication().openURL(NSURL(string: "https://www.udacity.com/account/auth#!/signup")!)
+        }))
+            setUIEnabled(true)
+            usernameTextField.text = nil
+            passwordTextField.text = nil
+            loginButton.enabled = true
+            activityOutlet.stopAnimating()
+            dimOulet.hidden = true
+            self.debugText.text! = ""
+            loginCount = 0
+        }
+>>>>>>> udacity_heeellllp
     }
     
     func setAccountKey(details: [String: AnyObject]) {
@@ -139,7 +200,6 @@ extension LoginViewController {
         usernameTextField.enabled = enabled
         passwordTextField.enabled = enabled
         loginButton.enabled = enabled
-        debugText.text = "Please try again!"
         debugText.enabled = enabled
         
         if enabled {

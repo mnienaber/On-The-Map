@@ -18,7 +18,7 @@ extension Client {
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
         ]
         
-        let url = Client.Constants.Scheme.Method
+        let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder // + Client.Constants.Scheme.Order*/
         
         taskForGETMethod(url, parameters: parameters) { results, error in
             if let error = error {
@@ -44,6 +44,8 @@ extension Client {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
+        print("afterrequest")
+        print(request)
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
                 
@@ -68,6 +70,7 @@ extension Client {
                     displayError("No data was returned by the request!")
                     return
                 }
+                
                 let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
                 
                 let parsedResult: AnyObject!
@@ -79,6 +82,7 @@ extension Client {
                     return
                 }
             }
+            print("newdata3")
             print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
@@ -92,10 +96,11 @@ extension Client {
             
             if let error = error {
                 
-                print(error)
+                completionHandlerForLOGIN(details: nil, error: error)
+                
             } else {
                 
-                if let results = results["account"] as? [String: AnyObject]? {
+                if let results = results as? [String: AnyObject]? {
                     completionHandlerForLOGIN(details: results, error: nil)
                 } else {
                     
