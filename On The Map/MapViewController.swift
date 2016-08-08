@@ -48,7 +48,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             print("Shaked")
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
-            failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: nil))
+            failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
             failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(failLogoutAlert, animated: true, completion: nil)
         }
@@ -161,7 +161,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     }
     
     func logOut() {
-        
+
+        self.appDelegate.accountKey = nil
+        self.appDelegate.accountRegistered = nil
+        self.appDelegate.sessionID = nil
+        self.appDelegate.sessionExpiration = nil
+        dispatch_async(dispatch_get_main_queue(), {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
     }
 }
 
@@ -173,8 +180,6 @@ extension UIViewController {
     
     func dismissKeyboard() {
         view.endEditing(true)
-    }
-    
-    
+    } 
 }
 

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AudioToolbox
 
 class ListViewController: UITableViewController {
     
@@ -44,6 +45,22 @@ class ListViewController: UITableViewController {
         return studentLocation.count
     }
     
+    override internal func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override internal func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+        if motion == .MotionShake {
+            print("Shaked")
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
+            failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
+            failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failLogoutAlert, animated: true, completion: nil)
+        }
+        
+    }
+    
     func getStudentList() {
         
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
@@ -62,6 +79,17 @@ class ListViewController: UITableViewController {
         
         getStudentList()
         print("refresh")
+    }
+    
+    func logOut() {
+        
+        self.appDelegate.accountKey = nil
+        self.appDelegate.accountRegistered = nil
+        self.appDelegate.sessionID = nil
+        self.appDelegate.sessionExpiration = nil
+        dispatch_async(dispatch_get_main_queue(), {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
     }
 }
 

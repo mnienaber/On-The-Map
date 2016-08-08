@@ -33,18 +33,14 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        debugText.text = "Please login to Udacity"
-        hideKeyboardWhenTappedAround()
-        session = NSURLSession.sharedSession()
-        configureUI()
-        subscribeToKeyboardNotifications()
-        dimOulet.hidden = true
+        resetUI()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        resetUI()
+        setUIEnabled(true)
         addKeyboardDismissRecognizer()
         subscribeToKeyboardNotifications()
     }
@@ -152,6 +148,17 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         }
     }
     
+    func resetUI() {
+        
+        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        debugText.text = "Please login to Udacity"
+        hideKeyboardWhenTappedAround()
+        session = NSURLSession.sharedSession()
+        configureUI()
+        subscribeToKeyboardNotifications()
+        dimOulet.hidden = true
+    }
+    
     func setAccountKey(details: [String: AnyObject]) {
         
         performUIUpdatesOnMain {
@@ -159,9 +166,7 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
             if let accountDetail = details["key"]! as? Int {
                 
                 self.appDelegate.accountKey = accountDetail
-                print(accountDetail)
             }
-            
         }
     }
 }
@@ -180,7 +185,6 @@ extension LoginViewController {
             loginButton.hidden = true
         }
     }
-    
     
     func configureUI() {
         
@@ -209,8 +213,8 @@ extension LoginViewController {
     }
     
     func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     func unsubscribeToKeyboardNotifications() {
@@ -241,7 +245,7 @@ extension LoginViewController {
     }
     
     override func hideKeyboardWhenTappedAround() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
     }
     
