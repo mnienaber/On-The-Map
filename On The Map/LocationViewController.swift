@@ -233,7 +233,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
         let failPostAlert = UIAlertController(title: "Yikes", message: "There seems to be a problem, your post didn't execute!", preferredStyle: UIAlertControllerStyle.Alert)
         failPostAlert.addAction(UIAlertAction(title: "I'll try again later", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failPostAlert, animated: true, completion: { self.returnToMapView() })
+        self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.returnToMapView() })
     }
 }
 
