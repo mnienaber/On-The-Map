@@ -17,6 +17,8 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     var annotations = [MKPointAnnotation]()
     
     
+    @IBOutlet weak var activityOutlet: UIActivityIndicatorView!
+    @IBOutlet weak var dimOutlet: UIView!
     @IBOutlet weak var cancelButtonOutlet: UIBarButtonItem!
     @IBOutlet weak var textLocation: UITextField!
     @IBOutlet weak var findOnTheMap: UIButton!
@@ -49,6 +51,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         submitOutlet.hidden = true
         questionText.text = "Where are you studying today?"
         questionText.textAlignment = .Center
+        dimOutlet.hidden = true
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         self.hideKeyboardWhenTappedAround()
     }
@@ -67,12 +70,17 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     @IBAction func findOnTheMap(sender: AnyObject) {
         
         
+        activityOutlet.startAnimating()
+        dimOutlet.hidden = false
         let request = MKLocalSearchRequest()
         request.naturalLanguageQuery = self.textLocation.text!
         request.region = myMiniMapView.region
         
         let search = MKLocalSearch(request: request)
         search.startWithCompletionHandler { response, error in
+            
+            self.activityOutlet.stopAnimating()
+            self.dimOutlet.hidden = true
             
             if let error = error {
                 
