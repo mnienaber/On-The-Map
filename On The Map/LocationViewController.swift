@@ -66,14 +66,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     @IBAction func findOnTheMap(sender: AnyObject) {
         
-        textLocation.hidden = true
-        myMiniMapView.hidden = false
-        questionText.text! = "What's your media URL"
-        questionText.textAlignment = .Center
-        findOnTheMap.hidden = true
-        submitOutlet.hidden = false
-        myMediaUrl.hidden = false
-        dismissAnyVisibleKeyboards()
         
         let request = MKLocalSearchRequest()
         request.naturalLanguageQuery = self.textLocation.text!
@@ -81,38 +73,54 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
         let search = MKLocalSearch(request: request)
         search.startWithCompletionHandler { response, error in
-            guard let response = response else {
+            
+            if let error = error {
+                
+                let failSearchAlert = UIAlertController(title: "Oops!", message: "Either you have a problem with your connection or your query returned zero results", preferredStyle: UIAlertControllerStyle.Alert)
+                failSearchAlert.addAction(UIAlertAction(title: "Try Again", style: UIAlertActionStyle.Default, handler: { alertAction in self.returnToMapView() }))
+                self.presentViewController(failSearchAlert, animated: true, completion: nil)
                 print("There was an error searching for: \(request.naturalLanguageQuery) error: \(error)")
-                return
+            } else {
+                
+                self.textLocation.hidden = true
+                self.myMiniMapView.hidden = false
+                self.questionText.text! = "What's your media URL"
+                self.questionText.textAlignment = .Center
+                self.findOnTheMap.hidden = true
+                self.submitOutlet.hidden = false
+                self.myMediaUrl.hidden = false
+                self.dismissAnyVisibleKeyboards()
+                
+                [self.myStudentLocation = self.myStudentLocation]
+                performUIUpdatesOnMain {
+                    
+                    for item in response!.mapItems {
+                        
+                        let annotation = MKPointAnnotation()
+                        let lat = item.placemark.coordinate.latitude
+                        let long = item.placemark.coordinate.longitude
+                        let title = item.placemark.title
+                        let initialLocation = CLLocation(latitude: lat, longitude: long)
+                        
+                        self.centerMapOnLocation(initialLocation)
+                        
+                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                        
+                        annotation.coordinate = coordinate
+                        annotation.title = title
+                        self.annotations.append(annotation)
+                        self.appDelegate.latitude = lat
+                        self.appDelegate.longitude = long
+                        self.appDelegate.mapString = title
+                        
+                    }
+                    self.myMiniMapView.addAnnotations(self.annotations)
+                    self.getUserInfo(self.appDelegate.accountKey!)
+                }
+
             }
             
-            [self.myStudentLocation = self.myStudentLocation]
-            performUIUpdatesOnMain {
-                
-                for item in response.mapItems {
-                    
-                    let annotation = MKPointAnnotation()
-                    let lat = item.placemark.coordinate.latitude
-                    let long = item.placemark.coordinate.longitude
-                    let title = item.placemark.title
-                    let initialLocation = CLLocation(latitude: lat, longitude: long)
-                    
-                    self.centerMapOnLocation(initialLocation)
-                    
-                    let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                    
-                    annotation.coordinate = coordinate
-                    annotation.title = title
-                    self.annotations.append(annotation)
-                    self.appDelegate.latitude = lat
-                    self.appDelegate.longitude = long
-                    self.appDelegate.mapString = title
-                    
-                }
-                self.myMiniMapView.addAnnotations(self.annotations)
-                self.getUserInfo(self.appDelegate.accountKey!)
-            }
-        }
+                    }
     }
     
     func getPostToMap(jsonBody: String) {

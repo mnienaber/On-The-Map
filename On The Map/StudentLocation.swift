@@ -22,10 +22,11 @@ struct StudentLocation {
     let createdAt: String
     let updatedAt: String
 
-    init(dictionary: [String:AnyObject]) {
+    init?(dictionary: [String:AnyObject]) {
         
         objectId = dictionary[Client.Constants.ParseResponseKeys.ObjectId] as! String
-        uniqueKey = dictionary[Client.Constants.ParseResponseKeys.UniqueKey] as! String
+        guard let unique = dictionary[Client.Constants.ParseResponseKeys.UniqueKey] as? String else { return nil }
+        uniqueKey = unique //https://discussions.udacity.com/t/app-crashing-at-login-after-parse-update/182059/5?u=michael_135862232227
         firstName = dictionary[Client.Constants.ParseResponseKeys.FirstName] as! String
         lastName = dictionary[Client.Constants.ParseResponseKeys.LastName] as! String
         mapString = dictionary[Client.Constants.ParseResponseKeys.MapString] as! String
@@ -41,10 +42,13 @@ struct StudentLocation {
         var studentLocationObjects = [StudentLocation]()
         
         for result in results {
-            studentLocationObjects.append(StudentLocation(dictionary: result))
+            if let studObjects = StudentLocation(dictionary: result) {
+                
+                studentLocationObjects.append(studObjects)
+            }
         }
         return studentLocationObjects
-    }    
+    }
 }
 
 struct AccountVerification {

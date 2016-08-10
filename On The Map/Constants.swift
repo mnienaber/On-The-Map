@@ -22,8 +22,8 @@ extension Client {
             static let ApiPath = "parse/classes/StudentLocation"
             static let Limit = "?limit=50"
             static let Skip = "?limit=200&skip=400"
-            static let Order = "?order=-createdAt"
-            static let LimitAndOrder = "?limit=100&order=createdAt"
+            static let Order = "?order=-updatedAt"
+            static let LimitAndOrder = "?limit=50&order=-updatedAt"
         }
         
         struct ParameterKeys {
