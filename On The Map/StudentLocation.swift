@@ -9,6 +9,8 @@
 import UIKit
 import Foundation
 
+var studentLocationObjects = [StudentLocation]()
+
 struct StudentLocation {
     
     let objectId: String
@@ -39,14 +41,14 @@ struct StudentLocation {
     
     static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
         
-        var studentLocationObjects = [StudentLocation]()
-        
         for result in results {
+            
             if let studObjects = StudentLocation(dictionary: result) {
                 
                 studentLocationObjects.append(studObjects)
             }
         }
+        print("\(studentLocationObjects)" + "this is studentlocationObject")
         return studentLocationObjects
     }
 }

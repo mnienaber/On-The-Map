@@ -12,11 +12,12 @@ import AudioToolbox
 class ListViewController: UITableViewController {
     
     var appDelegate: AppDelegate!
-    var studentLocation: [StudentLocation] = [StudentLocation]()
+    //var studentLocation = Client.sharedInstance().studentLocation
     let studentSegueIdentifier = "ShowStudentDetail"
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //print("\(studentLocation)" + "viewdidload")
         
         self.navigationController?.navigationBarHidden = false
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -32,7 +33,7 @@ class ListViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cellReuseIdentifier = "TableViewCell"
-        let location = studentLocation[indexPath.row]
+        let location = Client.sharedInstance().studentLocation[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
         
         cell.textLabel!.text = location.firstName + " " + location.lastName
@@ -42,12 +43,13 @@ class ListViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return studentLocation.count
+        //print("\(studentLocation.count)" + "tableview count")
+        return Client.sharedInstance().studentLocation.count
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let location = studentLocation[indexPath.row]
+        let location = Client.sharedInstance().studentLocation[indexPath.row]
         let url = location.mediaURL
         
         if verifyUrl(url) == true {
@@ -76,34 +78,23 @@ class ListViewController: UITableViewController {
     
     func getStudentList() {
         
-        
-        Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
+        if Client.sharedInstance().studentLocation.isEmpty == true {
             
-            print("getstudentlocations")
-            
-            if errorString != nil {
+            performUIUpdatesOnMain {
                 
-                print("our errorstring")
-                performUIUpdatesOnMain {
+                self.failAlertGeneral("Yikes", message: "There was a problem retrieving data, please try again later", actionTitle: "OK")
+            }
+        } else if Client.sharedInstance().studentLocation.isEmpty == false {
+            
+            performUIUpdatesOnMain {
+                
+                for _ in Client.sharedInstance().studentLocation {
                     
-                    self.failAlertGeneral("Yikes", message: "There was a problem retrieving data, please try again later", actionTitle: "OK")
-                }
-            } else {
-                
-                if let studentLocation = studentLocation {
-                    [self.studentLocation = studentLocation]
-                    performUIUpdatesOnMain {
-                        for student in self.studentLocation {
-                            
-                            self.tableView.reloadData()
-                        }
-                    }
+                    self.tableView.reloadData()
                 }
             }
-            
         }
     }
-
 
     @IBAction func logOutButton(sender: AnyObject) {
         
@@ -123,17 +114,6 @@ class ListViewController: UITableViewController {
 }
 
 extension ListViewController {
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        if  (segue.identifier == studentSegueIdentifier) {
-            
-            let destination = segue.destinationViewController as? StudentDetailController
-            let studentIndex = tableView.indexPathForSelectedRow?.row
-            let studentDetailDict = [studentLocation[studentIndex!]]
-            destination?.studentDetailLocation = studentDetailDict
-        }
-    }
     
     func failAlertGeneral(title: String, message: String, actionTitle: String) {
         

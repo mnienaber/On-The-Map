@@ -137,7 +137,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                             annotations.append(annotation)
                             
                         }
-                        //Client.sharedInstance().
                         self.mapView.addAnnotations(annotations)
                     }
                 }

@@ -26,6 +26,15 @@ extension Client {
             } else {
                 if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
                     let locations = StudentLocation.SLOFromResults(results)
+                    Client.sharedInstance().studentLocation = locations
+                    
+//                    if let locations = locations {
+//                        
+//                        [self.studentLocation = self.studentLocation]
+//                        
+//                        
+//                    }
+                    print("\(Client.sharedInstance().studentLocation.count)" + "client.sharedinstance.studentlocation.count")
                     completionHandlerForStudentLocations(result: locations, error: nil)
                 } else {
                     completionHandlerForStudentLocations(result: nil, error: error)
