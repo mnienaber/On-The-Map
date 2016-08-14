@@ -134,27 +134,23 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     func getPostToMap(jsonBody: String) {
         
-        print("getposttomap")
-        Client.sharedInstance().postToMap(jsonBody) { (statusCode, error) in
-            
-            self.dimOutlet.hidden = true
-            self.activityOutlet.stopAnimating()
+        Client.sharedInstance().postToMap(jsonBody) { (result, error) in
             
             if error != nil {
                 
-                performUIUpdatesOnMain {
-
-                    let failPostAlert = UIAlertController(title: "Yikes", message: "There seems to be a problem, your post didn't execute!", preferredStyle: UIAlertControllerStyle.Alert)
-                    failPostAlert.addAction(UIAlertAction(title: "I'll try again later", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.returnToMapView() })
-                }
+                self.dimOutlet.hidden = true
+                self.activityOutlet.stopAnimating()
+                print(error)
+                let failPostAlert = UIAlertController(title: "Yikes", message: "There seems to be a problem, your post didn't execute!", preferredStyle: UIAlertControllerStyle.Alert)
+                failPostAlert.addAction(UIAlertAction(title: "I'll try again later", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.returnToMapView() })
                 
             } else {
                 
-                performUIUpdatesOnMain {
-                    
-                    print("success")
-                }
+                self.dimOutlet.hidden = true
+                self.activityOutlet.stopAnimating()
+                print("success")
+                self.returnToMapView()
             }
         }
     }
@@ -217,8 +213,8 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             let user = parsedResult["user"]!
             
             if let lastName = user!["last_name"] as? String {
+                
                 self.appDelegate.lastName = lastName
-                print(self.appDelegate.lastName!)
             } else {
                 dispatch_async(dispatch_get_main_queue()) {
                     print("Login Failed (lastname).")
@@ -227,9 +223,10 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             }
             
             if let firstName = user!["first_name"] as? String {
+                
                 self.appDelegate.firstName = firstName
-                print(self.appDelegate.firstName!)
             } else {
+                
                 dispatch_async(dispatch_get_main_queue()) {
                     print("Login Failed (firstname).")
                 }

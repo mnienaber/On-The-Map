@@ -24,74 +24,86 @@ extension Client {
             if let error = error {
                 print(error)
             } else {
+                
                 if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
                     let locations = StudentLocation.SLOFromResults(results)
                     Client.sharedInstance().studentLocation = locations
-                    
-//                    if let locations = locations {
-//                        
-//                        [self.studentLocation = self.studentLocation]
-//                        
-//                        
-//                    }
-                    print("\(Client.sharedInstance().studentLocation.count)" + "client.sharedinstance.studentlocation.count")
                     completionHandlerForStudentLocations(result: locations, error: nil)
                 } else {
                     completionHandlerForStudentLocations(result: nil, error: error)
                 }
             }
         }
-        
     }
     
     func postToMap(jsonBody: String, completionHandlerForPOST: (result: Int?, error: NSError?) -> Void) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
-        request.HTTPMethod = "POST"
-        request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            if error != nil {
+        
+        taskForPOSTMethod(jsonBody) { results, error in
+            
+            if let error = error {
                 
-                func displayError(error: String, debugLabelText: String? = nil) {
-                    print(error)
-                    performUIUpdatesOnMain {
-                        "fail"
-                    }
-                }
+                print("\(error)" + "posttomap error")
+            } else {
                 
-                guard (error == nil) else {
-                    displayError("There was an error with your request: \(error)")
-                    return
-                }
-                
-                guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                    displayError("Your request returned a status code other than 2xx!")
-                    return
-                }
-                
-                guard let data = data else {
-                    displayError("No data was returned by the request!")
-                    return
-                }
-                
-                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-                
-                let parsedResult: AnyObject!
-                do {
-                    parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-                    print(parsedResult!)
-                } catch {
-                    print("Error: Parsing JSON data")
-                    return
+                if let results = results as? Int? {
+                    
+                    completionHandlerForPOST(result: results, error: nil)
+                } else {
+                    
+                    completionHandlerForPOST(result: nil, error: error)
                 }
             }
-            print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
-        task.resume()
+        
+        
+//        let request = NSMutableURLRequest(URL: NSURL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
+//        request.HTTPMethod = "POST"
+//        request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
+//        request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
+//        let session = NSURLSession.sharedSession()
+//        let task = session.dataTaskWithRequest(request) { data, response, error in
+//            
+//            if error != nil {
+//                
+//                func displayError(error: String, debugLabelText: String? = nil) {
+//                    print(error)
+//                    performUIUpdatesOnMain {
+//                        "fail"
+//                    }
+//                }
+//                
+//                guard (error == nil) else {
+//                    displayError("There was an error with your request: \(error)")
+//                    return
+//                }
+//                
+//                guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+//                    displayError("Your request returned a status code other than 2xx!")
+//                    return
+//                }
+//                
+//                guard let data = data else {
+//                    displayError("No data was returned by the request!")
+//                    return
+//                }
+//                
+//                let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+//                
+//                let parsedResult: AnyObject!
+//                do {
+//                    parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
+//                    print(parsedResult!)
+//                } catch {
+//                    print("Error: Parsing JSON data")
+//                    return
+//                }
+//            }
+//            //print(NSString(data: data!, encoding: NSUTF8StringEncoding))
+//        }
+//        task.resume()
     }
     
     func loginToApp(username: String, password: String, completionHandlerForLOGIN: (details: [String: AnyObject]?, error: NSError?) -> Void) {

@@ -57,15 +57,17 @@ class Client : NSObject {
         
     }
     
-    func taskForPOSTMethod(urlString: String, parameters: [String:AnyObject], jsonBody: String, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
-        
-        let url = NSURL(string: urlString)
+    func taskForPOSTMethod(jsonBody: String, completionHandlerForPOST: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+
+        let url = NSURL(string: Client.Constants.Scheme.Method)
         
         let request = NSMutableURLRequest(URL: url!)
         request.HTTPMethod = "POST"
         request.addValue(Client.Constants.ParameterValues.ParseAPIKey, forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue(Client.Constants.ParameterValues.RestAPIKey, forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
+        let session = NSURLSession.sharedSession()
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             
@@ -80,13 +82,11 @@ class Client : NSObject {
                 return
             }
             
-            /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                 sendError("Your request returned a status code other than 2xx!")
                 return
             }
             
-            /* GUARD: Was there any data returned? */
             guard let data = data else {
                 sendError("No data was returned by the request!")
                 return
@@ -96,7 +96,6 @@ class Client : NSObject {
         }
         task.resume()
         return task
-        
     }
     
     func taskForLOGINMethod(parameters: String, completionHandlerForLOGIN: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
@@ -115,8 +114,7 @@ class Client : NSObject {
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
 
-                completionHandlerForLOGIN(result: nil, error: NSError(domain: "taskForLOGINMethod", code: 1, userInfo: userInfo))
-                
+                completionHandlerForLOGIN(result: nil, error: NSError(domain: "taskForLOGINMethod", code: 1, userInfo: userInfo)) 
             }
             
             guard (error == nil) else {

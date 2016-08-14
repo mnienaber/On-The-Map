@@ -12,12 +12,10 @@ import AudioToolbox
 class ListViewController: UITableViewController {
     
     var appDelegate: AppDelegate!
-    //var studentLocation = Client.sharedInstance().studentLocation
     let studentSegueIdentifier = "ShowStudentDetail"
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //print("\(studentLocation)" + "viewdidload")
         
         self.navigationController?.navigationBarHidden = false
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -43,7 +41,6 @@ class ListViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        //print("\(studentLocation.count)" + "tableview count")
         return Client.sharedInstance().studentLocation.count
     }
     
