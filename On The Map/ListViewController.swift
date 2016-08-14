@@ -90,11 +90,8 @@ class ListViewController: UITableViewController {
             
         }
     }
-    @IBAction func refreshButton(sender: AnyObject) {
-        
-        getStudentList()
-        print("refresh")
-    }
+
+
     
     func logOut() {
         
@@ -126,6 +123,14 @@ extension ListViewController {
         let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+    }
+    
+    func failLogOutAlert() {
+        
+        let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
+        failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
+        failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failLogoutAlert, animated: true, completion: nil)
     }
 }
 

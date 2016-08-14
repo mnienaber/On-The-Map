@@ -6,7 +6,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Map View Controller-->
+        <!--On The Map-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
                 <viewController id="9pv-A4-QxB" customClass="MapViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
@@ -18,40 +18,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="XdR-0W-sxw">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="XdR-0W-sxw">
                                 <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                             </mapView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Yo-Qw-Cme">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items>
-                                    <navigationItem title="On The Map" id="eHD-xG-Dya">
-                                        <barButtonItem key="leftBarButtonItem" image="MDPin" id="hcQ-fq-eLM">
-                                            <connections>
-                                                <segue destination="0nf-LG-OEF" kind="show" id="l62-hV-8fF"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" image="mdRefresh" id="2r8-Pm-G0n">
-                                            <connections>
-                                                <action selector="buttonMethod:" destination="9pv-A4-QxB" id="1VC-wh-1N0"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="2Yo-Qw-Cme" firstAttribute="leading" secondItem="XdR-0W-sxw" secondAttribute="leading" id="16b-aH-4YQ"/>
-                            <constraint firstItem="2Yo-Qw-Cme" firstAttribute="trailing" secondItem="XdR-0W-sxw" secondAttribute="trailing" id="6fF-Gr-iNn"/>
-                            <constraint firstItem="2Yo-Qw-Cme" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" id="SYv-e8-z7e"/>
                             <constraint firstItem="XdR-0W-sxw" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="Vyf-wA-zWD"/>
                             <constraint firstAttribute="trailing" secondItem="XdR-0W-sxw" secondAttribute="trailing" id="XxO-pi-sbV"/>
                             <constraint firstItem="XdR-0W-sxw" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" id="a2t-N4-ZjI"/>
                             <constraint firstItem="XdR-0W-sxw" firstAttribute="bottom" secondItem="4ug-Mw-9AY" secondAttribute="top" id="rO0-G5-U0L"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="mapIcon" id="acW-dT-cKf"/>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" title="On The Map" id="olS-Ex-CJj">
+                        <barButtonItem key="leftBarButtonItem" image="mdRefresh" id="Hok-tP-KKP">
+                            <connections>
+                                <action selector="buttonMethod:" destination="9pv-A4-QxB" id="wbI-rS-3GB"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="MDPin" id="CKf-zJ-0vq">
+                            <connections>
+                                <segue destination="0nf-LG-OEF" kind="show" id="61U-Aw-AmT"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mapView" destination="XdR-0W-sxw" id="CRN-Xo-M0x"/>
@@ -59,7 +50,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="-320"/>
+            <point key="canvasLocation" x="1438" y="-320"/>
         </scene>
         <!--On The Map-->
         <scene sceneID="PWA-qn-2Mb">
@@ -90,9 +81,6 @@
                                         </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="5sN-QE-03f" kind="show" identifier="ShowStudentDetail" id="02r-ZH-nlx"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -101,21 +89,17 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="On The Map" id="VSU-us-7eh">
-                        <barButtonItem key="leftBarButtonItem" image="MDPin" id="PBC-Jb-ZiC">
+                        <barButtonItem key="leftBarButtonItem" title="Log Out" id="PBC-Jb-ZiC"/>
+                        <barButtonItem key="rightBarButtonItem" image="MDPin" id="Opm-LI-kan">
                             <connections>
-                                <segue destination="0nf-LG-OEF" kind="presentation" id="5qC-a1-hu6"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="mdRefresh" id="Opm-LI-kan">
-                            <connections>
-                                <action selector="refreshButton:" destination="cZd-HX-D2Q" id="PRl-Wo-oyZ"/>
+                                <segue destination="0nf-LG-OEF" kind="show" id="RSx-dQ-yfF"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etk-WB-8zc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1562" y="387"/>
+            <point key="canvasLocation" x="1438" y="387"/>
         </scene>
         <!--Student Detail Controller-->
         <scene sceneID="MdQ-gu-jPa">
@@ -165,7 +149,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PBF-1Y-sOQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2258" y="387"/>
+            <point key="canvasLocation" x="2304" y="1137"/>
         </scene>
         <!--Location View Controller-->
         <scene sceneID="ooK-3d-fke">
@@ -188,7 +172,7 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E51-gC-abb">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E51-gC-abb">
                                 <rect key="frame" x="224" y="185" width="153" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="153" id="Go8-8J-u37"/>
@@ -200,13 +184,13 @@
                                     <action selector="findOnTheMap:" destination="0nf-LG-OEF" eventType="touchUpInside" id="Ukp-sY-uTZ"/>
                                 </connections>
                             </button>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
                                 <rect key="frame" x="0.0" y="142" width="600" height="458"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="458" id="c9q-g3-38x"/>
                                 </constraints>
                             </mapView>
-                            <textField opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Location here..." textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="H8a-ue-Mmk">
+                            <textField opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Location here..." textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="H8a-ue-Mmk">
                                 <rect key="frame" x="138" y="160" width="324" height="30"/>
                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
@@ -215,13 +199,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes" spellCheckingType="yes" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Paste URL Here..." textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="naa-uf-Zfp">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Paste URL Here..." textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="naa-uf-Zfp">
                                 <rect key="frame" x="138" y="160" width="324" height="30"/>
                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcY-Eh-Jkf">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcY-Eh-Jkf">
                                 <rect key="frame" x="224" y="194" width="153" height="28"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="21"/>
                                 <state key="normal" title="SUBMIT"/>
@@ -229,7 +213,7 @@
                                     <action selector="submitButton:" destination="0nf-LG-OEF" eventType="touchUpInside" id="dIN-jd-JmR"/>
                                 </connections>
                             </button>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bLN-0F-gLB">
+                            <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bLN-0F-gLB">
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <items>
                                     <navigationItem title="On The Map" id="zZA-Lf-z0P">
@@ -241,10 +225,10 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jBZ-uR-44e">
+                            <view alpha="0.59999999999999998" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jBZ-uR-44e">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="N3k-5U-YU0">
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="N3k-5U-YU0">
                                         <rect key="frame" x="282" y="190" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -297,7 +281,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G5a-jq-z3O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="124" y="1085"/>
+            <point key="canvasLocation" x="2160" y="0.0"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="CpS-7C-D9Y">
@@ -412,7 +396,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
+                        <segue destination="2Qj-rU-LLs" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="KlK-tV-Uoi" kind="relationship" relationship="viewControllers" id="0ft-SD-G4F"/>
                     </connections>
                 </tabBarController>
@@ -423,6 +407,7 @@
         <!--Navigation Controller-->
         <scene sceneID="vBE-Zc-2tq">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZzI-LY-xtQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KlK-tV-Uoi" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="listIcon" id="otg-8b-rxU"/>
                     <toolbarItems/>
@@ -435,9 +420,27 @@
                         <segue destination="cZd-HX-D2Q" kind="relationship" relationship="rootViewController" id="EGn-5L-SdM"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ZzI-LY-xtQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="750" y="387"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="O85-V9-hyJ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2Qj-rU-LLs" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="mapIcon" id="acW-dT-cKf"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="kZj-bq-D9u">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="9pv-A4-QxB" kind="relationship" relationship="rootViewController" id="eWN-f0-cRm"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BTE-in-yjX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="750" y="-320"/>
         </scene>
     </scenes>
     <resources>
@@ -449,6 +452,6 @@
         <image name="regMDPin" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="l62-hV-8fF"/>
+        <segue reference="RSx-dQ-yfF"/>
     </inferredMetricsTieBreakers>
 </document>

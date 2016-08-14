@@ -44,6 +44,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBarHidden = true
         myMiniMapView.delegate = self
         myMiniMapView.hidden = true
         textLocation.hidden = false
@@ -59,6 +60,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     override func viewWillAppear(animated: Bool) {
         
         dimOutlet.hidden = true
+        self.navigationController?.navigationBarHidden = true
         self.subscribeToKeyboardNotifications()
         self.unsubscribeToKeyboardNotifications()
     }
