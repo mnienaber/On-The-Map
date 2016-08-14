@@ -30,6 +30,7 @@ extension Client {
                     Client.sharedInstance().studentLocation = locations
                     completionHandlerForStudentLocations(result: locations, error: nil)
                 } else {
+                    
                     completionHandlerForStudentLocations(result: nil, error: error)
                 }
             }

@@ -17,6 +17,7 @@ class ListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.reloadData()
         self.navigationController?.navigationBarHidden = false
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         getStudentList()
@@ -25,6 +26,7 @@ class ListViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear(animated)
+        tableView.reloadData()
         self.navigationController?.navigationBarHidden = false
     }
     

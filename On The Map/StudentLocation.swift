@@ -48,7 +48,6 @@ struct StudentLocation {
                 studentLocationObjects.append(studObjects)
             }
         }
-        print("\(studentLocationObjects)" + "this is studentlocationObject")
         return studentLocationObjects
     }
 }

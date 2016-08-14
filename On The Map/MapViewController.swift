@@ -132,7 +132,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
                             
                             annotation.coordinate = coordinate
-                            annotation.title = student.firstName + student.lastName
+                            annotation.title = student.firstName + " " + student.lastName
                             annotation.subtitle = mediaURL
                             annotations.append(annotation)
                             

@@ -150,6 +150,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 self.dimOutlet.hidden = true
                 self.activityOutlet.stopAnimating()
                 print("success")
+                Client.sharedInstance().getStudentLocations {_,_ in }
                 self.returnToMapView()
             }
         }
@@ -168,6 +169,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     func returnToMapView() {
         
         dispatch_async(dispatch_get_main_queue(), {
+            
             self.dismissViewControllerAnimated(true, completion: nil)
         })
     }
