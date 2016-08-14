@@ -92,6 +92,10 @@ class ListViewController: UITableViewController {
     }
 
 
+    @IBAction func logOutButton(sender: AnyObject) {
+        
+        self.logOut()
+    }
     
     func logOut() {
         

@@ -89,7 +89,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="On The Map" id="VSU-us-7eh">
-                        <barButtonItem key="leftBarButtonItem" title="Log Out" id="kQO-f8-Bzz"/>
+                        <barButtonItem key="leftBarButtonItem" title="Log Out" id="kQO-f8-Bzz">
+                            <connections>
+                                <action selector="logOutButton:" destination="cZd-HX-D2Q" id="FEW-HA-qwt"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="MDPin" id="Opm-LI-kan">
                             <connections>
                                 <segue destination="2Pq-Pv-8f2" kind="show" id="lbj-7g-qqT"/>

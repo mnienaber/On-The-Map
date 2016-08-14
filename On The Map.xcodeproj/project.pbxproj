@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		2E240A451D001919004BC3D0 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E240A441D001919004BC3D0 /* Config.swift */; };
+		2E2C27EF1D6050E600C6A1E3 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */; };
 		2E4E8A1E1D5B69C900206E13 /* StudentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4E8A1D1D5B69C900206E13 /* StudentModel.swift */; };
 		2E97184B1D44901A005AA138 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E97184A1D44901A005AA138 /* GoogleService-Info.plist */; };
 		2EA80F211D38D0B700BFC968 /* StudentDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */; };
 		2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */; };
 		2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180141CF2EFF700D6EB19 /* MapViewController.swift */; };
-		2EE180171CF2EFF700D6EB19 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180161CF2EFF700D6EB19 /* ListViewController.swift */; };
 		2EE1801A1CF2EFF700D6EB19 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EE180181CF2EFF700D6EB19 /* Main.storyboard */; };
 		2EE1801C1CF2EFF700D6EB19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EE1801B1CF2EFF700D6EB19 /* Assets.xcassets */; };
 		2EE1801F1CF2EFF700D6EB19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EE1801D1CF2EFF700D6EB19 /* LaunchScreen.storyboard */; };
@@ -51,13 +51,13 @@
 /* Begin PBXFileReference section */
 		2AB68C85F6D3825B50552538 /* Pods_On_The_Map.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_On_The_Map.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E240A441D001919004BC3D0 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		2E4E8A1D1D5B69C900206E13 /* StudentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentModel.swift; sourceTree = "<group>"; };
 		2E97184A1D44901A005AA138 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentDetailController.swift; sourceTree = "<group>"; };
 		2EE1800F1CF2EFF700D6EB19 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EE180141CF2EFF700D6EB19 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		2EE180161CF2EFF700D6EB19 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		2EE180191CF2EFF700D6EB19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2EE1801B1CF2EFF700D6EB19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2EE1801E1CF2EFF700D6EB19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -172,9 +172,9 @@
 		2EE180421CF30A5200D6EB19 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */,
 				2EE180541CFD81CE00D6EB19 /* LoginViewController.swift */,
 				2EE180141CF2EFF700D6EB19 /* MapViewController.swift */,
-				2EE180161CF2EFF700D6EB19 /* ListViewController.swift */,
 				2EE180451CF31B1000D6EB19 /* LocationViewController.swift */,
 				2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */,
 			);
@@ -492,7 +492,6 @@
 				2EE1804E1CF32A0400D6EB19 /* StudentLocation.swift in Sources */,
 				2EE180481CF31CF100D6EB19 /* Constants.swift in Sources */,
 				2E4E8A1E1D5B69C900206E13 /* StudentModel.swift in Sources */,
-				2EE180171CF2EFF700D6EB19 /* ListViewController.swift in Sources */,
 				2EE1804A1CF31E2F00D6EB19 /* Client.swift in Sources */,
 				2E240A451D001919004BC3D0 /* Config.swift in Sources */,
 				2EE1804C1CF326D000D6EB19 /* Convenience.swift in Sources */,
@@ -501,6 +500,7 @@
 				2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */,
 				2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */,
 				2EE180551CFD81CE00D6EB19 /* LoginViewController.swift in Sources */,
+				2E2C27EF1D6050E600C6A1E3 /* ListViewController.swift in Sources */,
 				2EE180461CF31B1000D6EB19 /* LocationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
