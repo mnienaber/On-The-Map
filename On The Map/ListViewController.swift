@@ -63,16 +63,31 @@ class ListViewController: UITableViewController {
     
     func getStudentList() {
         
+        
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
-            if let studentLocation = studentLocation {
-                [self.studentLocation = studentLocation]
+            
+            print("getstudentlocations")
+            
+            if errorString != nil {
+                
+                print("our errorstring")
                 performUIUpdatesOnMain {
-                    for student in self.studentLocation {
-
-                        self.tableView.reloadData()
+                    
+                    self.failAlertGeneral("Yikes", message: "There was a problem retrieving data, please try again later", actionTitle: "OK")
+                }
+            } else {
+                
+                if let studentLocation = studentLocation {
+                    [self.studentLocation = studentLocation]
+                    performUIUpdatesOnMain {
+                        for student in self.studentLocation {
+                            
+                            self.tableView.reloadData()
+                        }
                     }
                 }
             }
+            
         }
     }
     @IBAction func refreshButton(sender: AnyObject) {
@@ -104,6 +119,13 @@ extension ListViewController {
             let studentDetailDict = [studentLocation[studentIndex!]]
             destination?.studentDetailLocation = studentDetailDict
         }
+    }
+    
+    func failAlertGeneral(title: String, message: String, actionTitle: String) {
+        
+        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failAlertGeneral, animated: true, completion: nil)
     }
 }
 

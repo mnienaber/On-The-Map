@@ -70,7 +70,7 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
                 
                 performUIUpdatesOnMain{
                     
-                    self.failAlert()
+                    self.countfailAlert()
                 }
             } else {
 
@@ -113,7 +113,7 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         }
     }
     
-    func failAlert() {
+    func countfailAlert() {
         
         if self.loginCount <= self.loginLimit {
             
@@ -184,6 +184,13 @@ extension LoginViewController {
         } else {
             loginButton.hidden = true
         }
+    }
+    
+    func failAlertGeneral(title: String, message: String, actionTitle: String) {
+        
+        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failAlertGeneral, animated: true, completion: nil)
     }
     
     func configureUI() {

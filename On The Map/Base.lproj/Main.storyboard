@@ -6,7 +6,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Map-->
+        <!--Map View Controller-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
                 <viewController id="9pv-A4-QxB" customClass="MapViewController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
@@ -25,12 +25,12 @@
                                 <rect key="frame" x="0.0" y="20" width="600" height="44"/>
                                 <items>
                                     <navigationItem title="On The Map" id="eHD-xG-Dya">
-                                        <barButtonItem key="leftBarButtonItem" image="pinIcon" id="hcQ-fq-eLM">
+                                        <barButtonItem key="leftBarButtonItem" image="MDPin" id="hcQ-fq-eLM">
                                             <connections>
                                                 <segue destination="0nf-LG-OEF" kind="show" id="l62-hV-8fF"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Item" systemItem="refresh" id="2r8-Pm-G0n">
+                                        <barButtonItem key="rightBarButtonItem" image="mdRefresh" id="2r8-Pm-G0n">
                                             <connections>
                                                 <action selector="buttonMethod:" destination="9pv-A4-QxB" id="1VC-wh-1N0"/>
                                             </connections>
@@ -50,7 +50,7 @@
                             <constraint firstItem="XdR-0W-sxw" firstAttribute="bottom" secondItem="4ug-Mw-9AY" secondAttribute="top" id="rO0-G5-U0L"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Map" image="mapIcon" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="" image="mapIcon" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -78,14 +78,14 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aae-Rt-Ncg">
-                                            <rect key="frame" x="62" y="0.0" width="503" height="45.5"/>
+                                            <rect key="frame" x="54" y="0.0" width="511" height="45.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="pinIcon" id="GIJ-zv-YoQ">
-                                            <rect key="frame" x="15" y="6" width="32" height="32"/>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="regMDPin" id="GIJ-zv-YoQ">
+                                            <rect key="frame" x="15" y="10" width="24" height="24"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </imageView>
                                     </subviews>
@@ -101,12 +101,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="On The Map" id="VSU-us-7eh">
-                        <barButtonItem key="leftBarButtonItem" image="pinIcon" id="PBC-Jb-ZiC">
+                        <barButtonItem key="leftBarButtonItem" image="MDPin" id="PBC-Jb-ZiC">
                             <connections>
                                 <segue destination="0nf-LG-OEF" kind="presentation" id="5qC-a1-hu6"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Opm-LI-kan">
+                        <barButtonItem key="rightBarButtonItem" image="mdRefresh" id="Opm-LI-kan">
                             <connections>
                                 <action selector="refreshButton:" destination="cZd-HX-D2Q" id="PRl-Wo-oyZ"/>
                             </connections>
@@ -420,11 +420,11 @@
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
         </scene>
-        <!--List-->
+        <!--Navigation Controller-->
         <scene sceneID="vBE-Zc-2tq">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KlK-tV-Uoi" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="List" image="listIcon" id="otg-8b-rxU"/>
+                    <tabBarItem key="tabBarItem" title="" image="listIcon" id="otg-8b-rxU"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hJh-dw-anw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -441,9 +441,12 @@
         </scene>
     </scenes>
     <resources>
-        <image name="listIcon" width="32" height="32"/>
-        <image name="mapIcon" width="32" height="32"/>
+        <image name="MDPin" width="24" height="24"/>
+        <image name="listIcon" width="24" height="24"/>
+        <image name="mapIcon" width="24" height="24"/>
+        <image name="mdRefresh" width="24" height="24"/>
         <image name="pinIcon" width="32" height="32"/>
+        <image name="regMDPin" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="l62-hV-8fF"/>

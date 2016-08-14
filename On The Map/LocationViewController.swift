@@ -58,6 +58,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     override func viewWillAppear(animated: Bool) {
         
+        dimOutlet.hidden = true
         self.subscribeToKeyboardNotifications()
         self.unsubscribeToKeyboardNotifications()
     }
@@ -133,14 +134,25 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     func getPostToMap(jsonBody: String) {
         
+        print("getposttomap")
         Client.sharedInstance().postToMap(jsonBody) { (statusCode, error) in
+            
+            self.dimOutlet.hidden = true
+            self.activityOutlet.stopAnimating()
             
             if error != nil {
                 
-                self.failPost()
+                performUIUpdatesOnMain {
+
+                    let failPostAlert = UIAlertController(title: "Yikes", message: "There seems to be a problem, your post didn't execute!", preferredStyle: UIAlertControllerStyle.Alert)
+                    failPostAlert.addAction(UIAlertAction(title: "I'll try again later", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.returnToMapView() })
+                }
+                
             } else {
                 
                 performUIUpdatesOnMain {
+                    
                     print("success")
                 }
             }
@@ -231,6 +243,9 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     @IBAction func submitButton(sender: AnyObject) {
         
+        dimOutlet.hidden = false
+        activityOutlet.startAnimating()
+        
         if ((self.myMediaUrl.text!.rangeOfString("http://") != nil) && (self.myMediaUrl.text!.rangeOfString("https://")) != nil) {
             
             self.appDelegate.mediaUrl = self.myMediaUrl.text!
@@ -242,7 +257,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}"
         
         self.getPostToMap(jsonBody)
-        returnToMapView()
     }
     
     func failPost() {

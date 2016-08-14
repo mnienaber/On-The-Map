@@ -135,7 +135,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                             annotation.title = student.firstName + student.lastName
                             annotation.subtitle = mediaURL
                             annotations.append(annotation)
+                            
                         }
+                        //Client.sharedInstance().
                         self.mapView.addAnnotations(annotations)
                     }
                 }

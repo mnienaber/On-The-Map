@@ -44,8 +44,6 @@ extension Client {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         let session = NSURLSession.sharedSession()
-        print("afterrequest")
-        print(request)
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
                 
@@ -82,7 +80,6 @@ extension Client {
                     return
                 }
             }
-            print("newdata3")
             print(NSString(data: data!, encoding: NSUTF8StringEncoding))
         }
         task.resume()
