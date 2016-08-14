@@ -24,8 +24,8 @@ class ListViewController: UITableViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
         
+        super.viewWillAppear(animated)
         self.navigationController?.navigationBarHidden = false
     }
     
@@ -43,6 +43,19 @@ class ListViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return studentLocation.count
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let location = studentLocation[indexPath.row]
+        let url = location.mediaURL
+        
+        if verifyUrl(url) == true {
+            UIApplication.sharedApplication().openURL(NSURL(string: url)!)
+        } else if verifyUrl(url) == false {
+            
+            self.failAlertGeneral("Unable to open that URL", message: "Unfrt this item doesn't contain a valid URL", actionTitle: "Try another")
+        }
     }
     
     override internal func canBecomeFirstResponder() -> Bool {
@@ -135,6 +148,18 @@ extension ListViewController {
         failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
         failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(failLogoutAlert, animated: true, completion: nil)
+    }
+    
+    func verifyUrl(urlString: String?) -> Bool {
+
+        if let urlString = urlString {
+            
+            if NSURL(string: urlString) != nil {
+                
+                return true
+            }
+        }
+        return false
     }
 }
 

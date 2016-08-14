@@ -172,9 +172,9 @@
 		2EE180421CF30A5200D6EB19 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */,
 				2EE180541CFD81CE00D6EB19 /* LoginViewController.swift */,
 				2EE180141CF2EFF700D6EB19 /* MapViewController.swift */,
+				2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */,
 				2EE180451CF31B1000D6EB19 /* LocationViewController.swift */,
 				2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */,
 			);
@@ -186,7 +186,6 @@
 			children = (
 				2EE180491CF31E2F00D6EB19 /* Client.swift */,
 				2EE180471CF31CF100D6EB19 /* Constants.swift */,
-				2EE1804B1CF326D000D6EB19 /* Convenience.swift */,
 				2EE1804D1CF32A0400D6EB19 /* StudentLocation.swift */,
 				2E4E8A1D1D5B69C900206E13 /* StudentModel.swift */,
 				2EE180521CF5B1CB00D6EB19 /* BlackBox.swift */,
@@ -198,6 +197,7 @@
 		2EE180441CF30A7000D6EB19 /* Control */ = {
 			isa = PBXGroup;
 			children = (
+				2EE1804B1CF326D000D6EB19 /* Convenience.swift */,
 			);
 			name = Control;
 			sourceTree = "<group>";
