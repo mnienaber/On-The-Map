@@ -26,7 +26,7 @@ class ListViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear(animated)
-        tableView.reloadData()
+        getStudentList()
         self.navigationController?.navigationBarHidden = false
     }
     
@@ -90,6 +90,7 @@ class ListViewController: UITableViewController {
                 for _ in Client.sharedInstance().studentLocation {
                     
                     self.tableView.reloadData()
+                    print("getStudentList()")
                 }
             }
         }

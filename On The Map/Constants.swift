@@ -25,7 +25,7 @@ extension Client {
             static let Order = "?order=-updatedAt"
             static let LimitAndOrder = "?limit=50&order=-updatedAt"
         }
-        
+
         struct ParameterKeys {
             static let ApiKey = "api_key"
             static let RequestToken = "request_token"

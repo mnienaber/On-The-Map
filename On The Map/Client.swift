@@ -15,6 +15,7 @@ class Client : NSObject {
     var config = Config()
     var appDelegate: AppDelegate!
     var studentLocation = studentLocationObjects
+    var accountDetails = accountVerificationObjects
     
     override init() {
         super.init()
@@ -97,7 +98,7 @@ class Client : NSObject {
         task.resume()
         return task
     }
-    
+
     func taskForLOGINMethod(parameters: String, completionHandlerForLOGIN: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         let url = "https://www.udacity.com/api/session"
@@ -135,6 +136,41 @@ class Client : NSObject {
             let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
             
             self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForLOGIN)
+        }
+        task.resume()
+        return task
+    }
+    
+    func taskForUSERINFOMethod(accountKey: AnyObject, completionHandlerForUSERINFO: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+        
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + String(accountKey))!)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithRequest(request) { data, response, error in
+            func displayError(error: String, debugLabelText: String? = nil) {
+                print(error)
+                performUIUpdatesOnMain {
+                    print("looking good")
+                }
+            }
+            
+            guard (error == nil) else {
+                displayError("There was an error with your request: \(error)")
+                return
+            }
+            
+            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+                displayError("Your request returned a status code other than 2xx!")
+                return
+            }
+            
+            guard let data = data else {
+                displayError("No data was returned by the request!")
+                return
+            }
+
+            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
+
+            self.convertDataWithCompletionHandler(newData, completionHandlerForConvertData: completionHandlerForUSERINFO)
         }
         task.resume()
         return task

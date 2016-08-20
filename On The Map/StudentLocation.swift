@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 
 var studentLocationObjects = [StudentLocation]()
+var accountVerificationObjects = [AccountVerification]()
 
 struct StudentLocation {
     

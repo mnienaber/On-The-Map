@@ -175,71 +175,27 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     }
     
     func getUserInfo(accountKey: AnyObject) {
-        
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://www.udacity.com/api/users/" + String(accountKey))!)
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            func displayError(error: String, debugLabelText: String? = nil) {
+
+        Client.sharedInstance().getUserCompleteInfo(self.appDelegate.accountKey!) { (result, error) in
+
+            if error != nil {
+
+                self.dimOutlet.hidden = true
+                self.activityOutlet.stopAnimating()
                 print(error)
-                performUIUpdatesOnMain {
-                    print("looking good")
-                }
-            }
-            
-            guard (error == nil) else {
-                displayError("There was an error with your request: \(error)")
-                return
-            }
+                let failPostAlert = UIAlertController(title: "Oops", message: "We weren't able to capture your userinfo so you will not be able to post to the map", preferredStyle: UIAlertControllerStyle.Alert)
+                failPostAlert.addAction(UIAlertAction(title: "I'll log out try again later", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.returnToMapView() })
+                failPostAlert.addAction(UIAlertAction(title: "Log me out", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.logOut() })
 
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                displayError("Your request returned a status code other than 2xx!")
-                return
-            }
+            } else {
 
-            guard let data = data else {
-                displayError("No data was returned by the request!")
-                return
+                print("success")
             }
-            let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
-            
-            let parsedResult: AnyObject!
-            do {
-                
-                parsedResult = try NSJSONSerialization.JSONObjectWithData(newData, options: .AllowFragments)
-            } catch {
-                
-                print("Error: Parsing JSON data")
-                return
-            }
-            
-            let user = parsedResult["user"]!
-            
-            if let lastName = user!["last_name"] as? String {
-                
-                self.appDelegate.lastName = lastName
-            } else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    print("Login Failed (lastname).")
-                }
-                print("Could not find accountKey")
-            }
-            
-            if let firstName = user!["first_name"] as? String {
-                
-                self.appDelegate.firstName = firstName
-            } else {
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    print("Login Failed (firstname).")
-                }
-                print("Could not find firstname")
-                
-            }
-            
         }
-        task.resume()
     }
-    
+
     @IBAction func submitButton(sender: AnyObject) {
         
         dimOutlet.hidden = false
@@ -316,5 +272,16 @@ extension LocationViewController {
         if textLocation.isFirstResponder() || myMediaUrl.isFirstResponder() {
             self.view.endEditing(true)
         }
+    }
+
+    func logOut() {
+
+        self.appDelegate.accountKey = nil
+        self.appDelegate.accountRegistered = nil
+        self.appDelegate.sessionID = nil
+        self.appDelegate.sessionExpiration = nil
+        dispatch_async(dispatch_get_main_queue(), {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
     }
 }
