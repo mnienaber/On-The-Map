@@ -21,6 +21,7 @@ extension Client {
         let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder // + Client.Constants.Scheme.Order*/
         
         taskForGETMethod(url, parameters: parameters) { results, error in
+            
             if let error = error {
                 print(error)
             } else {
@@ -124,4 +125,8 @@ extension Client {
         
         
     }
+
+
 }
+
+

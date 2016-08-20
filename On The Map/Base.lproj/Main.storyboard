@@ -84,7 +84,7 @@
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="cZd-HX-D2Q" id="g8t-7x-cjF"/>
+                            <outlet property="dataSource" destination="cZd-HX-D2Q" id="6Yt-hl-J4i"/>
                             <outlet property="delegate" destination="cZd-HX-D2Q" id="pey-Zq-yPO"/>
                         </connections>
                     </tableView>
@@ -100,6 +100,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="lgV-xU-ZlN">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etk-WB-8zc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

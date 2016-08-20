@@ -13,21 +13,53 @@ class ListViewController: UITableViewController {
     
     var appDelegate: AppDelegate!
     let studentSegueIdentifier = "ShowStudentDetail"
+    var refreshCount = 0
+
+    func refresh(sender: AnyObject) {
+
+        Client.sharedInstance().getStudentLocations() { (results, error) in
+
+            if error != nil {
+
+                print("that's an error")
+
+            } else {
+
+                performUIUpdatesOnMain {
+
+                    print("here are the studentlocations \(Client.sharedInstance().studentLocation)")
+                    self.getStudentList()
+                    self.tableView.reloadData()
+                    self.refreshCount += 1
+                    print(self.refreshCount)
+
+                }
+            }
+        } 
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.reloadData()
+
         self.navigationController?.navigationBarHidden = false
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        getStudentList()
+        self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        print("viewwillload")
     }
     
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear(animated)
-        getStudentList()
         self.navigationController?.navigationBarHidden = false
+
+        performUIUpdatesOnMain {
+
+            self.tableView.reloadData()
+            self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+            self.tableView.reloadData()
+            print("viewwillappear")
+        }
+
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -89,8 +121,10 @@ class ListViewController: UITableViewController {
                 
                 for _ in Client.sharedInstance().studentLocation {
                     
-                    self.tableView.reloadData()
-                    print("getStudentList()")
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.tableView.reloadData()
+                        self.refreshControl?.endRefreshing()
+                    })
                 }
             }
         }
@@ -140,6 +174,11 @@ extension ListViewController {
             }
         }
         return false
+    }
+
+    func isEqual(lhs: [String: AnyObject], rhs: [String: AnyObject]) -> Bool {
+
+        return NSDictionary(dictionary: lhs).isEqualToDictionary(rhs)
     }
 }
 

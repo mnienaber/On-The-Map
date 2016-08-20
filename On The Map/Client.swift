@@ -206,6 +206,8 @@ class Client : NSObject {
         
         return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
     }
+
+
     
     class func sharedInstance() -> Client {
         struct Singleton {
