@@ -150,7 +150,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 self.dimOutlet.hidden = true
                 self.activityOutlet.stopAnimating()
                 print("success")
-                Client.sharedInstance().getStudentLocations {_,_ in }
                 self.returnToMapView()
             }
         }
@@ -168,10 +167,31 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     func returnToMapView() {
         
-        dispatch_async(dispatch_get_main_queue(), {
+        Client.sharedInstance().getStudentLocations { (result, error) in
             
-            self.dismissViewControllerAnimated(true, completion: nil)
-        })
+            if error != nil {
+                
+                performUIUpdatesOnMain {
+                    
+                    let failPostAlert = UIAlertController(title: "Oops", message: "We weren't able to capture your userinfo so you will not be able to post to the map", preferredStyle: UIAlertControllerStyle.Alert)
+                    failPostAlert.addAction(UIAlertAction(title: "I'll log out try again later", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(failPostAlert, animated: true, completion: nil)
+                }
+                
+            } else {
+                
+                performUIUpdatesOnMain {
+                    
+                    if result != nil {
+                        
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    }
+                }
+                
+                
+            }
+        }
+        
     }
     
     func getUserInfo(accountKey: AnyObject) {

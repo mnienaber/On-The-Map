@@ -18,17 +18,17 @@ extension Client {
             Client.Constants.ParameterValues.RestAPIKey: Client.Constants.ParameterValues.RestAPIKey,
         ]
         
-        let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder // + Client.Constants.Scheme.Order*/
+        let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder
         
         taskForGETMethod(url, parameters: parameters) { results, error in
             
             if let error = error {
+                
                 print(error)
             } else {
                 
                 if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
                     let locations = StudentLocation.SLOFromResults(results)
-                    Client.sharedInstance().studentLocation = locations
                     completionHandlerForStudentLocations(result: locations, error: nil)
                 } else {
                     

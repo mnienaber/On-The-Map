@@ -47,8 +47,11 @@ struct StudentLocation {
             if let studObjects = StudentLocation(dictionary: result) {
                 
                 studentLocationObjects.append(studObjects)
+                
             }
         }
+        Client.sharedInstance().studentLocation.removeAll()
+        Client.sharedInstance().studentLocation = studentLocationObjects
         return studentLocationObjects
     }
 }

@@ -120,10 +120,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             } else {
                 
                 if let studentLocation = studentLocation {
-                    [self.studentLocation = studentLocation]
+//                    [self.studentLocation = studentLocation]
                     var annotations = [MKPointAnnotation]()
                     performUIUpdatesOnMain {
-                        for student in self.studentLocation {
+                        for student in studentLocation {
                             
                             let lat = student.latitude
                             let long = student.longitude
