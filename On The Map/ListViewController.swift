@@ -11,57 +11,16 @@ import AudioToolbox
 
 class ListViewController: UITableViewController {
     
-    var studentLocation: [StudentLocation] = [StudentLocation]()
     var appDelegate: AppDelegate!
     let studentSegueIdentifier = "ShowStudentDetail"
-    var refreshCount = 0
 
-//    func refresh(sender: AnyObject) {
-//
-//        Client.sharedInstance().getStudentLocations() { (studentLocation, error) in
-//            
-//            print("studentLocation \(studentLocation)")
-//
-//            if error != nil {
-//
-//                print("that's an error")
-//
-//            } else {
-//                
-//                if let studentLocation = studentLocation {
-//                    
-//                    [self.studentLocation = studentLocation]
-//                    
-//                    performUIUpdatesOnMain {
-//                        
-//                        for student in studentLocation {
-//                            
-//                            performUIUpdatesOnMain {
-//                                
-//                                print(student.firstName + " " + student.lastName)
-////                                self.tableView.reloadData()
-//                                
-//                            }
-//                            
-//                            
-//                        }
-//                        self.tableView.reloadData()
-//                        self.refreshControl?.endRefreshing()
-//                        self.refreshCount += 1
-//                        print(self.refreshCount)
-//                        
-//                    }
-//                }
-//            }
-//        } 
-//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.navigationController?.navigationBarHidden = false
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-//        self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+
         
         print("viewwillload")
     }
@@ -70,7 +29,6 @@ class ListViewController: UITableViewController {
         
         super.viewWillAppear(animated)
         self.navigationController?.navigationBarHidden = false
-//        self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         getStudentList()
         self.tableView.reloadData()
         print("viewwillappear")
@@ -126,43 +84,38 @@ class ListViewController: UITableViewController {
         
         if Client.sharedInstance().studentLocation.isEmpty == true {
             
-            performUIUpdatesOnMain {
-                
                 Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
                     
-                    if studentLocation != nil {
+                    performUIUpdatesOnMain {
                         
                         if errorString != nil {
                             
                             self.failAlertGeneral("Yikes", message: "There was a problem retrieving data, please try again later", actionTitle: "OK")
+                    } else {
+                        
+                        if let studentLocation = studentLocation {
                             
-                            }
-                        } else {
-                            
-                            if let studentLocation = studentLocation {
-                                
-                                performUIUpdatesOnMain {
-                                    for student in studentLocation {
-                                        
-                                        self.tableView.reloadData()
-                                    }
+                            performUIUpdatesOnMain {
+                                for student in studentLocation {
+                                    
+                                    self.tableView.reloadData()
+                                    print(student)
                                 }
+                            }
                         }
                     }
+         
+                    
                 }
-                
-                
             }
+    
         } else if Client.sharedInstance().studentLocation.isEmpty == false {
             
             performUIUpdatesOnMain {
                 
-                for _ in Client.sharedInstance().studentLocation {
+                for student in Client.sharedInstance().studentLocation {
                     
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.tableView.reloadData()
-                        self.refreshControl?.endRefreshing()
-                    })
+                    print(student)
                 }
             }
         }
