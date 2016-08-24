@@ -150,7 +150,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 self.dimOutlet.hidden = true
                 self.activityOutlet.stopAnimating()
                 print("success")
-                Client.sharedInstance().getStudentLocations {_,_ in }
                 self.returnToMapView()
             }
         }
@@ -167,11 +166,28 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     }
     
     func returnToMapView() {
-        
-        dispatch_async(dispatch_get_main_queue(), {
-            
-            self.dismissViewControllerAnimated(true, completion: nil)
-        })
+
+        Client.sharedInstance().getStudentLocations() { (results, error) in
+
+            if error != nil {
+
+                print("that's an error")
+                self.dimOutlet.hidden = true
+                self.activityOutlet.stopAnimating()
+                self.dismissViewControllerAnimated(true, completion: nil)
+
+            } else {
+
+                performUIUpdatesOnMain {
+
+                    print("refresh is \(results)")
+                    self.dimOutlet.hidden = true
+                    self.activityOutlet.stopAnimating()
+                    self.dismissViewControllerAnimated(true, completion: nil)
+
+                }
+            }
+        }
     }
     
     func getUserInfo(accountKey: AnyObject) {

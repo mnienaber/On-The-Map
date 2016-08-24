@@ -9,7 +9,6 @@
 import UIKit
 import Foundation
 
-var studentLocationObjects = [StudentLocation]()
 var accountVerificationObjects = [AccountVerification]()
 
 struct StudentLocation {
@@ -41,15 +40,15 @@ struct StudentLocation {
     }
     
     static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
-        
+
         for result in results {
             
             if let studObjects = StudentLocation(dictionary: result) {
                 
-                studentLocationObjects.append(studObjects)
+                Client.sharedInstance().studentLocation.append(studObjects)
             }
         }
-        return studentLocationObjects
+        return Client.sharedInstance().studentLocation
     }
 }
 

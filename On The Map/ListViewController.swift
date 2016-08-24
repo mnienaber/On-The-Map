@@ -15,51 +15,22 @@ class ListViewController: UITableViewController {
     let studentSegueIdentifier = "ShowStudentDetail"
     var refreshCount = 0
 
-    func refresh(sender: AnyObject) {
-
-        Client.sharedInstance().getStudentLocations() { (results, error) in
-
-            if error != nil {
-
-                print("that's an error")
-
-            } else {
-
-                performUIUpdatesOnMain {
-
-                    print("here are the studentlocations \(Client.sharedInstance().studentLocation)")
-                    self.getStudentList()
-                    self.tableView.reloadData()
-                    self.refreshCount += 1
-                    print(self.refreshCount)
-
-                }
-            }
-        } 
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.navigationController?.navigationBarHidden = false
+        tableView.delegate = self
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         print("viewwillload")
     }
     
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear(animated)
+        tableView.delegate = self
         self.navigationController?.navigationBarHidden = false
-
-        performUIUpdatesOnMain {
-
-            self.tableView.reloadData()
-            self.refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
-            self.tableView.reloadData()
-            print("viewwillappear")
-        }
-
+        print("viewwillappear")
+        self.tableView.reloadData()
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -106,14 +77,36 @@ class ListViewController: UITableViewController {
         }
         
     }
+
+    func refresh(sender: AnyObject) {
+
+        Client.sharedInstance().getStudentLocations() { (results, error) in
+
+            if error != nil {
+
+                print("that's an error")
+
+            } else {
+
+                performUIUpdatesOnMain {
+
+                    self.getStudentList()
+                    self.tableView.reloadData()
+                    print("refresh is \(results)")
+                    
+                }
+            }
+        } 
+    }
     
     func getStudentList() {
         
         if Client.sharedInstance().studentLocation.isEmpty == true {
             
             performUIUpdatesOnMain {
-                
-                self.failAlertGeneral("Yikes", message: "There was a problem retrieving data, please try again later", actionTitle: "OK")
+
+                self.refresh(self)
+
             }
         } else if Client.sharedInstance().studentLocation.isEmpty == false {
             
@@ -121,10 +114,8 @@ class ListViewController: UITableViewController {
                 
                 for _ in Client.sharedInstance().studentLocation {
                     
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.tableView.reloadData()
-                        self.refreshControl?.endRefreshing()
-                    })
+                    self.tableView.reloadData()
+                    self.refreshControl?.endRefreshing()
                 }
             }
         }
@@ -174,11 +165,6 @@ extension ListViewController {
             }
         }
         return false
-    }
-
-    func isEqual(lhs: [String: AnyObject], rhs: [String: AnyObject]) -> Bool {
-
-        return NSDictionary(dictionary: lhs).isEqualToDictionary(rhs)
     }
 }
 
