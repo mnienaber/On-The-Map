@@ -37,6 +37,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        mapView.delegate = self
+        getMapLocations()
+        print("map_willappear")
     }
     
     override internal func canBecomeFirstResponder() -> Bool {
@@ -107,35 +110,101 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         }
     }
     
+//    func getMapLocations() {
+//        
+//        Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
+//            
+//            if errorString != nil {
+//                
+//                performUIUpdatesOnMain{
+//                    
+//                    self.failStudentLocations()
+//                }
+//            } else {
+//                
+//                if let studentLocation = studentLocation {
+//                    [self.studentLocation = studentLocation]
+//                    var annotations = [MKPointAnnotation]()
+//                    performUIUpdatesOnMain {
+//                        for student in self.studentLocation {
+//                            
+//                            let lat = student.latitude
+//                            let long = student.longitude
+//                            let mediaURL = student.mediaURL
+//                            let annotation = MKPointAnnotation()
+//                            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+//                            
+//                            annotation.coordinate = coordinate
+//                            annotation.title = student.firstName + " " + student.lastName
+//                            annotation.subtitle = mediaURL
+//                            annotations.append(annotation)
+//                            
+//                        }
+//                        self.mapView.addAnnotations(annotations)
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     func getMapLocations() {
-        
+
+        if Client.sharedInstance().studentLocation.isEmpty == true {
+
+            refresh()
+        } else if Client.sharedInstance().studentLocation.isEmpty == false {
+
+            var annotations = [MKPointAnnotation]()
+            performUIUpdatesOnMain {
+
+                for student in Client.sharedInstance().studentLocation {
+
+                    let lat = student.latitude
+                    let long = student.longitude
+                    let mediaURL = student.mediaURL
+                    let annotation = MKPointAnnotation()
+                    let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+
+                    annotation.coordinate = coordinate
+                    annotation.title = student.firstName + " " + student.lastName
+                    annotation.subtitle = mediaURL
+                    annotations.append(annotation)
+
+                }
+                self.mapView.addAnnotations(annotations)
+            }
+        }
+    }
+
+    func refresh() {
+
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
-            
+
             if errorString != nil {
-                
+
                 performUIUpdatesOnMain{
-                    
+
                     self.failStudentLocations()
                 }
             } else {
-                
+
                 if let studentLocation = studentLocation {
                     [self.studentLocation = studentLocation]
                     var annotations = [MKPointAnnotation]()
                     performUIUpdatesOnMain {
                         for student in self.studentLocation {
-                            
+
                             let lat = student.latitude
                             let long = student.longitude
                             let mediaURL = student.mediaURL
                             let annotation = MKPointAnnotation()
                             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                            
+
                             annotation.coordinate = coordinate
                             annotation.title = student.firstName + " " + student.lastName
                             annotation.subtitle = mediaURL
                             annotations.append(annotation)
-                            
+
                         }
                         self.mapView.addAnnotations(annotations)
                     }
@@ -144,14 +213,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         }
     }
 
-    
     @IBAction func buttonMethod(sender: AnyObject) {
-        
-        getMapLocations()
+
+        refresh()
     }
-    
+
     func failStudentLocations() {
-        
+
         let failDataAlert = UIAlertController(title: "Sorry", message: "There was a problem with retrieving Student Location data", preferredStyle: UIAlertControllerStyle.Alert)
         failDataAlert.addAction(UIAlertAction(title: "I'll Come Back Later", style: UIAlertActionStyle.Default, handler: nil))
         failDataAlert.addAction(UIAlertAction(title: "Leave Feedback", style: UIAlertActionStyle.Default, handler: { alertAction in

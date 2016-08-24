@@ -179,7 +179,7 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E51-gC-abb">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E51-gC-abb">
                                 <rect key="frame" x="224" y="185" width="153" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="153" id="Go8-8J-u37"/>
@@ -191,7 +191,7 @@
                                     <action selector="findOnTheMap:" destination="0nf-LG-OEF" eventType="touchUpInside" id="Ukp-sY-uTZ"/>
                                 </connections>
                             </button>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kNb-P4-YwK">
                                 <rect key="frame" x="0.0" y="142" width="600" height="458"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="458" id="c9q-g3-38x"/>
@@ -212,7 +212,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcY-Eh-Jkf">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcY-Eh-Jkf">
                                 <rect key="frame" x="224" y="194" width="153" height="28"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="21"/>
                                 <state key="normal" title="SUBMIT"/>
@@ -220,10 +220,10 @@
                                     <action selector="submitButton:" destination="0nf-LG-OEF" eventType="touchUpInside" id="dIN-jd-JmR"/>
                                 </connections>
                             </button>
-                            <view alpha="0.59999999999999998" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jBZ-uR-44e">
+                            <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jBZ-uR-44e">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="N3k-5U-YU0">
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="N3k-5U-YU0">
                                         <rect key="frame" x="282" y="190" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -468,6 +468,6 @@
         <image name="regMDPin" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="lbj-7g-qqT"/>
+        <segue reference="ToE-tC-VWm"/>
     </inferredMetricsTieBreakers>
 </document>
