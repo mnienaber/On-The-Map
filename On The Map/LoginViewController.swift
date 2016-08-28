@@ -65,22 +65,24 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     func executeLogin() {
         
         Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
-            
-            if error?.code == 1 {
+
+            var userinfo = error?.userInfo
+
+            if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(403)"{
                 
+                performUIUpdatesOnMain{
+
+                    print("this is the error.userinfo \(userinfo!["NSLocalizedDescription"]!)")
+                    
+                    self.countfailAlert()
+                }
+            } else if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(-1009)"  {
+
                 performUIUpdatesOnMain{
 
                     self.failAlertGeneral("No Network Connection", message: "There seems to be a problem with your connection - please check it", actionTitle: "OK")
 
-                    print("this is the error \(error)")
-                    
-                    self.countfailAlert()
-                }
-            } else if error != nil {
-
-                performUIUpdatesOnMain{
-
-                    self.countfailAlert()
+                    //self.countfailAlert()
             }
             } else {
 
@@ -201,8 +203,15 @@ extension LoginViewController {
         let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+        setUIEnabled(true)
+        usernameTextField.text = nil
+        passwordTextField.text = nil
+        loginButton.enabled = true
+        activityOutlet.stopAnimating()
+        dimOulet.hidden = true
+        self.debugText.text! = "Try again:)"
     }
-    
+
     func configureUI() {
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")

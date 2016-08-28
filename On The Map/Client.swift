@@ -115,16 +115,16 @@ class Client : NSObject {
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
 
-                completionHandlerForLOGIN(result: nil, error: NSError(domain: "taskForLOGINMethod", code: 1, userInfo: userInfo)) 
+                completionHandlerForLOGIN(result: nil, error: NSError(domain: "taskForLOGINMethod", code: 1, userInfo: userInfo))
             }
             
             guard (error == nil) else {
-                displayError("There was an error with your request: \(error)")
+                displayError("\(error?.code)")
                 return
             }
             
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                displayError("task4login: Your request returned a status code other than 2xx!")
+                displayError("\((response as? NSHTTPURLResponse)?.statusCode)")
                 return
             }
             
