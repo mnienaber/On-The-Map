@@ -66,12 +66,22 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         
         Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
             
-            if error != nil {
+            if error?.code == 1 {
                 
                 performUIUpdatesOnMain{
+
+                    self.failAlertGeneral("No Network Connection", message: "There seems to be a problem with your connection - please check it", actionTitle: "OK")
+
+                    print("this is the error \(error)")
                     
                     self.countfailAlert()
                 }
+            } else if error != nil {
+
+                performUIUpdatesOnMain{
+
+                    self.countfailAlert()
+            }
             } else {
 
                 if let account = details as [String: AnyObject]! {
