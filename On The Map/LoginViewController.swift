@@ -18,8 +18,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBOutlet weak var dimOulet: UIView!
     @IBOutlet weak var activityOutlet: UIActivityIndicatorView!
     
-    var studentLocation: [StudentLocation] = [StudentLocation]()
-    var accountVerification: [AccountVerification] = [AccountVerification]()
+    //var studentLocation: [StudentLocation] = [StudentLocation]()
+    //var accountVerification: [AccountVerification] = [AccountVerification]()
     
     var appDelegate: AppDelegate!
     var keyboardOnScreen = false

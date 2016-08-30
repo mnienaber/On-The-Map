@@ -29,9 +29,9 @@ extension Client {
                 
                 if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
 
-                    Client.sharedInstance().studentLocation = []
+                    StudentModel.sharedInstance().studentLocation = []
                     let locations = StudentLocation.SLOFromResults(results)
-                    Client.sharedInstance().studentLocation = locations
+                    StudentModel.sharedInstance().studentLocation = locations
                     completionHandlerForStudentLocations(result: locations, error: nil)
                 } else {
                     
@@ -140,7 +140,6 @@ extension Client {
                 if let result = result as? [String: AnyObject]? {
 
                     let deleteResult = result!["session"]!
-                    print("logout success: \(deleteResult)")
                     completionHandlerForDELETE(result: deleteResult, error: nil)
                 }
             }

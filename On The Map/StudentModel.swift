@@ -9,10 +9,14 @@
 import Foundation
 
 
-//
-//class StudentModel {
-//    
-//    var listOfStudents : [StudentInformation] = []
-//    
-//    static let sharedInstance = StudentModel()
-//}
+class StudentModel: NSObject {
+    
+    var studentLocation = [StudentLocation]()
+
+    class func sharedInstance() -> StudentModel {
+        struct Singleton {
+            static var sharedInstance = StudentModel()
+        }
+        return Singleton.sharedInstance
+    }
+}

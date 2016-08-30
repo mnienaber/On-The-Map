@@ -45,10 +45,10 @@ struct StudentLocation {
             
             if let studObjects = StudentLocation(dictionary: result) {
                 
-                Client.sharedInstance().studentLocation.append(studObjects)
+                StudentModel.sharedInstance().studentLocation.append(studObjects)
             }
         }
-        return Client.sharedInstance().studentLocation
+        return StudentModel.sharedInstance().studentLocation
     }
 }
 

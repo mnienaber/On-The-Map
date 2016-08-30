@@ -7,14 +7,14 @@
 //
 import UIKit
 import MapKit
-import AudioToolbox
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate, CLLocationManagerDelegate {
     
-    var studentLocation: [StudentLocation] = [StudentLocation]()
+    //var studentLocation: [StudentLocation] = [StudentLocation]()
     var appDelegate: AppDelegate!
     let locationManager = CLLocationManager()
     let regionRadius: CLLocationDistance = 2000
+    var annotations = [MKPointAnnotation]()
 
     @IBOutlet weak var mapView: MKMapView!
  
@@ -38,24 +38,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         mapView.delegate = self
-//        getMapLocations()
+        self.mapView.addAnnotations(annotations)
         print("map_willappear")
-    }
-    
-    override internal func canBecomeFirstResponder() -> Bool {
-        return true
-    }
-    
-    override internal func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if motion == .MotionShake {
-            print("Shaked")
-            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
-            failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
-            failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(failLogoutAlert, animated: true, completion: nil)
-        }
-        
     }
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -85,6 +69,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
+            pinView.rem
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
             pinView!.pinColor = .Red
@@ -104,23 +89,32 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             
             let app = UIApplication.sharedApplication()
             if let toOpen = view.annotation?.subtitle! {
-                
-                app.openURL(NSURL(string: toOpen)!)
+
+                if verifyUrl(toOpen) == false {
+
+                    let failAlertGeneral = UIAlertController(title: "Yikes", message: "The url you're trying to open is invalid", preferredStyle: UIAlertControllerStyle.Alert)
+                    failAlertGeneral.addAction(UIAlertAction(title: "Try Another", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+                } else {
+
+                    app.openURL(NSURL(string: toOpen)!)
+                }
             }
         }
     }
 
     func getMapLocations() {
 
-        if Client.sharedInstance().studentLocation.isEmpty == true {
+        if StudentModel.sharedInstance().studentLocation.isEmpty == true {
 
             refresh()
-        } else if Client.sharedInstance().studentLocation.isEmpty == false {
+        } else if StudentModel.sharedInstance().studentLocation.isEmpty == false {
 
-            var annotations = [MKPointAnnotation]()
             performUIUpdatesOnMain {
 
-                for student in Client.sharedInstance().studentLocation {
+                self.mapView.removeAnnotations(self.annotations)
+
+                for student in StudentModel.sharedInstance().studentLocation {
 
                     let lat = student.latitude
                     let long = student.longitude
@@ -131,10 +125,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                     annotation.coordinate = coordinate
                     annotation.title = student.firstName + " " + student.lastName
                     annotation.subtitle = mediaURL
-                    annotations.append(annotation)
+                    self.annotations.append(annotation)
 
                 }
-                self.mapView.addAnnotations(annotations)
+                self.mapView.addAnnotations(self.annotations)
             }
         }
     }
@@ -152,10 +146,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             } else {
 
                 if let studentLocation = studentLocation {
-                    [self.studentLocation = studentLocation]
+
                     var annotations = [MKPointAnnotation]()
+
                     performUIUpdatesOnMain {
-                        for student in self.studentLocation {
+
+                        self.mapView.removeAnnotations(annotations)
+                        for student in studentLocation {
 
                             let lat = student.latitude
                             let long = student.longitude
@@ -178,6 +175,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
 
     @IBAction func buttonMethod(sender: AnyObject) {
 
+        self.mapView.removeAnnotations(annotations)
         refresh()
     }
 
@@ -191,17 +189,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         self.presentViewController(failDataAlert, animated: true, completion: nil)
         }))
     }
-    
-    func logOut() {
-
-        self.appDelegate.accountKey = nil
-        self.appDelegate.accountRegistered = nil
-        self.appDelegate.sessionID = nil
-        self.appDelegate.sessionExpiration = nil
-        dispatch_async(dispatch_get_main_queue(), {
-            self.dismissViewControllerAnimated(true, completion: nil)
-        })
-    }
 }
 
 extension UIViewController {
@@ -212,6 +199,18 @@ extension UIViewController {
     
     func dismissKeyboard() {
         view.endEditing(true)
-    } 
+    }
+
+    func verifyUrl(urlString: String?) -> Bool {
+
+        if let urlString = urlString {
+
+            if NSURL(string: urlString) != nil {
+
+                return true
+            }
+        }
+        return false
+    }
 }
 

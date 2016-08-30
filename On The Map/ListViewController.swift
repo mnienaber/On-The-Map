@@ -38,7 +38,7 @@ class ListViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cellReuseIdentifier = "TableViewCell"
-        let location = Client.sharedInstance().studentLocation[indexPath.row]
+        let location = StudentModel.sharedInstance().studentLocation[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
         
         cell.textLabel!.text = location.firstName + " " + location.lastName
@@ -48,12 +48,12 @@ class ListViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return Client.sharedInstance().studentLocation.count
+        return StudentModel.sharedInstance().studentLocation.count
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let location = Client.sharedInstance().studentLocation[indexPath.row]
+        let location = StudentModel.sharedInstance().studentLocation[indexPath.row]
         let url = location.mediaURL
         
         if verifyUrl(url) == true {
@@ -103,18 +103,18 @@ class ListViewController: UITableViewController {
     
     func getStudentList() {
         
-        if Client.sharedInstance().studentLocation.isEmpty == true {
+        if StudentModel.sharedInstance().studentLocation.isEmpty == true {
             
             performUIUpdatesOnMain {
 
                 self.refresh(self)
 
             }
-        } else if Client.sharedInstance().studentLocation.isEmpty == false {
+        } else if StudentModel.sharedInstance().studentLocation.isEmpty == false {
             
             performUIUpdatesOnMain {
                 
-                for _ in Client.sharedInstance().studentLocation {
+                for _ in StudentModel.sharedInstance().studentLocation {
                     
                     self.tableView.reloadData()
                     self.refreshControl?.endRefreshing()
@@ -172,7 +172,7 @@ extension ListViewController {
         self.presentViewController(failLogoutAlert, animated: true, completion: nil)
     }
     
-    func verifyUrl(urlString: String?) -> Bool {
+    override func verifyUrl(urlString: String?) -> Bool {
 
         if let urlString = urlString {
             

@@ -219,8 +219,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
         if verifyUrl(self.myMediaUrl.text!) == true {
 
-//        ((self.myMediaUrl.text!.rangeOfString("http://") != nil) && verifyUrl(self.myMediaUrl.text!) = true)  || (self.myMediaUrl.text!.rangeOfString("https://")) != nil)
-            
             self.appDelegate.mediaUrl = self.myMediaUrl.text!
         } else if verifyUrl(self.myMediaUrl.text!) == false {
 
@@ -305,7 +303,7 @@ extension LocationViewController {
         })
     }
 
-    func verifyUrl(urlString: String?) -> Bool {
+    override func verifyUrl(urlString: String?) -> Bool {
 
         if let urlString = urlString {
 
