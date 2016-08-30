@@ -14,7 +14,9 @@ class ListViewController: UITableViewController {
     var appDelegate: AppDelegate!
     let studentSegueIdentifier = "ShowStudentDetail"
     var refreshCount = 0
-
+    @IBOutlet weak var dimOutlet: UIView!
+    @IBOutlet weak var activityIndOutlet: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -123,7 +125,7 @@ class ListViewController: UITableViewController {
 
     @IBAction func logOutButton(sender: AnyObject) {
         
-        self.logOut()
+        failLogOutAlert()
     }
     
     func logOut() {
@@ -132,9 +134,24 @@ class ListViewController: UITableViewController {
         self.appDelegate.accountRegistered = nil
         self.appDelegate.sessionID = nil
         self.appDelegate.sessionExpiration = nil
-        dispatch_async(dispatch_get_main_queue(), {
-            self.dismissViewControllerAnimated(true, completion: nil)
-        })
+
+        Client.sharedInstance().deleteSession() { (result, error) in
+
+            if error != nil {
+
+                self.failAlertGeneral("LogOut Unsuccessful", message: "Something went wrong, please try again", actionTitle: "OK")
+            } else {
+
+                performUIUpdatesOnMain {
+
+                    print("logout success \(result)")
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    })
+                }
+            }
+        }
+
     }
 }
 

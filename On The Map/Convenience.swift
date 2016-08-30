@@ -126,6 +126,38 @@ extension Client {
             }
         }
     }
+
+    func deleteSession(completionHandlerForDELETE: (result: AnyObject!, error: NSError?) -> Void) {
+
+        taskForDeleteSession() { (result, error) in
+
+            if let error = error {
+
+                completionHandlerForDELETE(result: nil, error: error)
+
+            } else {
+
+                if let result = result as? [String: AnyObject]? {
+
+                    let deleteResult = result!["session"]!
+                    print("logout success: \(deleteResult)")
+                    completionHandlerForDELETE(result: deleteResult, error: nil)
+                }
+            }
+        }
+    }
+
+    func verifyUrl(urlString: String?) -> Bool {
+
+        if let urlString = urlString {
+
+            if NSURL(string: urlString) != nil {
+
+                return true
+            }
+        }
+        return false
+    }
 }
 
 

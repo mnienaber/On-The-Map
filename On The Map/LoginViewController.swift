@@ -66,24 +66,25 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         
         Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
 
-            var userinfo = error?.userInfo
+            if error != nil {
 
-            if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(403)"{
-                
-                performUIUpdatesOnMain{
+                var userinfo = error?.userInfo
 
-                    print("this is the error.userinfo \(userinfo!["NSLocalizedDescription"]!)")
-                    
-                    self.countfailAlert()
+                if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(403)" {
+
+                    performUIUpdatesOnMain{
+
+                        print("this is the error.userinfo \(userinfo!["NSLocalizedDescription"]!)")
+
+                        self.countfailAlert()
+                    }
+                } else if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(-1009)"  {
+
+                    performUIUpdatesOnMain{
+
+                        self.failAlertGeneral("No Network Connection", message: "There seems to be a problem with your connection - please check it", actionTitle: "OK")
+                    }
                 }
-            } else if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(-1009)"  {
-
-                performUIUpdatesOnMain{
-
-                    self.failAlertGeneral("No Network Connection", message: "There seems to be a problem with your connection - please check it", actionTitle: "OK")
-
-                    //self.countfailAlert()
-            }
             } else {
 
                 if let account = details as [String: AnyObject]! {

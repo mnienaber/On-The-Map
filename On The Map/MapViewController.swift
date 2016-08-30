@@ -38,7 +38,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         mapView.delegate = self
-        getMapLocations()
+//        getMapLocations()
         print("map_willappear")
     }
     
@@ -109,43 +109,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             }
         }
     }
-    
-//    func getMapLocations() {
-//        
-//        Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
-//            
-//            if errorString != nil {
-//                
-//                performUIUpdatesOnMain{
-//                    
-//                    self.failStudentLocations()
-//                }
-//            } else {
-//                
-//                if let studentLocation = studentLocation {
-//                    [self.studentLocation = studentLocation]
-//                    var annotations = [MKPointAnnotation]()
-//                    performUIUpdatesOnMain {
-//                        for student in self.studentLocation {
-//                            
-//                            let lat = student.latitude
-//                            let long = student.longitude
-//                            let mediaURL = student.mediaURL
-//                            let annotation = MKPointAnnotation()
-//                            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-//                            
-//                            annotation.coordinate = coordinate
-//                            annotation.title = student.firstName + " " + student.lastName
-//                            annotation.subtitle = mediaURL
-//                            annotations.append(annotation)
-//                            
-//                        }
-//                        self.mapView.addAnnotations(annotations)
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     func getMapLocations() {
 

@@ -217,12 +217,16 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         dimOutlet.hidden = false
         activityOutlet.startAnimating()
         
-        if ((self.myMediaUrl.text!.rangeOfString("http://") != nil) && (self.myMediaUrl.text!.rangeOfString("https://")) != nil) {
+        if verifyUrl(self.myMediaUrl.text!) == true {
+
+//        ((self.myMediaUrl.text!.rangeOfString("http://") != nil) && verifyUrl(self.myMediaUrl.text!) = true)  || (self.myMediaUrl.text!.rangeOfString("https://")) != nil)
             
             self.appDelegate.mediaUrl = self.myMediaUrl.text!
-        } else {
+        } else if verifyUrl(self.myMediaUrl.text!) == false {
+
+            failPost()
             
-            self.appDelegate.mediaUrl = Client.Constants.Scheme.http + self.myMediaUrl.text!
+//            self.appDelegate.mediaUrl = Client.Constants.Scheme.http + self.myMediaUrl.text!
         }
         
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}"
@@ -299,5 +303,17 @@ extension LocationViewController {
         dispatch_async(dispatch_get_main_queue(), {
             self.dismissViewControllerAnimated(true, completion: nil)
         })
+    }
+
+    func verifyUrl(urlString: String?) -> Bool {
+
+        if let urlString = urlString {
+
+            if NSURL(string: urlString) != nil {
+
+                return true
+            }
+        }
+        return false
     }
 }
