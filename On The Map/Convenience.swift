@@ -24,7 +24,7 @@ extension Client {
             
             if let error = error {
 
-                print(error)
+                completionHandlerForStudentLocations(result: nil, error: error)
             } else {
                 
                 if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
@@ -48,7 +48,7 @@ extension Client {
             
             if let error = error {
                 
-                print("\(error)" + "posttomap error")
+                completionHandlerForPOST(result: nil, error: error)
             } else {
                 
                 if let results = results as? Int? {

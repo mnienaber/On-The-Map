@@ -216,15 +216,20 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         
         dimOutlet.hidden = false
         activityOutlet.startAnimating()
-        
-        if verifyUrl(self.myMediaUrl.text!) == true {
 
-            self.appDelegate.mediaUrl = self.myMediaUrl.text!
+        let submitableURL = self.myMediaUrl.text!
+        
+        if verifyUrl(self.myMediaUrl.text!) == true && submitableURL.hasPrefix("http://") == true  {
+
+            self.appDelegate.mediaUrl = submitableURL
+
+        } else if verifyUrl(self.myMediaUrl.text!) == true && submitableURL.hasPrefix("http://") == false {
+
+            self.appDelegate.mediaUrl = Client.Constants.Scheme.http + submitableURL
+            
         } else if verifyUrl(self.myMediaUrl.text!) == false {
 
             failPost()
-            
-//            self.appDelegate.mediaUrl = Client.Constants.Scheme.http + self.myMediaUrl.text!
         }
         
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}"

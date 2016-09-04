@@ -57,6 +57,7 @@ class ListViewController: UITableViewController {
         let url = location.mediaURL
         
         if verifyUrl(url) == true {
+            
             UIApplication.sharedApplication().openURL(NSURL(string: url)!)
         } else if verifyUrl(url) == false {
             

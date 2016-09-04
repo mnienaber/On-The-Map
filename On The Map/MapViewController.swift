@@ -14,7 +14,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     var appDelegate: AppDelegate!
     let locationManager = CLLocationManager()
     let regionRadius: CLLocationDistance = 2000
-    var annotations = [MKPointAnnotation]()
+    var annotations: [MKAnnotation] = []
 
     @IBOutlet weak var mapView: MKMapView!
  
@@ -26,7 +26,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        self.mapView.delegate = self
+        mapView.delegate = self
         mapView.showsUserLocation = true
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -37,9 +37,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        mapView.delegate = self
-        self.mapView.addAnnotations(annotations)
-        print("map_willappear")
     }
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -69,7 +66,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
-            pinView.rem
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
             pinView!.pinColor = .Red
@@ -110,9 +106,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
             refresh()
         } else if StudentModel.sharedInstance().studentLocation.isEmpty == false {
 
-            performUIUpdatesOnMain {
+            self.annotations = []
 
-                self.mapView.removeAnnotations(self.annotations)
+            performUIUpdatesOnMain {
 
                 for student in StudentModel.sharedInstance().studentLocation {
 
@@ -135,6 +131,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
 
     func refresh() {
 
+        self.mapView.removeAnnotations(self.annotations)
+
+        self.annotations = []
+
         Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
 
             if errorString != nil {
@@ -147,11 +147,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
 
                 if let studentLocation = studentLocation {
 
-                    var annotations = [MKPointAnnotation]()
-
                     performUIUpdatesOnMain {
 
-                        self.mapView.removeAnnotations(annotations)
                         for student in studentLocation {
 
                             let lat = student.latitude
@@ -163,10 +160,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
                             annotation.coordinate = coordinate
                             annotation.title = student.firstName + " " + student.lastName
                             annotation.subtitle = mediaURL
-                            annotations.append(annotation)
+                            self.annotations.append(annotation)
 
                         }
-                        self.mapView.addAnnotations(annotations)
+                        self.mapView.addAnnotations(self.annotations)
                     }
                 }
             }
@@ -189,6 +186,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         self.presentViewController(failDataAlert, animated: true, completion: nil)
         }))
     }
+
 }
 
 extension UIViewController {

@@ -25,20 +25,31 @@ struct StudentLocation {
     let updatedAt: String
 
     init?(dictionary: [String:AnyObject]) {
-        
-        objectId = dictionary[Client.Constants.ParseResponseKeys.ObjectId] as! String
+
+        //https://discussions.udacity.com/t/app-crashing-at-login-after-parse-update/182059/5?u=michael_135862232227
+
+        guard let object = dictionary[Client.Constants.ParseResponseKeys.ObjectId] as? String else { return nil }
+        objectId = object
         guard let unique = dictionary[Client.Constants.ParseResponseKeys.UniqueKey] as? String else { return nil }
-        uniqueKey = unique //https://discussions.udacity.com/t/app-crashing-at-login-after-parse-update/182059/5?u=michael_135862232227
-        firstName = dictionary[Client.Constants.ParseResponseKeys.FirstName] as! String
-        lastName = dictionary[Client.Constants.ParseResponseKeys.LastName] as! String
-        mapString = dictionary[Client.Constants.ParseResponseKeys.MapString] as! String
-        mediaURL = dictionary[Client.Constants.ParseResponseKeys.MediaURL] as! String
-        latitude = dictionary[Client.Constants.ParseResponseKeys.Latitude] as! Double
-        longitude = dictionary[Client.Constants.ParseResponseKeys.Longitude] as! Double
-        createdAt = dictionary[Client.Constants.ParseResponseKeys.CreatedAt] as! String
-        updatedAt = dictionary[Client.Constants.ParseResponseKeys.UpdatedAt] as! String
+        uniqueKey = unique
+        guard let first = dictionary[Client.Constants.ParseResponseKeys.FirstName] as? String else { return nil }
+        firstName = first
+        guard let last = dictionary[Client.Constants.ParseResponseKeys.LastName] as? String else { return nil }
+        lastName = last
+        guard let map = dictionary[Client.Constants.ParseResponseKeys.MapString] as? String else { return nil }
+        mapString = map
+        guard let url = dictionary[Client.Constants.ParseResponseKeys.MediaURL] as? String else { return nil }
+        mediaURL = url
+        guard let lat = dictionary[Client.Constants.ParseResponseKeys.Latitude] as? Double else { return nil }
+        latitude = lat
+        guard let long = dictionary[Client.Constants.ParseResponseKeys.Longitude] as? Double else { return nil }
+        longitude = long
+        guard let created = dictionary[Client.Constants.ParseResponseKeys.CreatedAt] as? String else { return nil }
+        createdAt = created
+        guard let updated = dictionary[Client.Constants.ParseResponseKeys.UpdatedAt] as? String else { return nil }
+        updatedAt = updated
     }
-    
+
     static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
 
         for result in results {
