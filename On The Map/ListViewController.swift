@@ -78,7 +78,6 @@ class ListViewController: UITableViewController {
             failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(failLogoutAlert, animated: true, completion: nil)
         }
-        
     }
 
     func refresh(sender: AnyObject) {
@@ -189,8 +188,6 @@ class ListViewController: UITableViewController {
 }
 
 extension ListViewController {
-    
-
     
     override func verifyUrl(urlString: String?) -> Bool {
 

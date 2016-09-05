@@ -55,6 +55,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+
         print("error:: \(error)")
     }
     
@@ -132,9 +133,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
 
         if Reachability.isConnectedToNetwork() == false {
 
-            let failPostAlert = UIAlertController(title: "No Internet Connection", message: "Please check your connection and try again", preferredStyle: UIAlertControllerStyle.Alert)
-            failPostAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(failPostAlert, animated: true, completion: nil)
+            failAlertGeneral("No Internet Connection", message: "Please check your connection", actionTitle: "OK")
         } else if Reachability.isConnectedToNetwork() == true {
 
             self.mapView.removeAnnotations(self.annotations)
@@ -218,7 +217,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     @IBAction func logOutButton(sender: AnyObject) {
 
         failLogOutAlert()
-
     }
 
     func failAlertGeneral(title: String, message: String, actionTitle: String) {
@@ -258,9 +256,5 @@ extension UIViewController {
         }
         return false
     }
-
-
-
-
 }
 

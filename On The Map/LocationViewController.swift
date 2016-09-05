@@ -71,7 +71,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     
     @IBAction func findOnTheMap(sender: AnyObject) {
         
-        
         activityOutlet.startAnimating()
         dimOutlet.hidden = false
         let request = MKLocalSearchRequest()
@@ -185,7 +184,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 self.dimOutlet.hidden = true
                 self.activityOutlet.stopAnimating()
                 self.dismissViewControllerAnimated(true, completion: nil)
-
             } else {
 
                 performUIUpdatesOnMain {
@@ -194,7 +192,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                     self.dimOutlet.hidden = true
                     self.activityOutlet.stopAnimating()
                     self.dismissViewControllerAnimated(true, completion: nil)
-
                 }
             }
         }
@@ -216,7 +213,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
                 self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.logOut() })
 
             } else {
-
                 print("success")
             }
         }
@@ -232,11 +228,9 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         if verifyUrl(self.myMediaUrl.text!) == true && submitableURL.hasPrefix("http://") == true  {
 
             self.appDelegate.mediaUrl = submitableURL
-
         } else if verifyUrl(self.myMediaUrl.text!) == true && submitableURL.hasPrefix("http://") == false {
 
             self.appDelegate.mediaUrl = Client.Constants.Scheme.http + submitableURL
-            
         } else if verifyUrl(self.myMediaUrl.text!) == false {
 
             failPost("Yikes", message: "There seems to be a problem, your post didn't execute!", action: "I'll try again later")
