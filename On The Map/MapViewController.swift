@@ -130,39 +130,48 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
 
     func refresh() {
 
-        self.mapView.removeAnnotations(self.annotations)
+        if Reachability.isConnectedToNetwork() == false {
 
-        self.annotations = []
+            let failPostAlert = UIAlertController(title: "No Internet Connection", message: "Please check your connection and try again", preferredStyle: UIAlertControllerStyle.Alert)
+            failPostAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failPostAlert, animated: true, completion: nil)
+        } else if Reachability.isConnectedToNetwork() == true {
 
-        Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
+            self.mapView.removeAnnotations(self.annotations)
 
-            if errorString != nil {
+            self.annotations = []
 
-                performUIUpdatesOnMain{
+            Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
 
-                    self.failStudentLocations()
-                }
-            } else {
+                if errorString != nil {
 
-                if let studentLocation = studentLocation {
+                    performUIUpdatesOnMain{
 
-                    performUIUpdatesOnMain {
+                        self.failStudentLocations()
 
-                        for student in studentLocation {
+                    }
+                } else {
 
-                            let lat = student.latitude
-                            let long = student.longitude
-                            let mediaURL = student.mediaURL
-                            let annotation = MKPointAnnotation()
-                            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                    if let studentLocation = studentLocation {
 
-                            annotation.coordinate = coordinate
-                            annotation.title = student.firstName + " " + student.lastName
-                            annotation.subtitle = mediaURL
-                            self.annotations.append(annotation)
+                        performUIUpdatesOnMain {
 
+                            for student in studentLocation {
+
+                                let lat = student.latitude
+                                let long = student.longitude
+                                let mediaURL = student.mediaURL
+                                let annotation = MKPointAnnotation()
+                                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+
+                                annotation.coordinate = coordinate
+                                annotation.title = student.firstName + " " + student.lastName
+                                annotation.subtitle = mediaURL
+                                self.annotations.append(annotation)
+                                
+                            }
+                            self.mapView.addAnnotations(self.annotations)
                         }
-                        self.mapView.addAnnotations(self.annotations)
                     }
                 }
             }

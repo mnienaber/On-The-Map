@@ -248,9 +248,6 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     }
     
     func failPost(title: String, message: String, action: String) {
-//
-//        var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
-//        alert.show()
 
         let failPostAlert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         failPostAlert.addAction(UIAlertAction(title: action, style: UIAlertActionStyle.Default, handler: nil))
@@ -331,31 +328,5 @@ extension LocationViewController {
             }
         }
         return false
-    }
-
-    internal class Reachability {
-        class func isConnectedToNetwork() -> Bool {
-
-            print("running the internet check")
-
-            var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-            zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
-            zeroAddress.sin_family = sa_family_t(AF_INET)
-
-            let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-                SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, UnsafePointer($0))
-            }
-
-            var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
-            if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
-                return false
-            }
-
-            let isReachable = flags == .Reachable
-            let needsConnection = flags == .ConnectionRequired
-            
-            return isReachable && !needsConnection
-            
-        }
     }
 }

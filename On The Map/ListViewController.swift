@@ -87,7 +87,13 @@ class ListViewController: UITableViewController {
 
             if error != nil {
 
-                print("that's an error")
+                let failDataAlert = UIAlertController(title: "Sorry", message: "There was a problem with retrieving Student Location data", preferredStyle: UIAlertControllerStyle.Alert)
+                failDataAlert.addAction(UIAlertAction(title: "I'll Come Back Later", style: UIAlertActionStyle.Default, handler: nil))
+                failDataAlert.addAction(UIAlertAction(title: "Leave Feedback", style: UIAlertActionStyle.Default, handler: { alertAction in
+                    UIApplication.sharedApplication().openURL(NSURL(string : "mailto:mnienaber@google.com")!)
+                    failDataAlert.dismissViewControllerAnimated(true, completion: nil)
+                    self.presentViewController(failDataAlert, animated: true, completion: nil)
+                }))
 
             } else {
 
@@ -104,9 +110,16 @@ class ListViewController: UITableViewController {
 
     @IBAction func refreshButton(sender: AnyObject) {
 
-        self.refresh(self)
-    }
+        if Reachability.isConnectedToNetwork() == false {
 
+            let failPostAlert = UIAlertController(title: "No Internet Connection", message: "Please check your connection and try again", preferredStyle: UIAlertControllerStyle.Alert)
+            failPostAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failPostAlert, animated: true, completion: nil)
+        } else if Reachability.isConnectedToNetwork() == true {
+
+            self.refresh(self)
+        }
+    }
     
     func getStudentList() {
         

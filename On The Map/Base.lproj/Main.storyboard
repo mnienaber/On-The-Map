@@ -123,56 +123,6 @@
             </objects>
             <point key="canvasLocation" x="1438" y="387"/>
         </scene>
-        <!--Student Detail Controller-->
-        <scene sceneID="MdQ-gu-jPa">
-            <objects>
-                <viewController id="5sN-QE-03f" customClass="StudentDetailController" customModule="On_The_Map" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="3zc-t7-EYW"/>
-                        <viewControllerLayoutGuide type="bottom" id="mk6-Le-2JF"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="dKK-e3-1Gv">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="suB-K2-ybR">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
-                            </mapView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iV3-M5-ovV">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items>
-                                    <navigationItem title="Student Location" id="tCx-jZ-QwT">
-                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Ttc-v1-ACJ">
-                                            <connections>
-                                                <action selector="cancelButton:" destination="5sN-QE-03f" id="i3f-KU-hQs"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="suB-K2-ybR" secondAttribute="trailing" id="DZd-aI-2Jw"/>
-                            <constraint firstItem="iV3-M5-ovV" firstAttribute="trailing" secondItem="suB-K2-ybR" secondAttribute="trailing" id="FY3-fp-PgL"/>
-                            <constraint firstItem="suB-K2-ybR" firstAttribute="top" secondItem="dKK-e3-1Gv" secondAttribute="top" constant="20" id="MiG-Du-77k"/>
-                            <constraint firstItem="iV3-M5-ovV" firstAttribute="leading" secondItem="suB-K2-ybR" secondAttribute="leading" id="VxB-Ib-Rjq"/>
-                            <constraint firstItem="iV3-M5-ovV" firstAttribute="top" secondItem="suB-K2-ybR" secondAttribute="top" id="aBL-xf-nNZ"/>
-                            <constraint firstAttribute="bottom" secondItem="suB-K2-ybR" secondAttribute="bottom" id="rMo-0v-I3l"/>
-                            <constraint firstItem="suB-K2-ybR" firstAttribute="leading" secondItem="dKK-e3-1Gv" secondAttribute="leading" id="uQb-UW-9QR"/>
-                        </constraints>
-                    </view>
-                    <toolbarItems/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="mapViewOutlet" destination="suB-K2-ybR" id="rX1-H6-zp3"/>
-                        <outlet property="navBarOutlet" destination="iV3-M5-ovV" id="Qbg-NN-5cZ"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="PBF-1Y-sOQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2304" y="1137"/>
-        </scene>
         <!--Location View Controller-->
         <scene sceneID="ooK-3d-fke">
             <objects>

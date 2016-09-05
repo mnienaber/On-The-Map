@@ -11,7 +11,6 @@
 		2E2C27EF1D6050E600C6A1E3 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */; };
 		2E4E8A1E1D5B69C900206E13 /* StudentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4E8A1D1D5B69C900206E13 /* StudentModel.swift */; };
 		2E97184B1D44901A005AA138 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2E97184A1D44901A005AA138 /* GoogleService-Info.plist */; };
-		2EA80F211D38D0B700BFC968 /* StudentDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */; };
 		2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */; };
 		2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180141CF2EFF700D6EB19 /* MapViewController.swift */; };
 		2EE1801A1CF2EFF700D6EB19 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EE180181CF2EFF700D6EB19 /* Main.storyboard */; };
@@ -26,6 +25,7 @@
 		2EE1804E1CF32A0400D6EB19 /* StudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE1804D1CF32A0400D6EB19 /* StudentLocation.swift */; };
 		2EE180531CF5B1CB00D6EB19 /* BlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180521CF5B1CB00D6EB19 /* BlackBox.swift */; };
 		2EE180551CFD81CE00D6EB19 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE180541CFD81CE00D6EB19 /* LoginViewController.swift */; };
+		2EE37D061D7DB1DB008A0BF0 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE37D051D7DB1DB008A0BF0 /* Reachability.swift */; };
 		9F25D0B796ABBF93D0EFB0D5 /* Pods_On_The_MapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B093B5E892584C6B1BD8085 /* Pods_On_The_MapTests.framework */; };
 		AC313AC56706CB1A1F1EA916 /* Pods_On_The_MapUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA5513D04BDE1C50BF5F679 /* Pods_On_The_MapUITests.framework */; };
 		C24439BD8942068F42773412 /* Pods_On_The_Map.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AB68C85F6D3825B50552538 /* Pods_On_The_Map.framework */; };
@@ -54,7 +54,6 @@
 		2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		2E4E8A1D1D5B69C900206E13 /* StudentModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentModel.swift; sourceTree = "<group>"; };
 		2E97184A1D44901A005AA138 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentDetailController.swift; sourceTree = "<group>"; };
 		2EE1800F1CF2EFF700D6EB19 /* On The Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On The Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EE180121CF2EFF700D6EB19 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2EE180141CF2EFF700D6EB19 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -75,6 +74,7 @@
 		2EE1804D1CF32A0400D6EB19 /* StudentLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocation.swift; sourceTree = "<group>"; };
 		2EE180521CF5B1CB00D6EB19 /* BlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlackBox.swift; sourceTree = "<group>"; };
 		2EE180541CFD81CE00D6EB19 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		2EE37D051D7DB1DB008A0BF0 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		5B093B5E892584C6B1BD8085 /* Pods_On_The_MapTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_On_The_MapTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		664330FB78F1BA3D3A181956 /* Pods-On The Map.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-On The Map.release.xcconfig"; path = "Pods/Target Support Files/Pods-On The Map/Pods-On The Map.release.xcconfig"; sourceTree = "<group>"; };
 		78B041CD362A1B451AA83CAD /* Pods-On The MapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-On The MapTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-On The MapTests/Pods-On The MapTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -176,7 +176,6 @@
 				2EE180141CF2EFF700D6EB19 /* MapViewController.swift */,
 				2E2C27EE1D6050E600C6A1E3 /* ListViewController.swift */,
 				2EE180451CF31B1000D6EB19 /* LocationViewController.swift */,
-				2EA80F201D38D0B700BFC968 /* StudentDetailController.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -190,6 +189,7 @@
 				2E4E8A1D1D5B69C900206E13 /* StudentModel.swift */,
 				2EE180521CF5B1CB00D6EB19 /* BlackBox.swift */,
 				2E240A441D001919004BC3D0 /* Config.swift */,
+				2EE37D051D7DB1DB008A0BF0 /* Reachability.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -489,13 +489,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EE37D061D7DB1DB008A0BF0 /* Reachability.swift in Sources */,
 				2EE1804E1CF32A0400D6EB19 /* StudentLocation.swift in Sources */,
 				2EE180481CF31CF100D6EB19 /* Constants.swift in Sources */,
 				2E4E8A1E1D5B69C900206E13 /* StudentModel.swift in Sources */,
 				2EE1804A1CF31E2F00D6EB19 /* Client.swift in Sources */,
 				2E240A451D001919004BC3D0 /* Config.swift in Sources */,
 				2EE1804C1CF326D000D6EB19 /* Convenience.swift in Sources */,
-				2EA80F211D38D0B700BFC968 /* StudentDetailController.swift in Sources */,
 				2EE180531CF5B1CB00D6EB19 /* BlackBox.swift in Sources */,
 				2EE180131CF2EFF700D6EB19 /* AppDelegate.swift in Sources */,
 				2EE180151CF2EFF700D6EB19 /* MapViewController.swift in Sources */,
