@@ -9,8 +9,7 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDelegate, CLLocationManagerDelegate {
-    
-    //var studentLocation: [StudentLocation] = [StudentLocation]()
+
     var appDelegate: AppDelegate!
     let locationManager = CLLocationManager()
     let regionRadius: CLLocationDistance = 2000
@@ -187,6 +186,46 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         }))
     }
 
+    func logOut() {
+
+        Client.sharedInstance().deleteSession() { (result, error) in
+
+            if error != nil {
+
+                self.failAlertGeneral("LogOut Unsuccessful", message: "Something went wrong, please try again", actionTitle: "OK")
+            } else {
+
+                performUIUpdatesOnMain {
+
+                    print("logout success \(result)")
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    })
+                }
+            }
+        }
+    }
+
+    @IBAction func logOutButton(sender: AnyObject) {
+
+        failLogOutAlert()
+
+    }
+
+    func failAlertGeneral(title: String, message: String, actionTitle: String) {
+
+        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+    }
+
+    func failLogOutAlert() {
+
+        let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
+        failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
+        failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failLogoutAlert, animated: true, completion: nil)
+    }
 }
 
 extension UIViewController {
@@ -210,5 +249,9 @@ extension UIViewController {
         }
         return false
     }
+
+
+
+
 }
 

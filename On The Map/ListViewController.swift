@@ -101,6 +101,12 @@ class ListViewController: UITableViewController {
             }
         } 
     }
+
+    @IBAction func refreshButton(sender: AnyObject) {
+
+        self.refresh(self)
+    }
+
     
     func getStudentList() {
         
@@ -109,7 +115,6 @@ class ListViewController: UITableViewController {
             performUIUpdatesOnMain {
 
                 self.refresh(self)
-
             }
         } else if StudentModel.sharedInstance().studentLocation.isEmpty == false {
             
@@ -152,26 +157,27 @@ class ListViewController: UITableViewController {
                 }
             }
         }
-
     }
-}
 
-extension ListViewController {
-    
     func failAlertGeneral(title: String, message: String, actionTitle: String) {
-        
+
         let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(failAlertGeneral, animated: true, completion: nil)
     }
-    
+
     func failLogOutAlert() {
-        
+
         let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
         failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
         failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(failLogoutAlert, animated: true, completion: nil)
     }
+}
+
+extension ListViewController {
+    
+
     
     override func verifyUrl(urlString: String?) -> Bool {
 
