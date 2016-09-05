@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import MapKit
+import SystemConfiguration
 
 class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDelegate {
     
@@ -133,24 +134,33 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
     }
     
     func getPostToMap(jsonBody: String) {
-        
-        Client.sharedInstance().postToMap(jsonBody) { (result, error) in
-            
-            if error != nil {
-                
-                self.dimOutlet.hidden = true
-                self.activityOutlet.stopAnimating()
-                print(error)
-                let failPostAlert = UIAlertController(title: "Yikes", message: "There seems to be a problem, your post didn't execute!", preferredStyle: UIAlertControllerStyle.Alert)
-                failPostAlert.addAction(UIAlertAction(title: "I'll try again later", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.returnToMapView() })
-                
-            } else {
-                
-                self.dimOutlet.hidden = true
-                self.activityOutlet.stopAnimating()
-                print("success")
-                self.returnToMapView()
+
+        if Reachability.isConnectedToNetwork() == false {
+
+            self.dimOutlet.hidden = true
+            self.activityOutlet.stopAnimating()
+
+            let failPostAlert = UIAlertController(title: "No Internet Connection", message: "Please check your connection and try again", preferredStyle: UIAlertControllerStyle.Alert)
+            failPostAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(failPostAlert, animated: true, completion: nil)
+        } else if Reachability.isConnectedToNetwork() == true {
+
+            Client.sharedInstance().postToMap(jsonBody) { (result, error) in
+
+                if error != nil {
+
+                    self.dimOutlet.hidden = true
+                    self.activityOutlet.stopAnimating()
+                    print(error)
+                    self.failPost("Yikes", message: "There seems to be a problem, your post didn't execute!", action: "OK")
+
+                } else {
+
+                    self.dimOutlet.hidden = true
+                    self.activityOutlet.stopAnimating()
+                    print("success")
+                    self.returnToMapView()
+                }
             }
         }
     }
@@ -229,7 +239,7 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
             
         } else if verifyUrl(self.myMediaUrl.text!) == false {
 
-            failPost()
+            failPost("Yikes", message: "There seems to be a problem, your post didn't execute!", action: "I'll try again later")
         }
         
         let jsonBody: String = "{\"uniqueKey\": \"\(self.appDelegate.accountKey!)\", \"firstName\": \"\(self.appDelegate.firstName!)\", \"lastName\": \"\(self.appDelegate.lastName!)\",\"mapString\": \"\(self.appDelegate.mapString!)\", \"mediaURL\": \"\(self.appDelegate.mediaUrl!)\",\"latitude\": \(self.appDelegate.latitude!), \"longitude\": \(self.appDelegate.longitude!)}"
@@ -237,11 +247,14 @@ class LocationViewController: UIViewController, UITextViewDelegate, MKMapViewDel
         self.getPostToMap(jsonBody)
     }
     
-    func failPost() {
-        
-        let failPostAlert = UIAlertController(title: "Yikes", message: "There seems to be a problem, your post didn't execute!", preferredStyle: UIAlertControllerStyle.Alert)
-        failPostAlert.addAction(UIAlertAction(title: "I'll try again later", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failPostAlert, animated: true, completion: { alertAction in self.returnToMapView() })
+    func failPost(title: String, message: String, action: String) {
+//
+//        var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+//        alert.show()
+
+        let failPostAlert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        failPostAlert.addAction(UIAlertAction(title: action, style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(failPostAlert, animated: true, completion: nil)
     }
 }
 
@@ -318,5 +331,31 @@ extension LocationViewController {
             }
         }
         return false
+    }
+
+    internal class Reachability {
+        class func isConnectedToNetwork() -> Bool {
+
+            print("running the internet check")
+
+            var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
+            zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+            zeroAddress.sin_family = sa_family_t(AF_INET)
+
+            let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
+                SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, UnsafePointer($0))
+            }
+
+            var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
+            if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
+                return false
+            }
+
+            let isReachable = flags == .Reachable
+            let needsConnection = flags == .ConnectionRequired
+            
+            return isReachable && !needsConnection
+            
+        }
     }
 }
