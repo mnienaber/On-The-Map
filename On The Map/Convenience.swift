@@ -11,7 +11,7 @@ import Foundation
 
 extension Client {
     
-    func getStudentLocations(completionHandlerForStudentLocations: (result: [StudentLocation]?, error: NSError?) -> Void) {
+    func getStudentLocations(completionHandlerForStudentLocations: @escaping (_ result: [StudentLocation]?, _ error: Error?) -> Void) {
 
         let parameters = [
             Client.Constants.ParameterValues.ParseAPIKey: Client.Constants.ParameterValues.ParseAPIKey,
@@ -20,142 +20,139 @@ extension Client {
         
         let url = Client.Constants.Scheme.Method + Client.Constants.Scheme.LimitAndOrder
         
-        taskForGETMethod(url, parameters: parameters) { results, error in
+        // Parameters for GET student locations are typically part of the URL query string.
+        // The `taskForGETMethod` in Client.swift already handles adding parameters to the URL if provided.
+        // For this specific call, the parameters map seems to be for headers or specific API keys,
+        // which are handled inside taskForGETMethod.
+        // However, the `parameters` argument in `taskForGETMethod` is for URL query parameters.
+        // The Parse API keys are typically sent as HTTP headers, which `taskForGETMethod` does.
+        // So, parameters here should be nil or an empty dictionary if they are not URL query params.
+        // For this API, limit and order are part of the URL path, not parameters dictionary.
+        
+        taskForGETMethod(urlString: url, parameters: nil) { (response: StudentLocationResults?, error: Error?) in
             
             if let error = error {
-
-                completionHandlerForStudentLocations(result: nil, error: error)
+                completionHandlerForStudentLocations(nil, error)
+            } else if let response = response {
+                // StudentModel is updated here. This is a side effect.
+                // Consider if StudentModel should be updated by the caller instead.
+                StudentModel.sharedInstance().studentLocation = response.results
+                completionHandlerForStudentLocations(response.results, nil)
             } else {
-                
-                if let results = results[Client.Constants.JSONResponseKeys.StudentLocationResults] as? [[String:AnyObject]] {
-
-                    StudentModel.sharedInstance().studentLocation = []
-                    let locations = StudentLocation.SLOFromResults(results)
-                    StudentModel.sharedInstance().studentLocation = locations
-                    completionHandlerForStudentLocations(result: locations, error: nil)
-                } else {
-                    
-                    completionHandlerForStudentLocations(result: nil, error: error)
-                }
+                // Should not happen if error is nil and response is nil, but as a fallback:
+                completionHandlerForStudentLocations(nil, NSError(domain: "getStudentLocations", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unknown error: No data and no error."]))
             }
         }
     }
     
-    func postToMap(jsonBody: String, completionHandlerForPOST: (result: Int?, error: NSError?) -> Void) {
+    // For postToMap, we need a Codable request body if we are sending structured data.
+    // The current `jsonBody: String` suggests raw JSON. If this is intended, taskForPOSTMethod needs
+    // a variant that accepts raw String/Data.
+    // Assuming for now that we want to send structured data for posting a location.
+    struct StudentLocationPost: Encodable {
+        let uniqueKey: String
+        let firstName: String
+        let lastName: String
+        let mapString: String
+        let mediaURL: String
+        let latitude: Double
+        let longitude: Double
+    }
+    
+    // The completion handler for postToMap currently returns Int?.
+    // This needs to map to a field in the PostResponse (defined in Client.swift) or a new specific Codable struct.
+    // For now, let's assume PostResponse { let objectId: String?, let createdAt: String? } is sufficient.
+    func postToMap(locationData: StudentLocationPost, completionHandlerForPOST: @escaping (Client.PostResponse?, Error?) -> Void) {
         
+        let urlString = Client.Constants.Scheme.Method // URL for posting student location
         
-        taskForPOSTMethod(jsonBody) { results, error in
-            
+        taskForPOSTMethod(urlString: urlString, body: locationData, completionHandlerForPOST: completionHandlerForPOST)
+    }
+    
+    func loginToApp(username: String, password: String, completionHandlerForLOGIN: @escaping (UdacityAccount?, Error?) -> Void) {
+        
+        let credentials = Client.UdacityCredentials(username: username, password: password)
+        let loginBody = Client.UdacityLoginRequestBody(udacity: credentials)
+        
+        taskForLOGINMethod(credentials: loginBody) { (udacityAccount, error) in
             if let error = error {
+                completionHandlerForLOGIN(nil, error)
+            } else if let udacityAccount = udacityAccount {
+                // Successfully decoded UdacityAccount
+                // Update AppDelegate with account details
+                self.appDelegate.accountKey = udacityAccount.account.key as AnyObject // appDelegate.accountKey is AnyObject?
+                self.appDelegate.sessionID = udacityAccount.session.id
+                // Consider if appDelegate.accountRegistered needs to be set from udacityAccount.account.registered
                 
-                completionHandlerForPOST(result: nil, error: error)
+                completionHandlerForLOGIN(udacityAccount, nil)
             } else {
-                
-                if let results = results as? Int? {
-                    
-                    completionHandlerForPOST(result: results, error: nil)
-                } else {
-                    
-                    completionHandlerForPOST(result: nil, error: error)
-                }
+                completionHandlerForLOGIN(nil, NSError(domain: "loginToApp", code: 0, userInfo: [NSLocalizedDescriptionKey: "Login failed: No data or error."]))
             }
         }
     }
     
-    func loginToApp(username: String, password: String, completionHandlerForLOGIN: (details: [String: AnyObject]?, error: NSError?) -> Void) {
-        
-        let param = "{\"udacity\": {\"username\":\"\(username)\", \"password\":\"\(password)\"}}"
-        
-        taskForLOGINMethod(param) { (results, error) in
-            
+    func getUserCompleteInfo(accountKey: String, completionHandlerForUSERINFO: @escaping (Client.UserInfoResponse?, Error?) -> Void) {
+        // Ensure appDelegate is initialized. It's an implicitly unwrapped optional.
+        // It should be initialized when the Client is, or passed in.
+        // For now, assuming it's available as before.
+        appDelegate = UIApplication.shared.delegate as! AppDelegate 
+
+        taskForUSERINFOMethod(accountKey: accountKey) { (userInfoResponse, error) in
             if let error = error {
-                
-                completionHandlerForLOGIN(details: nil, error: error)
-                
+                completionHandlerForUSERINFO(nil, error)
+            } else if let userInfoResponse = userInfoResponse {
+                // Update AppDelegate with user's first and last name
+                self.appDelegate.firstName = userInfoResponse.user.firstName
+                self.appDelegate.lastName = userInfoResponse.user.lastName
+                completionHandlerForUSERINFO(userInfoResponse, nil)
             } else {
-                
-                if let results = results as? [String: AnyObject]? {
-                    completionHandlerForLOGIN(details: results, error: nil)
-                } else {
-                    
-                    completionHandlerForLOGIN(details: nil, error: error)
-                }
+                completionHandlerForUSERINFO(nil, NSError(domain: "getUserCompleteInfo", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to get user info."]))
             }
         }
     }
-    
-    func getUserCompleteInfo(accountKey: AnyObject, completionHandlerForUSERINFO: (result: AnyObject!, error: NSError?) -> Void) {
 
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    func deleteSession(completionHandlerForDELETE: @escaping (Client.DeleteSessionResponse?, Error?) -> Void) {
 
-        taskForUSERINFOMethod(accountKey) { (result, error) in
-
+        taskForDeleteSession() { (deleteResponse, error) in
             if let error = error {
-
-                completionHandlerForUSERINFO(result: nil, error: error)
+                completionHandlerForDELETE(nil, error)
             } else {
-
-                if let result = result as? [String: AnyObject]? {
-
-                    let user = result!["user"]!
-
-                    if let lastName = user["last_name"] as? String {
-
-                        self.appDelegate.lastName = lastName
-                    } else {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            print("Failed to get (lastname).")
-                        }
-                    }
-
-                    if let firstName = user["first_name"] as? String {
-
-                        self.appDelegate.firstName = firstName
-                    } else {
-
-                        dispatch_async(dispatch_get_main_queue()) {
-                            print("Failed to get (firstname).")
-                        }
-                    }
-
-                    completionHandlerForUSERINFO(result: result, error: nil)
-                } else {
-
-                    completionHandlerForUSERINFO(result: nil, error: error)
+                // Handle successful deletion, maybe clear some session data in AppDelegate
+                // The actual response might be minimal, just confirming deletion.
+                // The DeleteSessionResponse struct in Client.swift should model what's expected.
+                completionHandlerForDELETE(deleteResponse, nil)
                 }
             }
         }
     }
 
-    func deleteSession(completionHandlerForDELETE: (result: AnyObject!, error: NSError?) -> Void) {
-
-        taskForDeleteSession() { (result, error) in
-
-            if let error = error {
-
-                completionHandlerForDELETE(result: nil, error: error)
-
-            } else {
-
-                if let result = result as? [String: AnyObject]? {
-
-                    let deleteResult = result!["session"]!
-                    completionHandlerForDELETE(result: deleteResult, error: nil)
-                }
-            }
-        }
-    }
-
-    func verifyUrl(urlString: String?) -> Bool {
+    func verifyUrl(_ urlString: String?) -> Bool {
 
         if let urlString = urlString {
 
-            if NSURL(string: urlString) != nil {
+            if URL(string: urlString) != nil {
 
                 return true
             }
         }
         return false
+    }
+}
+
+func performUIUpdatesOnMain(_ updates: @escaping () -> Void) {
+    DispatchQueue.main.async {
+        updates()
+    }
+}
+
+extension UIViewController {
+    @objc func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboardViewController))
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func dismissKeyboardViewController() {
+        view.endEditing(true)
     }
 }
 

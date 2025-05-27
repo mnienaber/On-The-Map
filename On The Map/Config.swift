@@ -11,8 +11,8 @@ import Foundation
 
 // MARK: - File Support
 
-private let _documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
-private let _fileURL: NSURL = _documentsDirectoryURL.URLByAppendingPathComponent("TheMovieDB-Context")
+private let _documentsDirectoryURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+private let _fileURL: URL = _documentsDirectoryURL.appendingPathComponent("TheMovieDB-Context")
 
 // MARK: - Config
 
@@ -25,12 +25,12 @@ class Config: NSObject, NSCoding {
     var secureBaseImageURLString =  "https://image.tmdb.org/t/p/"
     var posterSizes = ["w92", "w154", "w185", "w342", "w500", "w780", "original"]
     var profileSizes = ["w45", "w185", "h632", "original"]
-    var dateUpdated: NSDate? = nil
+    var dateUpdated: Date? = nil
     
     // returns the number days since the config was last updated
     var daysSinceLastUpdate: Int? {
         if let lastUpdate = dateUpdated {
-            return Int(NSDate().timeIntervalSinceDate(lastUpdate)) / 60*60*24
+            return Int(Date().timeIntervalSince(lastUpdate)) / (60*60*24)
         } else {
             return nil
         }
@@ -40,11 +40,11 @@ class Config: NSObject, NSCoding {
     
     override init() {}
     
-    convenience init?(dictionary: [String:AnyObject]) {
+    convenience init?(dictionary: [String: Any]) {
         
         self.init()
         
-        if let imageDictionary = dictionary["images"] as? [String:AnyObject],
+        if let imageDictionary = dictionary["images"] as? [String: Any],
             let urlString = imageDictionary["base_url"] as? String,
             let secureURLString = imageDictionary["secure_base_url"] as? String,
             let posterSizesArray = imageDictionary["poster_sizes"] as? [String],
@@ -53,7 +53,7 @@ class Config: NSObject, NSCoding {
             secureBaseImageURLString = secureURLString
             posterSizes = posterSizesArray
             profileSizes = profileSizesArray
-            dateUpdated = NSDate()
+            dateUpdated = Date()
         } else {
             return nil
         }
@@ -76,7 +76,7 @@ class Config: NSObject, NSCoding {
         /* TASK: Get TheMovieDB configuration, and update the config */
         
         /* Grab the app delegate */
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         /* 1. Set the parameters */
         let parameters = [
@@ -84,20 +84,20 @@ class Config: NSObject, NSCoding {
         ]
         
         /* 2/3. Build the URL, Configure the request */
-        let request = NSMutableURLRequest(URL: appDelegate.URLFromParameters(parameters, withPathExtension: "/configuration"))
+        var request = URLRequest(url: appDelegate.URLFromParameters(parameters: parameters as [String : AnyObject], withPathExtension: "/configuration"))
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
         /* 4. Make the request */
-        let task = appDelegate.sharedSession.dataTaskWithRequest(request) { (data, response, error) in
+        let task = appDelegate.sharedSession.dataTask(with: request) { (data, response, error) in
             
             /* GUARD: Was there an error? */
             guard (error == nil) else {
-                print("There was an error with your request: \(error)")
+                print("There was an error with your request: \(error!)")
                 return
             }
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
                 print("Your request returned a status code other than 2xx!")
                 return
             }
@@ -111,21 +111,21 @@ class Config: NSObject, NSCoding {
             
             /* GUARD: Was there an error? */
             guard (error == nil) else {
-                print("There was an error with your request: \(error)")
+                print("There was an error with your request: \(error!)")
                 return
             }
             
             /* Parse the data! */
-            let parsedResult: AnyObject!
+            let parsedResult: Any!
             do {
-                parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+                parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
             } catch {
                 print("Could not parse the data as JSON: '\(data)'")
                 return
             }
             
             /* 6. Use the data! */
-            if let newConfig = Config(dictionary: parsedResult as! [String:AnyObject]) {
+            if let newConfig = Config(dictionary: parsedResult as! [String: Any]) {
                 appDelegate.config = newConfig
                 appDelegate.config.save()
             } else {
@@ -145,30 +145,30 @@ class Config: NSObject, NSCoding {
     let ProfileSizesKey = "config.profile_size_key"
     let DateUpdatedKey = "config.date_update_key"
     
-    required init(coder aDecoder: NSCoder) {
-        baseImageURLString = aDecoder.decodeObjectForKey(BaseImageURLStringKey) as! String
-        secureBaseImageURLString = aDecoder.decodeObjectForKey(SecureBaseImageURLStringKey) as! String
-        posterSizes = aDecoder.decodeObjectForKey(PosterSizesKey) as! [String]
-        profileSizes = aDecoder.decodeObjectForKey(ProfileSizesKey) as! [String]
-        dateUpdated = aDecoder.decodeObjectForKey(DateUpdatedKey) as? NSDate
+    required init?(coder aDecoder: NSCoder) {
+        baseImageURLString = aDecoder.decodeObject(forKey: BaseImageURLStringKey) as! String
+        secureBaseImageURLString = aDecoder.decodeObject(forKey: SecureBaseImageURLStringKey) as! String
+        posterSizes = aDecoder.decodeObject(forKey: PosterSizesKey) as! [String]
+        profileSizes = aDecoder.decodeObject(forKey: ProfileSizesKey) as! [String]
+        dateUpdated = aDecoder.decodeObject(forKey: DateUpdatedKey) as? Date
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(baseImageURLString, forKey: BaseImageURLStringKey)
-        aCoder.encodeObject(secureBaseImageURLString, forKey: SecureBaseImageURLStringKey)
-        aCoder.encodeObject(posterSizes, forKey: PosterSizesKey)
-        aCoder.encodeObject(profileSizes, forKey: ProfileSizesKey)
-        aCoder.encodeObject(dateUpdated, forKey: DateUpdatedKey)
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(baseImageURLString, forKey: BaseImageURLStringKey)
+        aCoder.encode(secureBaseImageURLString, forKey: SecureBaseImageURLStringKey)
+        aCoder.encode(posterSizes, forKey: PosterSizesKey)
+        aCoder.encode(profileSizes, forKey: ProfileSizesKey)
+        aCoder.encode(dateUpdated, forKey: DateUpdatedKey)
     }
     
     private func save() {
-        NSKeyedArchiver.archiveRootObject(self, toFile: _fileURL.path!)
+        NSKeyedArchiver.archiveRootObject(self, toFile: _fileURL.path)
     }
     
     class func unarchivedInstance() -> Config? {
         
-        if NSFileManager.defaultManager().fileExistsAtPath(_fileURL.path!) {
-            return NSKeyedUnarchiver.unarchiveObjectWithFile(_fileURL.path!) as? Config
+        if FileManager.default.fileExists(atPath: _fileURL.path) {
+            return NSKeyedUnarchiver.unarchiveObject(withFile: _fileURL.path) as? Config
         } else {
             return nil
         }

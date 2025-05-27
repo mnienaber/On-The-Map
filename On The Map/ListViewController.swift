@@ -22,98 +22,103 @@ class ListViewController: UITableViewController {
 
         self.navigationController?.navigationBarHidden = false
         tableView.delegate = self
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate = UIApplication.shared.delegate as! AppDelegate
         print("viewwillload")
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
         tableView.delegate = self
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         print("viewwillappear")
         self.tableView.reloadData()
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cellReuseIdentifier = "TableViewCell"
         let location = StudentModel.sharedInstance().studentLocation[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as UITableViewCell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
         
         cell.textLabel!.text = location.firstName + " " + location.lastName
         
         return cell
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return StudentModel.sharedInstance().studentLocation.count
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let location = StudentModel.sharedInstance().studentLocation[indexPath.row]
         let url = location.mediaURL
         
         if verifyUrl(url) == true {
             
-            UIApplication.sharedApplication().openURL(NSURL(string: url)!)
+            UIApplication.shared.open(URL(string: url)!, options: [:], completionHandler: nil)
         } else if verifyUrl(url) == false {
             
             self.failAlertGeneral("Unable to open that URL", message: "Unfrt this item doesn't contain a valid URL", actionTitle: "Try another")
         }
     }
     
-    override internal func canBecomeFirstResponder() -> Bool {
+    override internal var canBecomeFirstResponder: Bool {
         return true
     }
     
-    override internal func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if motion == .MotionShake {
+    override internal func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
             print("Shaked")
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
-            failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
-            failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(failLogoutAlert, animated: true, completion: nil)
+            let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: .alert)
+            failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: .default, handler: { alertAction in self.logOut() }))
+            failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: .default, handler: nil))
+            self.present(failLogoutAlert, animated: true, completion: nil)
         }
     }
 
-    func refresh(sender: AnyObject) {
+    func refresh(_ sender: AnyObject) {
 
-        Client.sharedInstance().getStudentLocations() { (results, error) in
-
-            if error != nil {
-
-                let failDataAlert = UIAlertController(title: "Sorry", message: "There was a problem with retrieving Student Location data", preferredStyle: UIAlertControllerStyle.Alert)
-                failDataAlert.addAction(UIAlertAction(title: "I'll Come Back Later", style: UIAlertActionStyle.Default, handler: nil))
-                failDataAlert.addAction(UIAlertAction(title: "Leave Feedback", style: UIAlertActionStyle.Default, handler: { alertAction in
-                    UIApplication.sharedApplication().openURL(NSURL(string : "mailto:mnienaber@google.com")!)
-                    failDataAlert.dismissViewControllerAnimated(true, completion: nil)
-                    self.presentViewController(failDataAlert, animated: true, completion: nil)
-                }))
-
-            } else {
-
-                performUIUpdatesOnMain {
-
-                    self.getStudentList()
+        Client.sharedInstance().getStudentLocations() { [weak self] (studentLocations, error) in
+            guard let self = self else { return }
+            performUIUpdatesOnMain {
+                if let error = error {
+                    print("Error fetching student locations: \(error.localizedDescription)")
+                    let failDataAlert = UIAlertController(title: "Sorry", message: "There was a problem with retrieving Student Location data. \(error.localizedDescription)", preferredStyle: .alert)
+                    failDataAlert.addAction(UIAlertAction(title: "I'll Come Back Later", style: .default, handler: nil))
+                    // Example: Adding a mailto link for feedback
+                    // Ensure the URL is valid
+                    if let mailURL = URL(string: "mailto:mnienaber@google.com") {
+                        failDataAlert.addAction(UIAlertAction(title: "Leave Feedback", style: .default, handler: { alertAction in
+                            UIApplication.shared.open(mailURL, options: [:], completionHandler: nil)
+                        }))
+                    }
+                    self.present(failDataAlert, animated: true, completion: nil)
+                } else if studentLocations != nil {
+                    // StudentModel is already updated by getStudentLocations in Convenience.swift
+                    // So, just reload data.
                     self.tableView.reloadData()
-                    print("refresh is \(results)")
-                    
+                    print("Refreshed student locations successfully.")
+                } else {
+                     // Handle case where studentLocations is nil but error is also nil (should ideally not happen)
+                    print("No student locations and no error after refresh.")
                 }
+                // Ensure refresh control ends refreshing if it was used
+                self.refreshControl?.endRefreshing()
             }
-        } 
+        }
     }
 
-    @IBAction func refreshButton(sender: AnyObject) {
+    @IBAction func refreshButton(_ sender: AnyObject) {
 
         if Reachability.isConnectedToNetwork() == false {
 
-            let failPostAlert = UIAlertController(title: "No Internet Connection", message: "Please check your connection and try again", preferredStyle: UIAlertControllerStyle.Alert)
-            failPostAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(failPostAlert, animated: true, completion: nil)
+            let failPostAlert = UIAlertController(title: "No Internet Connection", message: "Please check your connection and try again", preferredStyle: .alert)
+            failPostAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(failPostAlert, animated: true, completion: nil)
         } else if Reachability.isConnectedToNetwork() == true {
 
             self.refresh(self)
@@ -141,7 +146,7 @@ class ListViewController: UITableViewController {
         }
     }
 
-    @IBAction func logOutButton(sender: AnyObject) {
+    @IBAction func logOutButton(_ sender: AnyObject) {
         
         failLogOutAlert()
     }
@@ -153,19 +158,15 @@ class ListViewController: UITableViewController {
         self.appDelegate.sessionID = nil
         self.appDelegate.sessionExpiration = nil
 
-        Client.sharedInstance().deleteSession() { (result, error) in
-
-            if error != nil {
-
-                self.failAlertGeneral("LogOut Unsuccessful", message: "Something went wrong, please try again", actionTitle: "OK")
-            } else {
-
-                performUIUpdatesOnMain {
-
-                    print("logout success \(result)")
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                    })
+        Client.sharedInstance().deleteSession() { [weak self] (deleteResponse, error) in
+            guard let self = self else { return }
+            performUIUpdatesOnMain {
+                if let error = error {
+                    print("Logout error: \(error.localizedDescription)")
+                    self.failAlertGeneral("LogOut Unsuccessful", message: "Something went wrong, please try again", actionTitle: "OK")
+                } else {
+                    print("Logout success \(String(describing: deleteResponse))")
+                    self.dismiss(animated: true, completion: nil)
                 }
             }
         }
@@ -173,33 +174,20 @@ class ListViewController: UITableViewController {
 
     func failAlertGeneral(title: String, message: String, actionTitle: String) {
 
-        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: .default, handler: nil))
+        self.present(failAlertGeneral, animated: true, completion: nil)
     }
 
     func failLogOutAlert() {
 
-        let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
-        failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
-        failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failLogoutAlert, animated: true, completion: nil)
+        let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: .alert)
+        failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: .default, handler: { alertAction in self.logOut() }))
+        failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: .default, handler: nil))
+        self.present(failLogoutAlert, animated: true, completion: nil)
     }
 }
 
-extension ListViewController {
-    
-    override func verifyUrl(urlString: String?) -> Bool {
-
-        if let urlString = urlString {
-            
-            if NSURL(string: urlString) != nil {
-                
-                return true
-            }
-        }
-        return false
-    }
-}
+// Removed redundant ListViewController extension for verifyUrl, as it's in Convenience.swift (UIViewController extension)
 
 

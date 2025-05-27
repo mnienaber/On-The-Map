@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var config = Config()
     
     // authentication state
-    var sharedSession = NSURLSession.sharedSession()
+    var sharedSession = URLSession.shared
     var requestToken: String? = nil
     var accountRegistered: Int? = nil
     var accountKey: AnyObject? = nil
@@ -70,20 +70,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
     
-    func URLFromParameters(parameters: [String:AnyObject], withPathExtension: String? = nil) -> NSURL {
+    func URLFromParameters(parameters: [String:AnyObject], withPathExtension: String? = nil) -> URL {
         
-        let components = NSURLComponents()
+        var components = URLComponents()
         components.scheme = Client.Constants.Scheme.ApiScheme
         components.host = Client.Constants.Scheme.ApiHost
         components.path = Client.Constants.Scheme.ApiPath + (withPathExtension ?? "")
-        components.queryItems = [NSURLQueryItem]()
+        components.queryItems = [URLQueryItem]()
         
         for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
         
-        return components.URL!
+        return components.url!
     }
 
 }

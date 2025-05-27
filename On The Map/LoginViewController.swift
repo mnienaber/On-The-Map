@@ -15,7 +15,7 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var debugText: UILabel!
-    @IBOutlet weak var dimOulet: UIView!
+    @IBOutlet weak var dimOutlet: UIView!
     @IBOutlet weak var activityOutlet: UIActivityIndicatorView!
     
     //var studentLocation: [StudentLocation] = [StudentLocation]()
@@ -23,7 +23,7 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     
     var appDelegate: AppDelegate!
     var keyboardOnScreen = false
-    var session: NSURLSession!
+    var session: URLSession!
     var tapRecognizer: UITapGestureRecognizer? = nil
     var keyboardAdjusted = false
     var lastKeyboardOffset : CGFloat = 0.0
@@ -36,7 +36,7 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         resetUI()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         resetUI()
@@ -45,8 +45,8 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         subscribeToKeyboardNotifications()
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         removeKeyboardDismissRecognizer()
         unsubscribeToKeyboardNotifications()
     }
@@ -54,72 +54,83 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     func completeLogin() {
         
         activityOutlet.stopAnimating()
-        dimOulet.hidden = true
-        dispatch_async(dispatch_get_main_queue(), {
+        dimOutlet.isHidden = true
+        DispatchQueue.main.async {
             self.debugText.text = ""
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-            self.presentViewController(controller, animated: true, completion: nil)
-        })
+            let controller = self.storyboard!.instantiateViewController(withIdentifier: "TabBarController")
+            self.present(controller, animated: true, completion: nil)
+        }
     }
     
     func executeLogin() {
         
-        Client.sharedInstance().loginToApp(usernameTextField.text!, password: passwordTextField.text!) { (details, error) in
-
-            if error != nil {
-
-                var userinfo = error?.userInfo
-
-                if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(403)" {
-
-                    performUIUpdatesOnMain{
-
-                        print("this is the error.userinfo \(userinfo!["NSLocalizedDescription"]!)")
-
+        Client.sharedInstance().loginToApp(username: usernameTextField.text!, password: passwordTextField.text!) { (udacityAccount, error) in
+            
+            performUIUpdatesOnMain { // Ensure UI updates are on the main thread
+                if let error = error {
+                    // Attempt to get more specific error info if it's an NSError
+                    let nsError = error as NSError
+                    let errorMessage = nsError.userInfo[NSLocalizedDescriptionKey] as? String ?? "Login Failed"
+                    
+                    // Check for specific error codes or messages if possible
+                    // The previous check for "Optional(403)" or "Optional(-1009)" was very specific
+                    // to the old error construction. Modern error handling might differ.
+                    // For now, we'll use a general failure message or try to get status code if available.
+                    
+                    // Example: if nsError.domain == "taskForLOGINMethod" && nsError.code == 1
+                    // This depends on how errors are constructed in Client.swift now.
+                    // For a 403 (Forbidden), the server might return a specific message in the error body.
+                    // For network connection issues (like -1009), it's usually a URLError.
+                    
+                    print("Login error: \(errorMessage)")
+                    if (error as? URLError)?.code == .notConnectedToInternet {
+                        self.failAlertGeneral("No Network Connection", message: "There seems to be a problem with your connection - please check it", actionTitle: "OK")
+                    } else if errorMessage.contains("status code other than 2xx!") && errorMessage.contains("403") { // Crude check for 403
                         self.countfailAlert()
                     }
-                } else if userinfo!["NSLocalizedDescription"]! as! NSObject == "Optional(-1009)"  {
-
-                    performUIUpdatesOnMain{
-
-                        self.failAlertGeneral("No Network Connection", message: "There seems to be a problem with your connection - please check it", actionTitle: "OK")
+                    else {
+                        // Generic error from loginToApp
+                        self.failAlertGeneral("Login Failed", message: errorMessage, actionTitle: "OK")
                     }
-                }
-            } else {
+                    // Reset UI elements after error
+                    self.setUIEnabled(true)
+                    self.loginButton.isEnabled = true
+                    self.activityOutlet.stopAnimating()
+                    self.dimOutlet.isHidden = true
 
-                if let account = details as [String: AnyObject]! {
+                } else if let udacityAccount = udacityAccount {
+                    // Successfully decoded UdacityAccount
+                    // The appDelegate properties are already updated in Convenience.swift's loginToApp
+                    // So, just proceed with completing the login.
                     
-                    let accountDetail = account["account"] as! [String: AnyObject]
-                    let sessionDetail = account["session"] as! [String: AnyObject]
+                    // self.appDelegate.accountRegistered = udacityAccount.account.registered // If needed
+                    // self.appDelegate.accountKey = udacityAccount.account.key as AnyObject
+                    // self.appDelegate.sessionID = udacityAccount.session.id
+                    // self.appDelegate.sessionExpiration = udacityAccount.session.expiration
                     
-                    let registeredDetail = accountDetail["registered"]! as! Int
-                    if registeredDetail == 1 {
-                        
-                        self.appDelegate.accountRegistered = registeredDetail
-                        self.appDelegate.accountKey = accountDetail["key"] as AnyObject!
-                        self.appDelegate.sessionID = sessionDetail["id"] as? String
-                        self.appDelegate.sessionExpiration = sessionDetail["expiration"] as? String
-                    }
-
-                    performUIUpdatesOnMain{
-                        
-                        self.completeLogin()
-                    }
+                    self.completeLogin()
+                } else {
+                    // Fallback for unknown error
+                    self.failAlertGeneral("Login Failed", message: "An unknown error occurred.", actionTitle: "OK")
+                    self.setUIEnabled(true)
+                    self.loginButton.isEnabled = true
+                    self.activityOutlet.stopAnimating()
+                    self.dimOutlet.isHidden = true
                 }
             }
         }
     }
     
-    @IBAction func loginPressed(sender: AnyObject) {
+    @IBAction func loginPressed(_ sender: AnyObject) {
         
-        loginButton.enabled = false
-        dimOulet.hidden = false
+        loginButton.isEnabled = false
+        dimOutlet.isHidden = false
         activityOutlet.startAnimating()
         
         if usernameTextField.text!.isEmpty || passwordTextField.text!.isEmpty {
             debugText.text = "Username or Password Empty."
             setUIEnabled(true)
-            loginButton.enabled = true
+            loginButton.isEnabled = true
         } else {
             
             executeLogin()
@@ -130,32 +141,32 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
         
         if self.loginCount <= self.loginLimit {
             
-            let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: UIAlertControllerStyle.Alert)
-            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(failLoginAlert, animated: true, completion: nil)
+            let failLoginAlert = UIAlertController(title: "Sorry", message: "It seems your login credentials didn't work - try again", preferredStyle: .alert)
+            failLoginAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(failLoginAlert, animated: true, completion: nil)
             setUIEnabled(true)
             usernameTextField.text = nil
             passwordTextField.text = nil
-            loginButton.enabled = true
+            loginButton.isEnabled = true
             activityOutlet.stopAnimating()
-            dimOulet.hidden = true
+            dimOutlet.isHidden = true
             self.debugText.text! = "Try again:)"
             loginCount += 1
         } else {
             
-            let failLoginAlert = UIAlertController(title: "Forgotten your Username or Password?", message: "Please check your credentials with Udacity and try again later", preferredStyle: UIAlertControllerStyle.Alert)
-            failLoginAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(failLoginAlert, animated: true, completion: nil)
-            failLoginAlert.addAction(UIAlertAction(title: "Go To Udacity", style: UIAlertActionStyle.Default, handler: {
+            let failLoginAlert = UIAlertController(title: "Forgotten your Username or Password?", message: "Please check your credentials with Udacity and try again later", preferredStyle: .alert)
+            failLoginAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(failLoginAlert, animated: true, completion: nil)
+            failLoginAlert.addAction(UIAlertAction(title: "Go To Udacity", style: .default, handler: {
                 (action:UIAlertAction!) in
-                UIApplication.sharedApplication().openURL(NSURL(string: "https://www.udacity.com/account/auth#!/signup")!)
+                UIApplication.shared.open(URL(string: "https://www.udacity.com/account/auth#!/signup")!, options: [:], completionHandler: nil)
         }))
             setUIEnabled(true)
             usernameTextField.text = nil
             passwordTextField.text = nil
-            loginButton.enabled = true
+            loginButton.isEnabled = true
             activityOutlet.stopAnimating()
-            dimOulet.hidden = true
+            dimOutlet.isHidden = true
             self.debugText.text! = ""
             loginCount = 0
         }
@@ -163,120 +174,109 @@ class LoginViewController: UIViewController, UIApplicationDelegate {
     
     func resetUI() {
         
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate = UIApplication.shared.delegate as! AppDelegate
         debugText.text = "Please login to Udacity"
-        hideKeyboardWhenTappedAround()
-        session = NSURLSession.sharedSession()
-        configureUI()
-        subscribeToKeyboardNotifications()
-        dimOulet.hidden = true
+        // hideKeyboardWhenTappedAround() // This is now in UIViewController extension (Convenience.swift)
+        session = URLSession.shared // This session variable seems unused locally. Client manages its own session.
+        configureUI() // For tap recognizer
+        // Keyboard notifications are handled by UIViewController extension (Convenience.swift)
+        // subscribeToKeyboardNotifications() 
+        dimOutlet.isHidden = true
     }
     
-    func setAccountKey(details: [String: AnyObject]) {
-        
-        performUIUpdatesOnMain {
-            
-            if let accountDetail = details["key"]! as? Int {
-                
-                self.appDelegate.accountKey = accountDetail
-            }
-        }
-    }
+    // This method seems to be a remnant of the old data handling.
+    // Account key is now set directly from the Codable object in loginToApp or Convenience.swift
+    // func setAccountKey(details: [String: AnyObject]) {
+    //     performUIUpdatesOnMain {
+    //         if let accountDetail = details["key"]! as? Int {
+    //             self.appDelegate.accountKey = accountDetail
+    //         }
+    //     }
+    // }
 }
 
 extension LoginViewController {
     
-    private func setUIEnabled(enabled: Bool) {
-        usernameTextField.enabled = enabled
-        passwordTextField.enabled = enabled
-        loginButton.enabled = enabled
-        debugText.enabled = enabled
+    private func setUIEnabled(_ enabled: Bool) {
+        usernameTextField.isEnabled = enabled
+        passwordTextField.isEnabled = enabled
+        loginButton.isEnabled = enabled
+        debugText.isEnabled = enabled
         
         if enabled {
-            loginButton.hidden = false
+            loginButton.isHidden = false
         } else {
-            loginButton.hidden = true
+            loginButton.isHidden = true
         }
     }
     
     func failAlertGeneral(title: String, message: String, actionTitle: String) {
         
-        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: .default, handler: nil))
+        self.present(failAlertGeneral, animated: true, completion: nil)
         setUIEnabled(true)
         usernameTextField.text = nil
         passwordTextField.text = nil
-        loginButton.enabled = true
+        loginButton.isEnabled = true
         activityOutlet.stopAnimating()
-        dimOulet.hidden = true
+        dimOutlet.isHidden = true
         self.debugText.text! = "Try again:)"
     }
 
     func configureUI() {
         
-        tapRecognizer = UITapGestureRecognizer(target: self, action: "handleSingleTap:")
+        tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleSingleTap))
         tapRecognizer?.numberOfTapsRequired = 1
     }
     
-    private func subscribeToNotification(notification: String, selector: Selector) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
+    private func subscribeToNotification(notification: NSNotification.Name, selector: Selector) {
+        NotificationCenter.default.addObserver(self, selector: selector, name: notification, object: nil)
     }
     
     private func unsubscribeFromAllNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
-    func addKeyboardDismissRecognizer() {
+    @objc func addKeyboardDismissRecognizer() { // This should be part of the UIViewController extension if it's generic
         self.view.addGestureRecognizer(tapRecognizer!)
     }
     
-    func removeKeyboardDismissRecognizer() {
+    @objc func removeKeyboardDismissRecognizer() { // This should be part of the UIViewController extension
         self.view.removeGestureRecognizer(tapRecognizer!)
     }
     
-    func handleSingleTap(recognizer: UITapGestureRecognizer) {
+    @objc func handleSingleTap(recognizer: UITapGestureRecognizer) { // This is fine here or in extension
         self.view.endEditing(true)
     }
     
-    func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LoginViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
-    }
+    // subscribeToKeyboardNotifications, unsubscribeToKeyboardNotifications, keyboardWillShow, keyboardWillHide, getKeyboardHeight
+    // are now part of the UIViewController extension in Convenience.swift.
+    // They are automatically available and do not need to be re-declared or called from viewWillAppear/Disappear.
     
-    func unsubscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
-    }
-    
-    func keyboardWillShow(notification: NSNotification) {
+    // @objc func keyboardWillShow(_ notification: NSNotification) {
         
-        if keyboardAdjusted == false {
-            lastKeyboardOffset = getKeyboardHeight(notification) / 2
-            self.view.superview?.frame.origin.y -= lastKeyboardOffset
-            keyboardAdjusted = true
-        }
-    }
+    //     if keyboardAdjusted == false {
+    //         lastKeyboardOffset = getKeyboardHeight(notification) / 2
+    //         self.view.superview?.frame.origin.y -= lastKeyboardOffset
+    //         keyboardAdjusted = true
+    //     }
+    // }
     
-    func keyboardWillHide(notification: NSNotification) {
-        
-        if keyboardAdjusted == true {
-            self.view.superview?.frame.origin.y += lastKeyboardOffset
-            keyboardAdjusted = false
-        }
-    }
+    // @objc func keyboardWillHide(_ notification: NSNotification) {
+    //     
+    //     if keyboardAdjusted == true {
+    //         self.view.superview?.frame.origin.y += lastKeyboardOffset
+    //         keyboardAdjusted = false
+    //     }
+    // }
     
-    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
-        let userInfo = notification.userInfo
-        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
-        return keyboardSize.CGRectValue().height
-    }
+    // func getKeyboardHeight(_ notification: NSNotification) -> CGFloat {
+    //     let userInfo = notification.userInfo
+    //     let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+    //     return keyboardSize.cgRectValue.height
+    // }
     
-    override func hideKeyboardWhenTappedAround() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
-    }
-    
-    override func dismissKeyboard() {
-        view.endEditing(true)
-    }
+    // hideKeyboardWhenTappedAround and dismissKeyboardViewController are in UIViewController extension (Convenience.swift)
+    // and should be automatically available. No need to override unless specific behavior is desired.
 }

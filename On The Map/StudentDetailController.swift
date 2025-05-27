@@ -29,16 +29,16 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.hideKeyboardWhenTappedAround()
         self.mapViewOutlet.delegate = self
-        getLocationManager(locationManager, didUpdateLocations: self.getCoordinates(self.studentDetailLocation))
+        updateMapWithCoordinates(self.getCoordinates(self.studentDetailLocation))
     }
     
-    override func viewWillAppear(animated: Bool) {
-        
-        self.navBarOutlet.hidden = true
-        self.navigationController?.navigationBarHidden = true
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navBarOutlet.isHidden = true
+        self.navigationController?.isNavigationBarHidden = true
     }
     
-    func getCoordinates(studentDetailLocation: [StudentLocation]) -> CLLocationCoordinate2D {
+    func getCoordinates(_ studentDetailLocation: [StudentLocation]) -> CLLocationCoordinate2D {
         
         for result in studentDetailLocation {
             
@@ -47,17 +47,17 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
         return locations
     }
         
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
         
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinColor = .Red
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+            pinView!.pinTintColor = .red
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {
             pinView!.annotation = annotation
@@ -67,27 +67,28 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
     }
     
     
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
         if control == view.rightCalloutAccessoryView {
             
-            let app = UIApplication.sharedApplication()
-            if let toOpen = view.annotation?.subtitle! {
+            let app = UIApplication.shared
+            if let toOpen = view.annotation?.subtitle!, let url = URL(string: toOpen) {
                 
-                app.openURL(NSURL(string: toOpen)!)
+                app.open(url, options: [:], completionHandler: nil)
             }
         }
     }
     
-    func getLocationManager(manager: CLLocationManager, didUpdateLocations locations: CLLocationCoordinate2D) {
+    func updateMapWithCoordinates(_ locations: CLLocationCoordinate2D) {
         var annotations = [MKPointAnnotation]()
-        [self.studentDetailLocation = self.studentDetailLocation]
+        // The line below seems to be a no-op or a mistake, consider removing or clarifying its purpose.
+        // [self.studentDetailLocation = self.studentDetailLocation] 
         performUIUpdatesOnMain {
             
             for result in self.studentDetailLocation {
                 let coordinate = locations
-                let span = MKCoordinateSpanMake(0.05, 0.05)
-                let region = MKCoordinateRegionMake(coordinate, span)
+                let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+                let region = MKCoordinateRegion(center: coordinate, span: span)
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = coordinate
                 annotation.title = result.firstName + " " + result.lastName
@@ -99,11 +100,11 @@ class StudentDetailController: UIViewController, MKMapViewDelegate, CLLocationMa
         }
     }
 
-    @IBAction func cancelButton(sender: AnyObject) {
+    @IBAction func cancelButton(_ sender: AnyObject) {
         
-        dispatch_async(dispatch_get_main_queue(), {
-            let controller = self.storyboard!.instantiateViewControllerWithIdentifier("TabBarController")
-            self.presentViewController(controller, animated: true, completion: nil)
-        })
+        DispatchQueue.main.async {
+            let controller = self.storyboard!.instantiateViewController(withIdentifier: "TabBarController")
+            self.present(controller, animated: true, completion: nil)
+        }
     }
 }

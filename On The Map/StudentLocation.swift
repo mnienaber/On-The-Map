@@ -9,12 +9,12 @@
 import UIKit
 import Foundation
 
-var accountVerificationObjects = [AccountVerification]()
+// var accountVerificationObjects = [AccountVerification]() // This global variable seems unused or will be replaced by direct decoding.
 
-struct StudentLocation {
+struct StudentLocation: Codable {
     
     let objectId: String
-    let uniqueKey: String
+    let uniqueKey: String? // Made optional as per Parse API, sometimes it might be missing for new users
     let firstName: String
     let lastName: String
     let mapString: String
@@ -24,69 +24,47 @@ struct StudentLocation {
     let createdAt: String
     let updatedAt: String
 
-    init?(dictionary: [String:AnyObject]) {
+    // CodingKeys enum is not strictly necessary here if all property names
+    // exactly match the JSON keys (which they seem to, based on Client.Constants.ParseResponseKeys).
+    // JSONDecoder will map them automatically.
+    // It's only needed if Swift property names differ from JSON keys (e.g., camelCase vs snake_case without a strategy, or different names).
+    // Manual init and SLOFromResults are no longer needed with Codable
+}
 
-        //https://discussions.udacity.com/t/app-crashing-at-login-after-parse-update/182059/5?u=michael_135862232227
+// Wrapper struct for the results array from Parse
+struct StudentLocationResults: Codable {
+    let results: [StudentLocation]
+}
 
-        guard let object = dictionary[Client.Constants.ParseResponseKeys.ObjectId] as? String else { return nil }
-        objectId = object
-        guard let unique = dictionary[Client.Constants.ParseResponseKeys.UniqueKey] as? String else { return nil }
-        uniqueKey = unique
-        guard let first = dictionary[Client.Constants.ParseResponseKeys.FirstName] as? String else { return nil }
-        firstName = first
-        guard let last = dictionary[Client.Constants.ParseResponseKeys.LastName] as? String else { return nil }
-        lastName = last
-        guard let map = dictionary[Client.Constants.ParseResponseKeys.MapString] as? String else { return nil }
-        mapString = map
-        guard let url = dictionary[Client.Constants.ParseResponseKeys.MediaURL] as? String else { return nil }
-        mediaURL = url
-        guard let lat = dictionary[Client.Constants.ParseResponseKeys.Latitude] as? Double else { return nil }
-        latitude = lat
-        guard let long = dictionary[Client.Constants.ParseResponseKeys.Longitude] as? Double else { return nil }
-        longitude = long
-        guard let created = dictionary[Client.Constants.ParseResponseKeys.CreatedAt] as? String else { return nil }
-        createdAt = created
-        guard let updated = dictionary[Client.Constants.ParseResponseKeys.UpdatedAt] as? String else { return nil }
-        updatedAt = updated
-    }
+struct AccountVerification: Codable {
+    
+    let registered: Bool // Changed from Int to Bool as 'registered' usually is boolean
+    let key: String      // Changed from Int to String as keys are often strings
 
-    static func SLOFromResults(results: [[String:AnyObject]]) -> [StudentLocation] {
-
-        for result in results {
-            
-            if let studObjects = StudentLocation(dictionary: result) {
-                
-                StudentModel.sharedInstance().studentLocation.append(studObjects)
-            }
-        }
-        return StudentModel.sharedInstance().studentLocation
+    enum CodingKeys: String, CodingKey {
+        case registered
+        case key
     }
 }
 
-struct AccountVerification {
+struct SessionData: Codable {
+    let id: String
+    let expiration: String
     
-    let accountRegistered: Int
-    let accountKey: Int
-    let sessionId: String
-    let sessionExpiration: String
-    
-    init(dictionary: [String: AnyObject]) {
-        
-        accountRegistered = dictionary[Client.Constants.UdacityAccountDetails.Account_Registered] as! Int
-        accountKey = dictionary[Client.Constants.UdacityAccountDetails.Account_Key] as! Int
-        sessionId = dictionary[Client.Constants.UdacityAccountDetails.Session_Id] as! String
-        sessionExpiration = dictionary[Client.Constants.UdacityAccountDetails.Session_Expiration] as! String
-
-    }
-    
-    static func LOGFromResults(results: [[String:AnyObject]]) -> [AccountVerification] {
-        
-        var accountVerificationObjects = [AccountVerification]()
-
-        for result in results {
-            accountVerificationObjects.append(AccountVerification(dictionary: result))
-        }
-        print(accountVerificationObjects)
-        return accountVerificationObjects
+    enum CodingKeys: String, CodingKey {
+        case id
+        case expiration
     }
 }
+
+struct UdacityAccount: Codable {
+    let account: AccountVerification
+    let session: SessionData
+    
+    // Udacity API often nests account and session details, this structure reflects that.
+    // The exact structure depends on the API response.
+    // Assuming Client.Constants.UdacityAccountDetails are keys within these nested objects.
+}
+
+// The old LOGFromResults and the global accountVerificationObjects are likely no longer needed.
+// If AccountVerification is part of a larger login response, that larger struct should be made Codable.

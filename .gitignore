@@ -1,0 +1,59 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Global/Swift.gitignore & Global/Objective-C.gitignore
+
+## User settings
+xcuserdata/
+*.xcuserdatad/
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.moved-aside
+*.xcuserstate
+
+## Build generated
+build/
+DerivedData/
+*.[oa]
+*.[a]
+*.[app]
+*.[ipa]
+
+## Files that should never be committed
+*.DS_Store
+.DS_Store
+*.orig
+
+## Other
+*.dia
+*.xcscheme
+*.xcworkspace
+
+# CocoaPods
+Pods/
+Podfile.lock
+# We will manage Podfile.lock manually for this task, so commenting it out for now.
+# If it's preferred to commit Podfile.lock (common practice), then it should not be in .gitignore.
+
+# Carthage
+Carthage/Build
+Carthage/Checkouts
+
+# Swift Package Manager
+.build/
+Packages/
+*.resolved
+DerivedSources/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Secrets
+# Generally, secrets should not be in the repository.
+# Add specific secret files if any (e.g., APIKeys.swift if not handled by environment variables or other means)
+# Example:
+# Secrets.xcconfig
+# *.plist (if it contains sensitive data and isn't tracked)

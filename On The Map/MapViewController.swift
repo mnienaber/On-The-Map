@@ -21,30 +21,30 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         super.viewDidLoad()
         
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters // Optimization: Reduced accuracy for battery
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
         mapView.delegate = self
         mapView.showsUserLocation = true
         
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         self.hideKeyboardWhenTappedAround()
         getMapLocations()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
     
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         
-        if status == .AuthorizedWhenInUse {
+        if status == .authorizedWhenInUse {
         }
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let location = locations.last
         let center = CLLocationCoordinate2D(latitude: location!.coordinate.latitude, longitude: location!.coordinate.longitude)
@@ -54,22 +54,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
         locationManager.stopUpdatingLocation()
     }
     
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 
         print("error:: \(error)")
     }
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let reuseId = "pin"
         
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinColor = .Red
-            pinView!.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+            pinView!.pinTintColor = .red
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {
             pinView!.annotation = annotation
@@ -79,21 +79,21 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
     }
     
     
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
         if control == view.rightCalloutAccessoryView {
             
-            let app = UIApplication.sharedApplication()
+            let app = UIApplication.shared
             if let toOpen = view.annotation?.subtitle! {
 
                 if verifyUrl(toOpen) == false {
 
-                    let failAlertGeneral = UIAlertController(title: "Yikes", message: "The url you're trying to open is invalid", preferredStyle: UIAlertControllerStyle.Alert)
-                    failAlertGeneral.addAction(UIAlertAction(title: "Try Another", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+                    let failAlertGeneral = UIAlertController(title: "Yikes", message: "The url you're trying to open is invalid", preferredStyle: .alert)
+                    failAlertGeneral.addAction(UIAlertAction(title: "Try Another", style: .default, handler: nil))
+                    self.present(failAlertGeneral, animated: true, completion: nil)
                 } else {
 
-                    app.openURL(NSURL(string: toOpen)!)
+                    app.open(URL(string: toOpen)!, options: [:], completionHandler: nil)
                 }
             }
         }
@@ -140,121 +140,90 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIApplicationDeleg
 
             self.annotations = []
 
-            Client.sharedInstance().getStudentLocations { (studentLocation, errorString) in
-
-                if errorString != nil {
-
-                    performUIUpdatesOnMain{
-
+            Client.sharedInstance().getStudentLocations { [weak self] (studentLocations, error) in
+                guard let self = self else { return }
+                performUIUpdatesOnMain {
+                    if let error = error {
+                        print("Error fetching student locations: \(error.localizedDescription)")
                         self.failStudentLocations()
+                    } else if let studentLocations = studentLocations {
+                        var newAnnotations: [MKAnnotation] = [] // Create new annotations locally
+                        for student in studentLocations {
+                            let lat = student.latitude
+                            let long = student.longitude
+                            let mediaURL = student.mediaURL 
+                            let annotation = MKPointAnnotation()
+                            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
 
-                    }
-                } else {
-
-                    if let studentLocation = studentLocation {
-
-                        performUIUpdatesOnMain {
-
-                            for student in studentLocation {
-
-                                let lat = student.latitude
-                                let long = student.longitude
-                                let mediaURL = student.mediaURL
-                                let annotation = MKPointAnnotation()
-                                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-
-                                annotation.coordinate = coordinate
-                                annotation.title = student.firstName + " " + student.lastName
-                                annotation.subtitle = mediaURL
-                                self.annotations.append(annotation)
-                                
-                            }
-                            self.mapView.addAnnotations(self.annotations)
+                            annotation.coordinate = coordinate
+                            annotation.title = "\(student.firstName) \(student.lastName)"
+                            annotation.subtitle = mediaURL
+                            newAnnotations.append(annotation)
                         }
+                        self.annotations = newAnnotations // Update the class member
+                        self.mapView.addAnnotations(self.annotations)
                     }
                 }
             }
         }
     }
 
-    @IBAction func buttonMethod(sender: AnyObject) {
+    @IBAction func buttonMethod(_ sender: AnyObject) {
 
-        self.mapView.removeAnnotations(annotations)
+        self.mapView.removeAnnotations(annotations) // Existing annotations
         refresh()
     }
 
     func failStudentLocations() {
 
-        let failDataAlert = UIAlertController(title: "Sorry", message: "There was a problem with retrieving Student Location data", preferredStyle: UIAlertControllerStyle.Alert)
-        failDataAlert.addAction(UIAlertAction(title: "I'll Come Back Later", style: UIAlertActionStyle.Default, handler: nil))
-        failDataAlert.addAction(UIAlertAction(title: "Leave Feedback", style: UIAlertActionStyle.Default, handler: { alertAction in
-            UIApplication.sharedApplication().openURL(NSURL(string : "mailto:mnienaber@google.com")!)
-            failDataAlert.dismissViewControllerAnimated(true, completion: nil)
-        self.presentViewController(failDataAlert, animated: true, completion: nil)
+        let failDataAlert = UIAlertController(title: "Sorry", message: "There was a problem with retrieving Student Location data", preferredStyle: .alert)
+        failDataAlert.addAction(UIAlertAction(title: "I'll Come Back Later", style: .default, handler: nil))
+        failDataAlert.addAction(UIAlertAction(title: "Leave Feedback", style: .default, handler: { alertAction in
+            if let url = URL(string : "mailto:mnienaber@google.com") {
+                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+            failDataAlert.dismiss(animated: true, completion: nil)
         }))
+        self.present(failDataAlert, animated: true, completion: nil)
     }
 
     func logOut() {
 
-        Client.sharedInstance().deleteSession() { (result, error) in
-
-            if error != nil {
-
-                self.failAlertGeneral("LogOut Unsuccessful", message: "Something went wrong, please try again", actionTitle: "OK")
-            } else {
-
-                performUIUpdatesOnMain {
-
-                    print("logout success \(result)")
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                    })
+        Client.sharedInstance().deleteSession() { (deleteResponse, error) in
+            performUIUpdatesOnMain {
+                if let error = error {
+                    print("Logout error: \(error.localizedDescription)")
+                    self.failAlertGeneral("LogOut Unsuccessful", message: "Something went wrong, please try again", actionTitle: "OK")
+                } else {
+                    // Successfully logged out (or session deletion initiated)
+                    // deleteResponse might contain details if needed, e.g., deleteResponse.session.id
+                    print("Logout success \(String(describing: deleteResponse))")
+                    self.dismiss(animated: true, completion: nil)
                 }
             }
         }
     }
 
-    @IBAction func logOutButton(sender: AnyObject) {
+    @IBAction func logOutButton(_ sender: AnyObject) {
 
         failLogOutAlert()
     }
 
     func failAlertGeneral(title: String, message: String, actionTitle: String) {
 
-        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failAlertGeneral, animated: true, completion: nil)
+        let failAlertGeneral = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        failAlertGeneral.addAction(UIAlertAction(title: actionTitle, style: .default, handler: nil))
+        self.present(failAlertGeneral, animated: true, completion: nil)
     }
 
     func failLogOutAlert() {
 
-        let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: UIAlertControllerStyle.Alert)
-        failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: UIAlertActionStyle.Default, handler: { alertAction in self.logOut() }))
-        failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(failLogoutAlert, animated: true, completion: nil)
+        let failLogoutAlert = UIAlertController(title: "Wanna Logout?", message: "Just double checking, we'll miss you!", preferredStyle: .alert)
+        failLogoutAlert.addAction(UIAlertAction(title: "Log Me Out", style: .default, handler: { alertAction in self.logOut() }))
+        failLogoutAlert.addAction(UIAlertAction(title: "Take Me Back!", style: .default, handler: nil))
+        self.present(failLogoutAlert, animated: true, completion: nil)
     }
 }
 
-extension UIViewController {
-    func hideKeyboardWhenTappedAround() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
-        view.addGestureRecognizer(tap)
-    }
-    
-    func dismissKeyboard() {
-        view.endEditing(true)
-    }
-
-    func verifyUrl(urlString: String?) -> Bool {
-
-        if let urlString = urlString {
-
-            if NSURL(string: urlString) != nil {
-
-                return true
-            }
-        }
-        return false
-    }
-}
+// Removed redundant UIViewController extension, as these methods are in Convenience.swift
 
